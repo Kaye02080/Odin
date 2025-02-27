@@ -6,7 +6,7 @@
 package user;
 
 
-import config.Session;
+
 import javax.swing.JOptionPane;
 import testappnew.loginF;
 
@@ -118,12 +118,15 @@ public class accountD extends javax.swing.JFrame {
 
         getContentPane().add(jPanel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 0, 530, 80));
 
+        jLabel3.setFont(new java.awt.Font("Tahoma", 1, 13)); // NOI18N
         jLabel3.setText("First Name");
         getContentPane().add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(261, 104, 70, 20));
 
+        jLabel6.setFont(new java.awt.Font("Tahoma", 1, 13)); // NOI18N
         jLabel6.setText("Last Name");
         getContentPane().add(jLabel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(260, 134, 70, 20));
 
+        jLabel5.setFont(new java.awt.Font("Tahoma", 1, 13)); // NOI18N
         jLabel5.setText("UserName");
         getContentPane().add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(259, 194, 70, 20));
         getContentPane().add(fn, new org.netbeans.lib.awtextra.AbsoluteConstraints(330, 100, 190, 30));
@@ -134,16 +137,18 @@ public class accountD extends javax.swing.JFrame {
         ut.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "User", "Admin", " " }));
         getContentPane().add(ut, new org.netbeans.lib.awtextra.AbsoluteConstraints(330, 220, 190, 30));
 
+        jLabel10.setFont(new java.awt.Font("Tahoma", 1, 13)); // NOI18N
         jLabel10.setText("User Type");
         getContentPane().add(jLabel10, new org.netbeans.lib.awtextra.AbsoluteConstraints(259, 224, 70, 20));
 
-        jPanel4.setBackground(new java.awt.Color(51, 255, 204));
+        jPanel4.setBackground(new java.awt.Color(51, 255, 153));
         jPanel4.setLayout(null);
         getContentPane().add(jPanel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(260, 130, 270, 30));
 
         jPanel5.setBackground(new java.awt.Color(204, 255, 204));
         jPanel5.setLayout(null);
 
+        jLabel4.setFont(new java.awt.Font("Tahoma", 1, 13)); // NOI18N
         jLabel4.setText("Email");
         jPanel5.add(jLabel4);
         jLabel4.setBounds(0, 0, 70, 20);
@@ -158,7 +163,7 @@ public class accountD extends javax.swing.JFrame {
         jPanel7.setLayout(null);
         getContentPane().add(jPanel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(260, 220, 270, 30));
 
-        jPanel3.setBackground(new java.awt.Color(255, 51, 51));
+        jPanel3.setBackground(new java.awt.Color(51, 255, 153));
         getContentPane().add(jPanel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(260, 100, 270, 30));
 
         pack();
@@ -173,13 +178,8 @@ public class accountD extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void formWindowActivated(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowActivated
-       Session sess = Session.getInstance();
-        
-        idd.setText("USER ID:"+sess.getUid());
-        fn.setText(""+sess.getFname());
-        ln.setText(""+sess.getLname());
-        mail.setText(""+sess.getEmail());
-         us.setText(""+sess.getUsername());
+       
+      
        
     }//GEN-LAST:event_formWindowActivated
 

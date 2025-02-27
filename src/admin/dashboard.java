@@ -5,7 +5,7 @@
  */
 package admin;
 
-import config.Session;
+
 import javax.swing.JOptionPane;
 import testappnew.loginF;
 
@@ -52,7 +52,7 @@ public class dashboard extends javax.swing.JFrame {
         });
         getContentPane().setLayout(null);
 
-        jPanel1.setBackground(new java.awt.Color(255, 255, 255));
+        jPanel1.setBackground(new java.awt.Color(51, 255, 153));
         jPanel1.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         jLabel2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/images.png"))); // NOI18N
@@ -77,7 +77,7 @@ public class dashboard extends javax.swing.JFrame {
         jPanel1.add(acc_lname, new org.netbeans.lib.awtextra.AbsoluteConstraints(2, 130, 140, 10));
 
         getContentPane().add(jPanel1);
-        jPanel1.setBounds(0, 0, 140, 350);
+        jPanel1.setBounds(0, 0, 140, 360);
 
         jPanel2.setBackground(new java.awt.Color(255, 204, 204));
         jPanel2.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
@@ -90,10 +90,10 @@ public class dashboard extends javax.swing.JFrame {
         getContentPane().add(jPanel2);
         jPanel2.setBounds(140, 0, 530, 80);
 
-        jPanel3.setBackground(new java.awt.Color(255, 255, 153));
+        jPanel3.setBackground(new java.awt.Color(255, 255, 255));
         jPanel3.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        jPanel4.setBackground(new java.awt.Color(255, 255, 255));
+        jPanel4.setBackground(new java.awt.Color(51, 255, 153));
         jPanel4.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 jPanel4MouseClicked(evt);
@@ -109,7 +109,7 @@ public class dashboard extends javax.swing.JFrame {
         jLabel5.setText("USERS");
         jPanel4.add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 80, 40, 20));
 
-        jPanel3.add(jPanel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(170, 60, 180, 130));
+        jPanel3.add(jPanel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(170, 60, 170, 130));
 
         getContentPane().add(jPanel3);
         jPanel3.setBounds(140, 80, 530, 280);
@@ -132,16 +132,7 @@ public class dashboard extends javax.swing.JFrame {
     }//GEN-LAST:event_jPanel4MouseClicked
 
     private void formWindowActivated(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowActivated
-        Session sess = Session.getInstance();
-        
-        if(sess.getUid() == 0){
-         JOptionPane.showMessageDialog(null, "No account, Login First!");
-        loginF lf = new loginF();
-        lf.setVisible(true);
-        this.dispose();   
-        }
-        acc_fname.setText(""+sess.getFname());
-        acc_lname.setText(""+sess.getLname());
+       
     }//GEN-LAST:event_formWindowActivated
 
     /**

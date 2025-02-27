@@ -5,7 +5,7 @@
  */
 package admin;
 
-import config.Session;
+
 import config.dbConnector;
 import java.awt.Color;
 import java.sql.ResultSet;
@@ -209,9 +209,7 @@ public class userLoginF extends javax.swing.JFrame {
     }//GEN-LAST:event_usersOnlyMouseClicked
 
     private void formWindowActivated(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowActivated
-      Session sess = Session.getInstance();
-      
-       acc_id.setText(""+sess.getUid());
+  
     }//GEN-LAST:event_formWindowActivated
 
     private void p_addMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_p_addMouseEntered

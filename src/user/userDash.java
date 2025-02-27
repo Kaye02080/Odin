@@ -7,7 +7,7 @@ package user;
 
 
 import admin.CreateUsersF;
-import config.Session;
+
 import javax.swing.JOptionPane;
 import testappnew.loginF;
 
@@ -62,7 +62,7 @@ public class userDash extends javax.swing.JFrame {
         });
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        jPanel1.setBackground(new java.awt.Color(255, 255, 255));
+        jPanel1.setBackground(new java.awt.Color(51, 255, 153));
         jPanel1.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         jLabel2.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
@@ -94,7 +94,7 @@ public class userDash extends javax.swing.JFrame {
 
         getContentPane().add(jPanel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 0, 550, 70));
 
-        jPanel4.setBackground(new java.awt.Color(255, 255, 255));
+        jPanel4.setBackground(new java.awt.Color(51, 255, 153));
         jPanel4.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 jPanel4MouseClicked(evt);
@@ -139,7 +139,7 @@ public class userDash extends javax.swing.JFrame {
 
         getContentPane().add(jPanel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(460, 100, 180, 130));
 
-        jPanel6.setBackground(new java.awt.Color(255, 255, 255));
+        jPanel6.setBackground(new java.awt.Color(51, 255, 153));
         jPanel6.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 jPanel6MouseClicked(evt);
@@ -184,7 +184,7 @@ public class userDash extends javax.swing.JFrame {
 
         getContentPane().add(jPanel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(210, 100, 180, 130));
 
-        jPanel8.setBackground(new java.awt.Color(255, 255, 153));
+        jPanel8.setBackground(new java.awt.Color(255, 255, 255));
         jPanel8.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
         getContentPane().add(jPanel8, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 70, 550, 240));
 
@@ -206,15 +206,7 @@ public class userDash extends javax.swing.JFrame {
     }//GEN-LAST:event_jPanel4MouseClicked
 
     private void formWindowActivated(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowActivated
-       Session sess = Session.getInstance();
-        
-        if(sess.getUid() == 0){
-         JOptionPane.showMessageDialog(null, "No account, Login First!");
-        loginF lf = new loginF();
-        lf.setVisible(true);
-        this.dispose();   
-        }
-        acc_fname.setText(""+sess.getFname());
+      
     }//GEN-LAST:event_formWindowActivated
 
     private void jPanel5MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jPanel5MouseClicked

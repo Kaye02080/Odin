@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Feb 26, 2025 at 04:30 AM
+-- Generation Time: Apr 17, 2024 at 08:42 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -18,7 +18,7 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Database: `test`
+-- Database: `dbtest`
 --
 
 -- --------------------------------------------------------
@@ -43,12 +43,7 @@ CREATE TABLE `tbl_user` (
 --
 
 INSERT INTO `tbl_user` (`u_id`, `u_fname`, `u_lname`, `u_email`, `u_username`, `u_password`, `u_type`, `u_status`) VALUES
-(1, 'ross', 'sabio', 'rosssabio2@gmail.com', 'rosss', 'ross1234', 'Admin', 'Active'),
-(2, 'ross', 'sabio', 'ross2@gmail.com', 'rosssabio', 'TFQ6IzErSQ+rhP9gaKSYY0VtifuqIDivVgZv4ZkjB0Y=', 'User', 'Active'),
-(3, 'ross', 'sabio', 'rosssabio2@gmail', 'rosssabio2', '020824ross', 'Admin', 'Active'),
-(4, 'carla', 'gege', 'carla21@gmail.com', 'carla123', '73l8gRjwLftklgfdXT+MdiMEjJwGPVMsyVxe16iYpk8=', 'User', 'Active'),
-(5, 'gwapo', 'ross', 'gwapoross8@gmail.con', 'gwapoross8', 'QwQ1XM/xLt5aS2YMRbeEu6p+0+/y5V2ioI3cDGYl3NI=', 'Admin', 'Active'),
-(6, 'hell', 'george', 'georgehell@gmail.com', 'georgehell222', 'UtHYfDsgJ/PyZgAV3fZGPpdDC05gCZIXFDrHWkVkaqE=', 'User', 'Active');
+(1, 'ryan', 'cansancio', 'ryancansancio7@gmail.com', 'gwenchana', 'ryan1234', 'Admin', 'Active');
 
 --
 -- Indexes for dumped tables
@@ -68,7 +63,7 @@ ALTER TABLE `tbl_user`
 -- AUTO_INCREMENT for table `tbl_user`
 --
 ALTER TABLE `tbl_user`
-  MODIFY `u_id` int(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `u_id` int(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

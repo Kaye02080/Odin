@@ -6,8 +6,7 @@
 package user;
 
 
-import config.PassWordH;
-import config.Session;
+
 import config.dbConnector;
 import java.security.NoSuchAlgorithmException;
 import java.sql.ResultSet;
@@ -194,7 +193,7 @@ public class ChangeP extends javax.swing.JFrame {
         getContentPane().add(jPanel9);
         jPanel9.setBounds(340, 300, 190, 20);
 
-        jPanel10.setBackground(new java.awt.Color(0, 255, 204));
+        jPanel10.setBackground(new java.awt.Color(51, 255, 153));
         jPanel10.setLayout(null);
         getContentPane().add(jPanel10);
         jPanel10.setBounds(170, 90, 380, 250);
@@ -229,48 +228,15 @@ public class ChangeP extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void formWindowActivated(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowActivated
-       Session sess = Session.getInstance();
-        
-        idd.setText("USER ID:"+sess.getUid());
-        oldp.setText(""+sess.getFname());
-        newp.setText(""+sess.getLname());
-        firmp.setText(""+sess.getEmail());
+     
+       
         
        
     }//GEN-LAST:event_formWindowActivated
 
     private void jPanel4MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jPanel4MouseClicked
         
-        try {
-    dbConnector dbc = new dbConnector();
-    Session sess = Session.getInstance();
-    
-    String query = "SELECT * FROM tbl_user WHERE u_id = '" + sess.getUid() + "'";
-    ResultSet rs = dbc.getData(query);
-    if (rs.next()) {
-        String oldpass = rs.getString("u_password");
-        String oldhash = PassWordH.hashPassword(oldp.getText());
-        
-        if (oldpass.equals(oldhash)) {
-            String npass = PassWordH.hashPassword(newp.getText());    
-            String conpass = PassWordH.hashPassword(firmp.getText());
-            
-            if (npass.equals(conpass)) {
-                dbc.updateData("UPDATE tbl_user SET u_password = '" + npass + "'");                           
-                JOptionPane.showMessageDialog(null, "PASSWORD SUCCESSFULLY CHANGED");
-                loginF lf = new loginF();
-                lf.setVisible(true);
-                this.dispose();
-            } else {
-                JOptionPane.showMessageDialog(null, "CONFIRM PASSWORD DOES NOT MATCH");
-            }
-        } else {
-            JOptionPane.showMessageDialog(null, "OLD PASSWORD IS INCORRECT");
-        }
-    }
-} catch (SQLException | NoSuchAlgorithmException ex) {
-    System.out.println("" + ex);
-}
+   
     }//GEN-LAST:event_jPanel4MouseClicked
 
     private void checkActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_checkActionPerformed

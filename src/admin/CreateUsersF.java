@@ -6,7 +6,7 @@
 package admin;
 
 
-import config.PassWordH;
+
 import config.dbConnector;
 import java.security.NoSuchAlgorithmException;
 import java.sql.ResultSet;
@@ -117,6 +117,7 @@ public class CreateUsersF extends javax.swing.JFrame {
         jPanel1 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         jLabel11 = new javax.swing.JLabel();
+        jLabel14 = new javax.swing.JLabel();
         jPanel10 = new javax.swing.JPanel();
         jPanel7 = new javax.swing.JPanel();
         jLabel13 = new javax.swing.JLabel();
@@ -155,7 +156,7 @@ public class CreateUsersF extends javax.swing.JFrame {
         id.setEnabled(false);
         getContentPane().add(id, new org.netbeans.lib.awtextra.AbsoluteConstraints(320, 140, 190, 30));
 
-        jPanel2.setBackground(new java.awt.Color(255, 255, 255));
+        jPanel2.setBackground(new java.awt.Color(51, 255, 153));
         jPanel2.setLayout(null);
 
         jLabel2.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
@@ -190,12 +191,15 @@ public class CreateUsersF extends javax.swing.JFrame {
         jLabel11.setText("USER");
         jPanel1.add(jLabel11, new org.netbeans.lib.awtextra.AbsoluteConstraints(190, 30, 270, 34));
 
+        jLabel14.setIcon(new javax.swing.ImageIcon(getClass().getResource("/register/YU.png"))); // NOI18N
+        jPanel1.add(jLabel14, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 0, -1, 90));
+
         getContentPane().add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 640, 90));
 
-        jPanel10.setBackground(new java.awt.Color(255, 255, 153));
+        jPanel10.setBackground(new java.awt.Color(255, 255, 255));
         jPanel10.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        jPanel7.setBackground(new java.awt.Color(255, 255, 255));
+        jPanel7.setBackground(new java.awt.Color(51, 255, 153));
         jPanel7.setLayout(null);
 
         jLabel13.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
@@ -224,7 +228,7 @@ public class CreateUsersF extends javax.swing.JFrame {
 
         jPanel10.add(jPanel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 250, 420, 30));
 
-        jPanel6.setBackground(new java.awt.Color(255, 255, 255));
+        jPanel6.setBackground(new java.awt.Color(51, 255, 153));
         jPanel6.setLayout(null);
 
         jLabel5.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
@@ -250,7 +254,7 @@ public class CreateUsersF extends javax.swing.JFrame {
 
         jPanel10.add(jPanel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 210, 420, 30));
 
-        jPanel5.setBackground(new java.awt.Color(255, 255, 255));
+        jPanel5.setBackground(new java.awt.Color(51, 255, 153));
         jPanel5.setLayout(null);
 
         jLabel4.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
@@ -276,7 +280,7 @@ public class CreateUsersF extends javax.swing.JFrame {
 
         jPanel10.add(jPanel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 170, 420, 30));
 
-        jPanel4.setBackground(new java.awt.Color(255, 255, 255));
+        jPanel4.setBackground(new java.awt.Color(51, 255, 153));
         jPanel4.setLayout(null);
 
         jLabel3.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
@@ -303,7 +307,7 @@ public class CreateUsersF extends javax.swing.JFrame {
 
         jPanel10.add(jPanel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 130, 420, 30));
 
-        jPanel3.setBackground(new java.awt.Color(255, 255, 255));
+        jPanel3.setBackground(new java.awt.Color(51, 255, 153));
         jPanel3.setLayout(null);
 
         jLabel10.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
@@ -334,7 +338,7 @@ public class CreateUsersF extends javax.swing.JFrame {
 
         jPanel10.add(jPanel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 90, 420, 30));
 
-        jPanel8.setBackground(new java.awt.Color(255, 255, 255));
+        jPanel8.setBackground(new java.awt.Color(51, 255, 153));
         jPanel8.setLayout(null);
 
         jLabel9.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
@@ -350,7 +354,7 @@ public class CreateUsersF extends javax.swing.JFrame {
 
         jPanel10.add(jPanel8, new org.netbeans.lib.awtextra.AbsoluteConstraints(230, 310, 290, 30));
 
-        jPanel9.setBackground(new java.awt.Color(255, 255, 255));
+        jPanel9.setBackground(new java.awt.Color(51, 255, 153));
         jPanel9.setLayout(null);
 
         stat.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
@@ -398,13 +402,12 @@ public class CreateUsersF extends javax.swing.JFrame {
         }else{
             
              dbConnector dbc = new dbConnector();
-             try{
-             String pass = PassWordH.hashPassword(pw.getText());
-
+             {
+            
               
       if (dbc.insertData("INSERT INTO tbl_user(u_fname, u_lname, u_email, u_username, u_password, u_food, u_drink, u_dessert, u_type, u_status)VALUES('"
      + fn.getText() + "','"+ln.getText()+"','"+ mail.getText() + "','" 
-     + us.getText() + "','" + pass + "','"+ ut.getSelectedItem() + "','"+stat.getSelectedItem()+"')")){
+     + us.getText() + "','" + pw + "','"+ ut.getSelectedItem() + "','"+stat.getSelectedItem()+"')")){
           
         
           JOptionPane.showMessageDialog(null, "Inserted Successfully!");
@@ -415,9 +418,7 @@ public class CreateUsersF extends javax.swing.JFrame {
       }else{
           JOptionPane.showMessageDialog(null, "Connection Error!");
       }
-             }catch(NoSuchAlgorithmException ex) {
-                 System.out.println(""+ex);
-             }  
+             }
         }        
         
     }//GEN-LAST:event_addActionPerformed
@@ -530,6 +531,7 @@ public class CreateUsersF extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel13;
+    private javax.swing.JLabel jLabel14;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;

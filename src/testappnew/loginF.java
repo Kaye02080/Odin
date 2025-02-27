@@ -7,15 +7,13 @@ package testappnew;
 
 import admin.dashboard;
 
-import config.PassWordH;
-import config.Session;
 
 import config.dbConnector;
 import java.security.NoSuchAlgorithmException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import javax.swing.JOptionPane;
-import register.registF;
+import register.registF1;
 import user.userDash;
 
 
@@ -35,47 +33,36 @@ public class loginF extends javax.swing.JFrame {
     static String status;
     static String type;
    
-    
-    public static boolean loginAcc(String username, String password){
+    public static boolean loginAcc(String username, String password) {
+    dbConnector connector = new dbConnector();
+
+    try {
+        String query = "SELECT * FROM tbl_user WHERE u_username = '" + username + "'";
+        ResultSet resultSet = connector.getData(query);
         
-        
-        dbConnector connector = new dbConnector();
-        
-        try{
-            String query = "SELECT * FROM tbl_user  WHERE u_username = '" + username + "'";
-            ResultSet resultSet = connector.getData(query);
-           if(resultSet.next()){
-               
-          
-               String hashedPass = resultSet.getString("u_password");
-               String rehashedPass = PassWordH.hashPassword(password);
-               
-             
-               if(hashedPass.equals(rehashedPass)){
-                 status = resultSet.getString("u_status");
-                 type = resultSet.getString("u_type");
-                 Session sess = Session.getInstance();
-                 sess.setUid(resultSet.getInt("u_id"));
-                 sess.setFname(resultSet.getString("u_fname"));
-                 sess.setLname(resultSet.getString("u_lname"));
-                 sess.setEmail(resultSet.getString("u_email"));
-                 sess.setUsername(resultSet.getString("u_username"));
-                 sess.setType(resultSet.getString("u_type"));
-                 sess.setStatus(resultSet.getString("u_status"));
-                 
-                 return true;  
-                 }else{
-                   return false;
-               }
-          
-                 }else{
-                 return false;
-             }
-           }catch (SQLException | NoSuchAlgorithmException ex) {
+        if (resultSet.next()) {
+            String storedPass = resultSet.getString("u_password");
+
+            if (storedPass.equals(password)) { // Direct string comparison
+                status = resultSet.getString("u_status");
+                type = resultSet.getString("u_type");
+                return true;
+            } else {
+                return false;
+            }
+        } else {
             return false;
         }
-
+    } catch (SQLException ex) {
+        return false;
     }
+}
+
+    
+        
+     
+
+    
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -123,9 +110,9 @@ public class loginF extends javax.swing.JFrame {
 
         jButton1.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
         jButton1.setText("LOG-IN");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+        jButton1.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jButton1MouseClicked(evt);
             }
         });
         jPanel4.add(jButton1);
@@ -223,39 +210,10 @@ public class loginF extends javax.swing.JFrame {
     }//GEN-LAST:event_pwActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        registF ads = new registF();
+        registF1 ads = new registF1();
         ads.setVisible(true);
         this.dispose();
     }//GEN-LAST:event_jButton2ActionPerformed
-
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        if(loginAcc(un.getText(), pw.getText())){
-            if(!status.equals("Active")){
-                JOptionPane.showMessageDialog(null, "in active");
-            }else{
-                if(type.equals("Admin")){
-                    JOptionPane.showMessageDialog(null, "login");
-                    dashboard ads = new dashboard();
-                    ads.setVisible(true);
-                    this.dispose();
-                }else if(type.equals("User")){
-                    JOptionPane.showMessageDialog(null, "login");
-                    userDash uds = new userDash();
-                    uds.setVisible(true);
-                    this.dispose();
-                }else if(type.equals("Frontd")){
-                  
-                    
-                }else{
-                    
-                    JOptionPane.showMessageDialog(null, "No account");
-                }
-            }
-
-        }else{
-            JOptionPane.showMessageDialog(null, "Invalid Account");
-        }
-    }//GEN-LAST:event_jButton1ActionPerformed
 
     private void checkActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_checkActionPerformed
         boolean isSelected = check.isSelected();
@@ -266,6 +224,31 @@ public class loginF extends javax.swing.JFrame {
             pw.setEchoChar('*');
         }
     }//GEN-LAST:event_checkActionPerformed
+
+    private void jButton1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton1MouseClicked
+ if (loginAcc(un.getText(), pw.getText())) {
+    if (!status.equals("Active")) {
+        JOptionPane.showMessageDialog(null, "in active");
+    } else {
+        if (type.equals("Admin")) {
+            JOptionPane.showMessageDialog(null, "login");
+            dashboard ads = new dashboard();
+            ads.setVisible(true);
+            this.dispose();
+        } else if (type.equals("User")) {
+            JOptionPane.showMessageDialog(null, "login");
+            userDash uds = new userDash();
+            uds.setVisible(true);
+            this.dispose();
+        } else {
+            JOptionPane.showMessageDialog(null, "No account");
+        }
+    }
+} else {
+    JOptionPane.showMessageDialog(null, "Invalid Account");
+}
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jButton1MouseClicked
 
     /**
      * @param args the command line arguments
