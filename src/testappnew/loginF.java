@@ -73,27 +73,31 @@ public class loginF extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jPanel1 = new javax.swing.JPanel();
         jPanel4 = new javax.swing.JPanel();
         jButton2 = new javax.swing.JButton();
         jButton1 = new javax.swing.JButton();
-        check = new javax.swing.JCheckBox();
         jPanel5 = new javax.swing.JPanel();
+        check = new javax.swing.JCheckBox();
         jPanel3 = new javax.swing.JPanel();
         jLabel3 = new javax.swing.JLabel();
         pw = new javax.swing.JPasswordField();
         jPanel2 = new javax.swing.JPanel();
         jLabel2 = new javax.swing.JLabel();
         un = new javax.swing.JTextField();
-        jPanel1 = new javax.swing.JPanel();
-        jPanel6 = new javax.swing.JPanel();
-        jLabel1 = new javax.swing.JLabel();
-        jLabel13 = new javax.swing.JLabel();
-        jLabel12 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
+        jLabel13 = new javax.swing.JLabel();
+        MRmoving = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setPreferredSize(new java.awt.Dimension(550, 350));
-        getContentPane().setLayout(null);
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowOpened(java.awt.event.WindowEvent evt) {
+                formWindowOpened(evt);
+            }
+        });
+
+        jPanel1.setBackground(new java.awt.Color(0, 51, 255));
+        jPanel1.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         jPanel4.setBackground(new java.awt.Color(51, 255, 51));
         jPanel4.setLayout(null);
@@ -118,8 +122,10 @@ public class loginF extends javax.swing.JFrame {
         jPanel4.add(jButton1);
         jButton1.setBounds(100, 0, 80, 20);
 
-        getContentPane().add(jPanel4);
-        jPanel4.setBounds(230, 210, 180, 20);
+        jPanel1.add(jPanel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(280, 290, 180, 20));
+
+        jPanel5.setBackground(new java.awt.Color(255, 204, 204));
+        jPanel5.setLayout(null);
 
         check.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
         check.setText("Show");
@@ -128,22 +134,19 @@ public class loginF extends javax.swing.JFrame {
                 checkActionPerformed(evt);
             }
         });
-        getContentPane().add(check);
-        check.setBounds(330, 180, 70, 20);
+        jPanel5.add(check);
+        check.setBounds(0, 0, 70, 20);
 
-        jPanel5.setBackground(new java.awt.Color(255, 204, 204));
-        jPanel5.setLayout(null);
-        getContentPane().add(jPanel5);
-        jPanel5.setBounds(330, 180, 70, 20);
+        jPanel1.add(jPanel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(390, 250, 70, 20));
 
-        jPanel3.setBackground(new java.awt.Color(255, 255, 255));
+        jPanel3.setBackground(new java.awt.Color(204, 255, 255));
         jPanel3.setLayout(null);
 
         jLabel3.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
         jLabel3.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel3.setText("PassWord");
+        jLabel3.setText("Password");
         jPanel3.add(jLabel3);
-        jLabel3.setBounds(10, 0, 60, 30);
+        jLabel3.setBounds(10, 0, 59, 30);
 
         pw.setHorizontalAlignment(javax.swing.JTextField.CENTER);
         pw.addActionListener(new java.awt.event.ActionListener() {
@@ -154,15 +157,14 @@ public class loginF extends javax.swing.JFrame {
         jPanel3.add(pw);
         pw.setBounds(90, 0, 150, 30);
 
-        getContentPane().add(jPanel3);
-        jPanel3.setBounds(160, 140, 250, 30);
+        jPanel1.add(jPanel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(210, 210, 250, 30));
 
-        jPanel2.setBackground(new java.awt.Color(255, 255, 255));
+        jPanel2.setBackground(new java.awt.Color(204, 255, 255));
         jPanel2.setLayout(null);
 
         jLabel2.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
         jLabel2.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel2.setText("UserName");
+        jLabel2.setText("Username");
         jPanel2.add(jLabel2);
         jLabel2.setBounds(10, 0, 59, 30);
 
@@ -170,34 +172,31 @@ public class loginF extends javax.swing.JFrame {
         jPanel2.add(un);
         un.setBounds(90, 0, 150, 30);
 
-        getContentPane().add(jPanel2);
-        jPanel2.setBounds(160, 110, 250, 30);
+        jPanel1.add(jPanel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(210, 160, 250, 30));
 
-        jPanel1.setBackground(new java.awt.Color(255, 255, 255));
-        jPanel1.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+        jLabel4.setIcon(new javax.swing.ImageIcon(getClass().getResource("/testappnew/zz21-removebg-preview.png"))); // NOI18N
+        jPanel1.add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 20, 720, 450));
 
-        jPanel6.setBackground(new java.awt.Color(255, 204, 204));
-        jPanel6.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
-
-        jLabel1.setFont(new java.awt.Font("Tahoma", 1, 24)); // NOI18N
-        jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel1.setText("MONEY REMITTANCE");
-        jPanel6.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(180, 30, -1, -1));
-
+        jLabel13.setForeground(new java.awt.Color(255, 255, 255));
         jLabel13.setIcon(new javax.swing.ImageIcon(getClass().getResource("/register/YU.png"))); // NOI18N
-        jPanel6.add(jLabel13, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, -10, -1, -1));
+        jPanel1.add(jLabel13, new org.netbeans.lib.awtextra.AbsoluteConstraints(580, 10, -1, 90));
 
-        jPanel1.add(jPanel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 590, 80));
+        MRmoving.setFont(new java.awt.Font("Century Gothic", 3, 24)); // NOI18N
+        MRmoving.setForeground(new java.awt.Color(255, 255, 255));
+        MRmoving.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        MRmoving.setText("MONEY REMITTANCE");
+        jPanel1.add(MRmoving, new org.netbeans.lib.awtextra.AbsoluteConstraints(240, 20, -1, -1));
 
-        jLabel12.setFont(new java.awt.Font("Century Gothic", 3, 36)); // NOI18N
-        jLabel12.setText("Zero Transaction Fee");
-        jPanel1.add(jLabel12, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 240, 360, 50));
-
-        jLabel4.setIcon(new javax.swing.ImageIcon(getClass().getResource("/testappnew/hh.png"))); // NOI18N
-        jPanel1.add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(410, 230, 90, 70));
-
-        getContentPane().add(jPanel1);
-        jPanel1.setBounds(0, 0, 580, 320);
+        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
+        getContentPane().setLayout(layout);
+        layout.setHorizontalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+        );
+        layout.setVerticalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+        );
 
         pack();
         setLocationRelativeTo(null);
@@ -205,15 +204,14 @@ public class loginF extends javax.swing.JFrame {
 
     
     
+    private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
+        
+       
+    }//GEN-LAST:event_formWindowOpened
+
     private void pwActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_pwActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_pwActionPerformed
-
-    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        registF1 ads = new registF1();
-        ads.setVisible(true);
-        this.dispose();
-    }//GEN-LAST:event_jButton2ActionPerformed
 
     private void checkActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_checkActionPerformed
         boolean isSelected = check.isSelected();
@@ -226,29 +224,35 @@ public class loginF extends javax.swing.JFrame {
     }//GEN-LAST:event_checkActionPerformed
 
     private void jButton1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton1MouseClicked
- if (loginAcc(un.getText(), pw.getText())) {
-    if (!status.equals("Active")) {
-        JOptionPane.showMessageDialog(null, "in active");
-    } else {
-        if (type.equals("Admin")) {
-            JOptionPane.showMessageDialog(null, "login");
-            dashboard ads = new dashboard();
-            ads.setVisible(true);
-            this.dispose();
-        } else if (type.equals("User")) {
-            JOptionPane.showMessageDialog(null, "login");
-            userDash uds = new userDash();
-            uds.setVisible(true);
-            this.dispose();
+        if (loginAcc(un.getText(), pw.getText())) {
+            if (!status.equals("Active")) {
+                JOptionPane.showMessageDialog(null, "in active");
+            } else {
+                if (type.equals("Admin")) {
+                    JOptionPane.showMessageDialog(null, "login");
+                    dashboard ads = new dashboard();
+                    ads.setVisible(true);
+                    this.dispose();
+                } else if (type.equals("User")) {
+                    JOptionPane.showMessageDialog(null, "login");
+                    userDash uds = new userDash();
+                    uds.setVisible(true);
+                    this.dispose();
+                } else {
+                    JOptionPane.showMessageDialog(null, "No account");
+                }
+            }
         } else {
-            JOptionPane.showMessageDialog(null, "No account");
+            JOptionPane.showMessageDialog(null, "Invalid Account");
         }
-    }
-} else {
-    JOptionPane.showMessageDialog(null, "Invalid Account");
-}
         // TODO add your handling code here:
     }//GEN-LAST:event_jButton1MouseClicked
+
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+        registF1 ads = new registF1();
+        ads.setVisible(true);
+        this.dispose();
+    }//GEN-LAST:event_jButton2ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -286,11 +290,10 @@ public class loginF extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JLabel MRmoving;
     private javax.swing.JCheckBox check;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
-    private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel12;
     private javax.swing.JLabel jLabel13;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
@@ -300,7 +303,6 @@ public class loginF extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
     private javax.swing.JPanel jPanel5;
-    private javax.swing.JPanel jPanel6;
     private javax.swing.JPasswordField pw;
     private javax.swing.JTextField un;
     // End of variables declaration//GEN-END:variables
