@@ -11,8 +11,6 @@ import java.security.NoSuchAlgorithmException;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-
-
 import javax.swing.JOptionPane;
 import testappnew.loginF;
 
@@ -40,7 +38,7 @@ public class registF1 extends javax.swing.JFrame {
         dbConnector dbc = new dbConnector();
         
         try{
-            String query = "SELECT * FROM tbl_user  WHERE u_username = '" + us.getText() + "' OR u_email = '" + mail.getText() + "'";
+            String query = "SELECT * FROM tbl_users  WHERE u_username = '" + us.getText() + "' OR u_email = '" + mail.getText() + "'";
             ResultSet resultSet = dbc.getData(query);
             
             if(resultSet.next()){
@@ -120,7 +118,7 @@ public class registF1 extends javax.swing.JFrame {
 
         jLabel4.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
         jLabel4.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel4.setText("Gmail");
+        jLabel4.setText("Email");
         getContentPane().add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(220, 175, 90, 20));
 
         jLabel5.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
@@ -169,7 +167,7 @@ public class registF1 extends javax.swing.JFrame {
         getContentPane().add(check, new org.netbeans.lib.awtextra.AbsoluteConstraints(440, 270, -1, -1));
 
         ut.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
-        ut.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "User", "Admin", "FrontDesk", " " }));
+        ut.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "User", "Admin", " ", " " }));
         getContentPane().add(ut, new org.netbeans.lib.awtextra.AbsoluteConstraints(310, 300, 180, 20));
 
         jButton1.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
@@ -260,9 +258,10 @@ public class registF1 extends javax.swing.JFrame {
             
              dbConnector dbc = new dbConnector();
              
-             String pass = new String(pw.getPassword()).trim();
-             if (dbc.insertData("INSERT INTO tbl_user (u_fname, u_lname, u_email, u_username, u_password, u_type, u_status, u_image) VALUES('"
-                     + fn.getText() + "','"+ln.getText()+"','"+ mail.getText() + "','" + us.getText() + "','" + pass + "','" + ut.getSelectedItem() + "','Pending')")){
+            String imagePath = "uploads/" + us.getText() + ".jpg"; // Save image with username as filename
+
+if (dbc.insertData("INSERT INTO tbl_users (u_fname, u_lname, u_email, u_username, u_password, u_type, u_status, u_image) VALUES('"
+     + fn.getText() + "','" + ln.getText() + "','" + mail.getText() + "','" + us.getText() + "','" + pw.getText() + "','" + ut.getSelectedItem() + "','Pending','" + imagePath + "')")) {
                  
                  
                  JOptionPane.showMessageDialog(null, "Inserted Successfully!");

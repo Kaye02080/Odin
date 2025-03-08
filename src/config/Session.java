@@ -7,38 +7,41 @@ package config;
 
 /**
  *
- * @author chris
+ * @author User
  */
 public class Session {
     
-    private static Session instance; 
-    private int uid;
-    private String fname;
-    private String lname;
-    private String email;
-    private String username;
-    private String type;
-    private String status;
+    
+    private static Session instance;
 
+    private int uid;    
+    private String fname;   
+    private String lname;   
+    private String email;   
+    private String username;   
+    private String type;   
+    private String status;   
+         
+    
     private Session(){
-        // Private constructor prevents instance        
-    } 
+            
+    }
 
     
-   
+    
+    
     public static synchronized Session getInstance() {
-        
-        if(instance==null){
+        if(instance == null){
             instance = new Session();
         }
+        
         return instance;
     }
-    
-    
 
     public static boolean isInstanceEmpty() {
         return instance == null;
     }
+
     
     public int getUid() {
         return uid;
@@ -48,7 +51,7 @@ public class Session {
         this.uid = uid;
     }
 
-
+   
     public String getFname() {
         return fname;
     }
@@ -65,14 +68,13 @@ public class Session {
         this.lname = lname;
     }
 
-  public String getEmail() {
+    public String getEmail() {
         return email;
     }
 
     public void setEmail(String email) {
         this.email = email;
     }
-
 
     public String getUsername() {
         return username;
@@ -97,8 +99,6 @@ public class Session {
     public void setStatus(String status) {
         this.status = status;
     }
-
-
+   
     
 }
-

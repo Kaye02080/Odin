@@ -22,17 +22,12 @@ public class dbConnector {
     
     public Connection connect;
     
-      public dbConnector(){
-           try {
-            connect = DriverManager.getConnection("jdbc:mysql://localhost:3306/test", "root", "");
-            System.out.println("Database Connected Successfully!");
-        } catch (SQLException ex) {
-            JOptionPane.showMessageDialog(null, 
-                "Database Connection Failed!\nError: " + ex.getMessage(), 
-                "Connection Error", 
-                JOptionPane.ERROR_MESSAGE);
-            connect = null; // Ensure connection is null if it fails
-        }
+     public dbConnector(){
+            try{
+                connect = DriverManager.getConnection("jdbc:mysql://localhost:3306/moneyremittance_db", "root", "");
+            }catch(SQLException ex){
+                    System.out.println("Can't connect to database: "+ex.getMessage());
+            }
         }
      
      //Function to retrieve data

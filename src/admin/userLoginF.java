@@ -39,7 +39,7 @@ public class userLoginF extends javax.swing.JFrame {
          
         try{
             dbConnector dbc = new dbConnector();
-            ResultSet rs = dbc.getData("SELECT u_id, u_fname, u_lname, u_email, u_status FROM tbl_user");
+            ResultSet rs = dbc.getData("SELECT u_id, u_fname, u_lname, u_email, u_status FROM tbl_users");
             usersOnly.setModel(DbUtils.resultSetToTableModel(rs));
              rs.close();
         }catch(SQLException ex){
@@ -61,6 +61,7 @@ public class userLoginF extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jPanel5 = new javax.swing.JPanel();
         jPanel1 = new javax.swing.JPanel();
         jLabel2 = new javax.swing.JLabel();
         jLabel15 = new javax.swing.JLabel();
@@ -76,15 +77,18 @@ public class userLoginF extends javax.swing.JFrame {
         jLabel5 = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
         usersOnly = new javax.swing.JTable();
+        jPanel3 = new javax.swing.JPanel();
+        jPanel4 = new javax.swing.JPanel();
+        jPanel6 = new javax.swing.JPanel();
+        jPanel7 = new javax.swing.JPanel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setPreferredSize(new java.awt.Dimension(750, 450));
         addWindowListener(new java.awt.event.WindowAdapter() {
             public void windowActivated(java.awt.event.WindowEvent evt) {
                 formWindowActivated(evt);
             }
         });
-        getContentPane().setLayout(null);
+        getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         jPanel1.setBackground(new java.awt.Color(255, 255, 255));
         jPanel1.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
@@ -93,9 +97,9 @@ public class userLoginF extends javax.swing.JFrame {
         jPanel1.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 10, 90, 90));
 
         jLabel15.setText("              Current User");
-        jPanel1.add(jLabel15, new org.netbeans.lib.awtextra.AbsoluteConstraints(-10, 320, 140, 20));
+        jPanel1.add(jLabel15, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 300, 140, 20));
 
-        p_add.setBackground(new java.awt.Color(255, 51, 51));
+        p_add.setBackground(new java.awt.Color(255, 255, 255));
         p_add.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 p_addMouseClicked(evt);
@@ -115,14 +119,14 @@ public class userLoginF extends javax.swing.JFrame {
         p_add.add(jLabel13);
         jLabel13.setBounds(0, 10, 140, 20);
 
-        jPanel1.add(p_add, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 130, 140, 30));
+        jPanel1.add(p_add, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 120, 140, 40));
 
         jLabel16.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
         jLabel16.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel16.setText("USERS");
         jPanel1.add(jLabel16, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 90, 140, 30));
 
-        p_edit.setBackground(new java.awt.Color(255, 51, 51));
+        p_edit.setBackground(new java.awt.Color(255, 255, 255));
         p_edit.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 p_editMouseClicked(evt);
@@ -143,22 +147,21 @@ public class userLoginF extends javax.swing.JFrame {
         p_edit.add(jLabel17);
         jLabel17.setBounds(10, 10, 120, 20);
 
-        jPanel1.add(p_edit, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 160, 140, 30));
+        jPanel1.add(p_edit, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 160, 140, 40));
 
         acc_id.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         acc_id.setText("ID");
-        jPanel1.add(acc_id, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 340, 140, 20));
+        jPanel1.add(acc_id, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 330, 140, 20));
 
-        getContentPane().add(jPanel1);
-        jPanel1.setBounds(0, 0, 140, 400);
+        getContentPane().add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, -1, 400));
 
-        jPanel2.setBackground(new java.awt.Color(255, 204, 204));
+        jPanel2.setBackground(new java.awt.Color(204, 255, 255));
         jPanel2.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         jLabel1.setFont(new java.awt.Font("Tahoma", 1, 24)); // NOI18N
         jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel1.setText("USER LOGIN ");
-        jPanel2.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(260, 10, 210, 34));
+        jPanel2.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(230, 20, 210, 34));
 
         jLabel4.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
         jLabel4.setText("USERS");
@@ -173,8 +176,7 @@ public class userLoginF extends javax.swing.JFrame {
         });
         jPanel2.add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(620, 20, 60, 20));
 
-        getContentPane().add(jPanel2);
-        jPanel2.setBounds(140, 0, 710, 70);
+        getContentPane().add(jPanel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 0, 710, 70));
 
         usersOnly.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -191,8 +193,19 @@ public class userLoginF extends javax.swing.JFrame {
         });
         jScrollPane1.setViewportView(usersOnly);
 
-        getContentPane().add(jScrollPane1);
-        jScrollPane1.setBounds(150, 80, 690, 310);
+        getContentPane().add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 80, 690, 310));
+
+        jPanel3.setBackground(new java.awt.Color(255, 0, 0));
+        getContentPane().add(jPanel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 70, -1, 330));
+
+        jPanel4.setBackground(new java.awt.Color(255, 0, 0));
+        getContentPane().add(jPanel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 70, 700, -1));
+
+        jPanel6.setBackground(new java.awt.Color(255, 0, 0));
+        getContentPane().add(jPanel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 390, 700, -1));
+
+        jPanel7.setBackground(new java.awt.Color(255, 0, 0));
+        getContentPane().add(jPanel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(840, 80, -1, 310));
 
         pack();
         setLocationRelativeTo(null);
@@ -245,7 +258,7 @@ public class userLoginF extends javax.swing.JFrame {
           try{
               dbConnector dbc = new dbConnector();
               TableModel tbl = usersOnly.getModel();
-              ResultSet rs = dbc.getData("SELECT *FROM tbl_user WHERE u_id = '"+tbl.getValueAt(rowIndex,0)+"'");
+              ResultSet rs = dbc.getData("SELECT *FROM tbl_users WHERE u_id = '"+tbl.getValueAt(rowIndex,0)+"'");
               if(rs.next()){
                   CreateUsersF usf = new CreateUsersF();
                   usf.id.setText(""+rs.getString("u_id"));
@@ -315,6 +328,11 @@ public class userLoginF extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel5;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
+    private javax.swing.JPanel jPanel3;
+    private javax.swing.JPanel jPanel4;
+    private javax.swing.JPanel jPanel5;
+    private javax.swing.JPanel jPanel6;
+    private javax.swing.JPanel jPanel7;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JPanel p_add;
     private javax.swing.JPanel p_edit;

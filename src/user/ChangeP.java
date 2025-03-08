@@ -7,12 +7,18 @@ package user;
 
 
 
+import config.Session;
 import config.dbConnector;
+import config.passwordHasher;
 import java.security.NoSuchAlgorithmException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import javax.swing.JOptionPane;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import testappnew.loginF;
+import config.PassWordH;
+
 
 /**
  *
@@ -41,13 +47,9 @@ public class ChangeP extends javax.swing.JFrame {
         jButton2 = new javax.swing.JButton();
         acc_ln = new javax.swing.JLabel();
         acc_fn = new javax.swing.JLabel();
+        sessUsn = new javax.swing.JLabel();
         jPanel2 = new javax.swing.JPanel();
         jPanel10 = new javax.swing.JPanel();
-        jPanel9 = new javax.swing.JPanel();
-        jLabel1 = new javax.swing.JLabel();
-        jPanel4 = new javax.swing.JPanel();
-        jLabel5 = new javax.swing.JLabel();
-        jPanel3 = new javax.swing.JPanel();
         jPanel8 = new javax.swing.JPanel();
         check = new javax.swing.JCheckBox();
         jPanel7 = new javax.swing.JPanel();
@@ -59,6 +61,8 @@ public class ChangeP extends javax.swing.JFrame {
         jPanel5 = new javax.swing.JPanel();
         jLabel3 = new javax.swing.JLabel();
         oldp = new javax.swing.JTextField();
+        jPanel4 = new javax.swing.JPanel();
+        confirmp = new javax.swing.JLabel();
         jLabel8 = new javax.swing.JLabel();
         idd = new javax.swing.JLabel();
         jLabel7 = new javax.swing.JLabel();
@@ -95,7 +99,12 @@ public class ChangeP extends javax.swing.JFrame {
         acc_fn.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
         acc_fn.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         acc_fn.setText("ACC_FN");
-        jPanel1.add(acc_fn, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 80, 140, 20));
+        jPanel1.add(acc_fn, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 80, 150, 20));
+
+        sessUsn.setFont(new java.awt.Font("Yu Gothic UI", 0, 11)); // NOI18N
+        sessUsn.setForeground(new java.awt.Color(204, 204, 204));
+        sessUsn.setText("@");
+        jPanel1.add(sessUsn, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 50, 80, 50));
 
         getContentPane().add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, -1, 460));
 
@@ -104,37 +113,6 @@ public class ChangeP extends javax.swing.JFrame {
 
         jPanel10.setBackground(new java.awt.Color(204, 255, 255));
         jPanel10.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
-
-        jPanel9.setBackground(new java.awt.Color(255, 204, 153));
-        jPanel9.setLayout(null);
-
-        jLabel1.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
-        jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel1.setText("BACK");
-        jPanel9.add(jLabel1);
-        jLabel1.setBounds(20, 0, 60, 20);
-
-        jPanel4.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                jPanel4MouseClicked(evt);
-            }
-        });
-        jPanel4.setLayout(null);
-
-        jLabel5.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
-        jLabel5.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel5.setText("SAVE");
-        jPanel4.add(jLabel5);
-        jLabel5.setBounds(10, 0, 70, 20);
-
-        jPanel9.add(jPanel4);
-        jPanel4.setBounds(100, 0, 80, 20);
-
-        jPanel3.setLayout(null);
-        jPanel9.add(jPanel3);
-        jPanel3.setBounds(10, 0, 80, 20);
-
-        jPanel10.add(jPanel9, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 190, 190, 20));
 
         jPanel8.setBackground(new java.awt.Color(204, 255, 204));
         jPanel8.setLayout(null);
@@ -192,6 +170,26 @@ public class ChangeP extends javax.swing.JFrame {
 
         jPanel10.add(jPanel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 50, 360, 30));
 
+        jPanel4.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jPanel4MouseClicked(evt);
+            }
+        });
+        jPanel4.setLayout(null);
+
+        confirmp.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        confirmp.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        confirmp.setText("SAVE");
+        confirmp.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                confirmpMouseClicked(evt);
+            }
+        });
+        jPanel4.add(confirmp);
+        confirmp.setBounds(0, 0, 80, 20);
+
+        jPanel10.add(jPanel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(280, 200, 80, 20));
+
         jPanel2.add(jPanel10, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 160, 380, 250));
 
         jLabel8.setFont(new java.awt.Font("Tahoma", 3, 24)); // NOI18N
@@ -227,7 +225,22 @@ public class ChangeP extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void formWindowActivated(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowActivated
-     
+        Session sess = Session.getInstance();
+int id = sess.getUid(); // Get user ID once
+
+try {
+    dbConnector dbc = new dbConnector();
+    ResultSet rs = dbc.getData("SELECT * FROM tbl_users WHERE u_id = '" + id + "'");
+
+    if (rs.next()) {
+        sessUsn.setText("@" + rs.getString("u_usern")); // Set the username
+    }
+
+    rs.close(); // Close ResultSet after use
+
+} catch (SQLException ex) {
+    System.out.println("Database Error: " + ex.getMessage());
+}
        
         
        
@@ -258,6 +271,58 @@ public class ChangeP extends javax.swing.JFrame {
      this.dispose();           // TODO add your handling code here:
     }//GEN-LAST:event_jLabel7MouseClicked
 
+    private void confirmpMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_confirmpMouseClicked
+   if (oldp.getText().isEmpty() || newp.getText().isEmpty() || confirmp.getText().isEmpty()) { 
+    System.out.println("Empty Text Field!");
+    JOptionPane.showMessageDialog(null, "All fields are required!");
+
+   } else if (newp.getText().length() < 8) {
+    System.out.println("Password Invalid!");
+    JOptionPane.showMessageDialog(null, "Password must be at least 8 characters long!");
+    newp.setText("");
+    confirmp.setText(""); 
+
+   } else if (!newp.getText().trim().equals(confirmp.getText().trim())) {  // FIXED: Trim spaces to prevent invisible mismatch
+    JOptionPane.showMessageDialog(null, "New Password and Confirm Password do not match!");
+  } else {
+    try {
+        dbConnector dbc = new dbConnector();
+        Session sess = Session.getInstance();
+
+        String query = "SELECT * FROM tbl_users WHERE u_id = '" + sess.getUid() + "'";
+        ResultSet rs = dbc.getData(query);
+
+        if (rs.next()) {
+            String olddbpass = rs.getString("u_password"); // Get old hashed password from DB
+            String oldhash = passwordHasher.hashPassword(oldp.getText()); // Hash user input
+
+            if (olddbpass.equals(oldhash)) { // Compare hashed passwords
+                String npass = passwordHasher.hashPassword(newp.getText().trim()); // Trim to avoid invisible chars
+
+                // FIXED: Added WHERE clause to update the correct user
+                String updateQuery = "UPDATE tbl_users SET u_pass = '" + npass + "' WHERE u_id = '" + sess.getUid() + "'";
+                dbc.updateData(updateQuery);
+
+                JOptionPane.showMessageDialog(null, "Password updated successfully!");
+                loginF lg = new loginF();
+                lg.setVisible(true);
+                this.dispose();
+            } else {
+                JOptionPane.showMessageDialog(null, "Old Password is Incorrect!");
+            }
+        }
+
+        rs.close(); // Close ResultSet to prevent memory leaks
+    } catch (SQLException | NoSuchAlgorithmException ex) {
+        System.out.println("Error: " + ex.getMessage());
+    }
+
+
+
+
+
+    }//GEN-LAST:event_confirmpMouseClicked
+    }
     /**
      * @param args the command line arguments
      */
@@ -304,28 +369,26 @@ public class ChangeP extends javax.swing.JFrame {
     public javax.swing.JLabel acc_fn;
     public javax.swing.JLabel acc_ln;
     private javax.swing.JCheckBox check;
+    private javax.swing.JLabel confirmp;
     private javax.swing.JPasswordField firmp;
     private javax.swing.JLabel idd;
     private javax.swing.JButton jButton2;
-    private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
-    private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel10;
     private javax.swing.JPanel jPanel2;
-    private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
     private javax.swing.JPanel jPanel5;
     private javax.swing.JPanel jPanel6;
     private javax.swing.JPanel jPanel7;
     private javax.swing.JPanel jPanel8;
-    private javax.swing.JPanel jPanel9;
     private javax.swing.JTextField newp;
     private javax.swing.JTextField oldp;
+    public javax.swing.JLabel sessUsn;
     // End of variables declaration//GEN-END:variables
 }

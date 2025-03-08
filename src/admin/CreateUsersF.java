@@ -36,7 +36,7 @@ public class CreateUsersF extends javax.swing.JFrame {
         dbConnector dbc = new dbConnector();
         
         try{
-            String query = "SELECT * FROM tbl_user  WHERE u_username = '" + us.getText() + "' OR u_email = '" + mail.getText() + "'";
+            String query = "SELECT * FROM tbl_users  WHERE u_username = '" + us.getText() + "' OR u_email = '" + mail.getText() + "'";
             ResultSet resultSet = dbc.getData(query);
             
             if(resultSet.next()){
@@ -66,7 +66,7 @@ public class CreateUsersF extends javax.swing.JFrame {
        dbConnector dbc = new dbConnector();
         
         try{
-            String query = "SELECT * FROM tbl_user  WHERE (u_username = '" +us.getText()+ "' OR u_email = '" +mail.getText()+ "') AND u_id != '"+id.getText()+"'";
+            String query = "SELECT * FROM tbl_users  WHERE (u_username = '" +us.getText()+ "' OR u_email = '" +mail.getText()+ "') AND u_id != '"+id.getText()+"'";
             ResultSet resultSet = dbc.getData(query);
             
             if(resultSet.next()){ 
@@ -405,7 +405,7 @@ public class CreateUsersF extends javax.swing.JFrame {
              {
             
               
-      if (dbc.insertData("INSERT INTO tbl_user(u_fname, u_lname, u_email, u_username, u_password,  u_type, u_status)VALUES('"
+      if (dbc.insertData("INSERT INTO tbl_users(u_fname, u_lname, u_email, u_username, u_password,  u_type, u_status)VALUES('"
      + fn.getText() + "','"+ln.getText()+"','"+ mail.getText() + "','" 
      + us.getText() + "','" + pw + "','"+ ut.getSelectedItem() + "','"+stat.getSelectedItem()+"')")){
           
@@ -444,7 +444,7 @@ public class CreateUsersF extends javax.swing.JFrame {
             
         }else{
        dbConnector dbc = new dbConnector();
-      dbc.updateData("UPDATE tbl_user SET u_fname ='"+fn.getText()+"', u_lname ='"+ln.getText()+"', u_email ='"+mail.getText()+"', u_username ='"+us.getText()+"', u_password ='"+pw.getText()+"', u_type ='"+ut.getSelectedItem()+"', u_status ='"+stat.getSelectedItem()+"' WHERE u_id ='"+id.getText()+"'");
+      dbc.updateData("UPDATE tbl_users SET u_fname ='"+fn.getText()+"', u_lname ='"+ln.getText()+"', u_email ='"+mail.getText()+"', u_username ='"+us.getText()+"', u_password ='"+pw.getText()+"', u_type ='"+ut.getSelectedItem()+"', u_status ='"+stat.getSelectedItem()+"' WHERE u_id ='"+id.getText()+"'");
        
        JOptionPane.showMessageDialog(null, "UPDATED SUCCESSFULLY!");
        userLoginF ads = new userLoginF();

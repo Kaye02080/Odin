@@ -203,7 +203,7 @@ public class userDash extends javax.swing.JFrame {
     }//GEN-LAST:event_jPanel7MouseClicked
 
     private void jPanel6MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jPanel6MouseClicked
-        AccountSetting ads = new AccountSetting();
+        accountD ads = new accountD();
         ads.setVisible(true);
         this.dispose();
     }//GEN-LAST:event_jPanel6MouseClicked

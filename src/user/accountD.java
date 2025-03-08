@@ -40,8 +40,11 @@ public class accountD extends javax.swing.JFrame {
      */
     public accountD() {
         initComponents();
+        
     }
     
+   
+
     public String destination = "";
    File selectedFile;
    public String path;
@@ -135,7 +138,7 @@ public class accountD extends javax.swing.JFrame {
     Session sess = Session.getInstance();
 
     try {
-        String query = "SELECT * FROM tbl_user WHERE (u_username = '" + us.getText() 
+        String query = "SELECT * FROM tbl_users WHERE (u_username = '" + us.getText() 
                      + "' OR u_email = '" + mail.getText() 
                      + "') AND u_id != '" + sess.getUid() + "'";
 
@@ -361,38 +364,22 @@ public class accountD extends javax.swing.JFrame {
     private void formWindowActivated(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowActivated
        
        Session sess = Session.getInstance();
-       
-       
-       if(sess.getUid() == 0){
-            JOptionPane.showMessageDialog(null, "No Account, Log in First! ","Notice", JOptionPane.ERROR_MESSAGE);
-            loginF lgf = new loginF();
-            lgf.setVisible(true);
-            this.dispose();
-       }else{
-           sessUsn.setText("@"+sess.getUsername());
-           int id = sess.getUid();
-          
-           try{
-           dbConnector dbc = new dbConnector();
-           ResultSet rs = dbc.getData("SELECT * FROM tbl_user WHERE u_id = '"+sess.getUid()+"'");
-           
-           if(rs.next()){
-              
-               
-               String code = rs.getString("u_code");
-               if(code.equals("")){
-             //       dot.setText("•");
-               }else{
-              //       dot.setText("");
-                }
-               
-           }
-           
-           }catch(SQLException ex){
-                 System.out.println(""+ex);
-         
-        }
-       }
+
+   sessUsn.setText("@" + sess.getUsername());
+   int id = sess.getUid();
+
+   dbConnector dbc = new dbConnector(); // Keep dbConnector outside try
+
+    try (ResultSet rs = dbc.getData("SELECT * FROM tbl_users WHERE u_id = '" + id + "'")) {
+    if (rs.next()) {
+        String code = rs.getString("u_code");
+        // Handle code value if necessary
+    }
+  } catch (SQLException ex) {
+    System.out.println("Database Error: " + ex.getMessage());
+  }
+
+
        
     }//GEN-LAST:event_formWindowActivated
 
@@ -439,7 +426,7 @@ public class accountD extends javax.swing.JFrame {
 
     private void cancelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cancelActionPerformed
 
-        AccountSetting ru = new AccountSetting();
+        userDash ru = new userDash();
         ru.setVisible(true);
         this.dispose();
     }//GEN-LAST:event_cancelActionPerformed
@@ -470,7 +457,7 @@ public class accountD extends javax.swing.JFrame {
 
             dbConnector dbc = new dbConnector();
 
-            dbc.updateData("UPDATE tbl_user SET u_fname = '" + fn.getText() + "', u_lname = '" + ln.getText()
+            dbc.updateData("UPDATE tbl_users SET u_fname = '" + fn.getText() + "', u_lname = '" + ln.getText()
                 + "', u_email = '" + mail.getText() + "', u_username = '" + us.getText()
                 + "',u_image = '" + destination + "' WHERE u_id = '" + sess.getUid() + "'");
 
@@ -490,7 +477,7 @@ public class accountD extends javax.swing.JFrame {
 
            // logEvent(userID, "ADMIN_DATA_UPDATE", "Admin ID: "+userID+" data is updated.");
 
-            AccountSetting as = new AccountSetting();
+            userDash as = new userDash();
             as.setVisible(true);
             this.dispose();
 

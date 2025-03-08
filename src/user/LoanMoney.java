@@ -56,6 +56,11 @@ public class LoanMoney extends javax.swing.JFrame {
         jLabel2.setText("Barrow");
         jLabel2.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         jLabel2.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        jLabel2.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jLabel2MouseClicked(evt);
+            }
+        });
         jPanel3.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 100, 30));
 
         jPanel1.add(jPanel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 170, 100, 30));
@@ -102,12 +107,18 @@ public class LoanMoney extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton2MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton2MouseClicked
-        
+
         JOptionPane.showMessageDialog(null, "log-out Success! ");
         loginF ads = new loginF();
         ads.setVisible(true);
         this.dispose();        // TODO add your handling code here:
     }//GEN-LAST:event_jButton2MouseClicked
+
+    private void jLabel2MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel2MouseClicked
+       BarrowM ads = new BarrowM();
+        ads.setVisible(true);
+        this.dispose();                // TODO add your handling code here:
+    }//GEN-LAST:event_jLabel2MouseClicked
 
     /**
      * @param args the command line arguments

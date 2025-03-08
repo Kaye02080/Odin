@@ -43,7 +43,7 @@ public class loginF extends javax.swing.JFrame {
     dbConnector connector = new dbConnector();
 
     try {
-        String query = "SELECT * FROM tbl_user WHERE u_username = '" + username + "'";
+        String query = "SELECT * FROM tbl_users WHERE u_username = '" + username + "'";
         ResultSet resultSet = connector.getData(query);
         
         if (resultSet.next()) {
@@ -94,9 +94,9 @@ public void logEvent(String userId, String event, String description) {
 
         try {
          
-            String sql = "SELECT u_id FROM tbl_user WHERE u_usn = ?";
+            String sql = "SELECT u_id FROM tbl_users WHERE u_username = ?";
             pstmt = dbc.connect.prepareStatement(sql);
-            pstmt.setString(1, username);
+                pstmt.setString(1, username);
             rs = pstmt.executeQuery();
 
             if (rs.next()) {
@@ -125,12 +125,8 @@ public void logEvent(String userId, String event, String description) {
         return userId;
     }
 
-    
-    
-        
-     
-
-    
+       
+   
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -292,7 +288,7 @@ public void logEvent(String userId, String event, String description) {
     }//GEN-LAST:event_checkActionPerformed
 
     private void jButton1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton1MouseClicked
-         String username = un.getText().trim();
+    String username = un.getText().trim();
     String password = pw.getText().trim();
 
     // ✅ Check if fields are empty

@@ -64,7 +64,7 @@
           <Font name="Tahoma" size="12" style="1"/>
         </Property>
         <Property name="horizontalAlignment" type="int" value="0"/>
-        <Property name="text" type="java.lang.String" value="Gmail"/>
+        <Property name="text" type="java.lang.String" value="Email"/>
       </Properties>
       <Constraints>
         <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout" value="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout$AbsoluteConstraintsDescription">
@@ -184,7 +184,7 @@
           <StringArray count="4">
             <StringItem index="0" value="User"/>
             <StringItem index="1" value="Admin"/>
-            <StringItem index="2" value="FrontDesk"/>
+            <StringItem index="2" value=" "/>
             <StringItem index="3" value=" "/>
           </StringArray>
         </Property>
