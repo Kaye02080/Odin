@@ -8,8 +8,10 @@ package register;
 
 import config.dbConnector;
 import java.security.NoSuchAlgorithmException;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+
 
 import javax.swing.JOptionPane;
 import testappnew.loginF;
@@ -29,6 +31,8 @@ public class registF1 extends javax.swing.JFrame {
     }
     
     public static String email,username;
+    
+ 
             
     
     public boolean duplicateCheck(){
@@ -257,7 +261,7 @@ public class registF1 extends javax.swing.JFrame {
              dbConnector dbc = new dbConnector();
              
              String pass = new String(pw.getPassword()).trim();
-             if (dbc.insertData("INSERT INTO tbl_user (u_fname, u_lname, u_email, u_username, u_password, u_type, u_status) VALUES('"
+             if (dbc.insertData("INSERT INTO tbl_user (u_fname, u_lname, u_email, u_username, u_password, u_type, u_status, u_image) VALUES('"
                      + fn.getText() + "','"+ln.getText()+"','"+ mail.getText() + "','" + us.getText() + "','" + pass + "','" + ut.getSelectedItem() + "','Pending')")){
                  
                  

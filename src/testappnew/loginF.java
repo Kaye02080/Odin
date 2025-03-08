@@ -10,9 +10,13 @@ import admin.dashboard;
 
 import config.dbConnector;
 import java.security.NoSuchAlgorithmException;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
+import java.util.Date;
 import javax.swing.JOptionPane;
+import javax.swing.border.EmptyBorder;
 import register.registF1;
 import user.userDash;
 
@@ -28,6 +32,8 @@ public class loginF extends javax.swing.JFrame {
      */
     public loginF() {
         initComponents();
+        un.setBorder(new EmptyBorder(0,10,0,0));
+        pw.setBorder(new EmptyBorder(0,10,0,0));
     }
     
     static String status;
@@ -57,7 +63,69 @@ public class loginF extends javax.swing.JFrame {
         return false;
     }
 }
+    
+public void logEvent(String userId, String event, String description) {
+   
+        dbConnector dbc = new dbConnector();
+        PreparedStatement pstmt = null;
+        
+    try {
+     
 
+        String sql = "INSERT INTO tbl_logs (l_timestamp, l_event, u_id, l_description) VALUES (?, ?, ?, ?)";
+        pstmt = dbc.connect.prepareStatement(sql);
+        pstmt.setTimestamp(1, new Timestamp(new Date().getTime()));
+        pstmt.setString(2, event);
+        pstmt.setString(3, userId);
+        pstmt.setString(4, description);
+        pstmt.executeUpdate();
+    } catch (SQLException e) {
+        e.printStackTrace();
+    } finally {
+        
+    }
+}
+ public String getUserId(String username) {
+       
+        dbConnector dbc = new dbConnector();
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
+        String userId = null;
+
+        try {
+         
+            String sql = "SELECT u_id FROM tbl_user WHERE u_usn = ?";
+            pstmt = dbc.connect.prepareStatement(sql);
+            pstmt.setString(1, username);
+            rs = pstmt.executeQuery();
+
+            if (rs.next()) {
+                userId = rs.getString("u_id");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            if (rs != null) {
+                try {
+                    rs.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
+            if (pstmt != null) {
+                try {
+                    pstmt.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
+           
+       
+        }
+        return userId;
+    }
+
+    
     
         
      
@@ -224,28 +292,39 @@ public class loginF extends javax.swing.JFrame {
     }//GEN-LAST:event_checkActionPerformed
 
     private void jButton1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton1MouseClicked
-        if (loginAcc(un.getText(), pw.getText())) {
-            if (!status.equals("Active")) {
-                JOptionPane.showMessageDialog(null, "in active");
-            } else {
-                if (type.equals("Admin")) {
-                    JOptionPane.showMessageDialog(null, "login");
-                    dashboard ads = new dashboard();
-                    ads.setVisible(true);
-                    this.dispose();
-                } else if (type.equals("User")) {
-                    JOptionPane.showMessageDialog(null, "login");
-                    userDash uds = new userDash();
-                    uds.setVisible(true);
-                    this.dispose();
-                } else {
-                    JOptionPane.showMessageDialog(null, "No account");
-                }
-            }
-        } else {
-            JOptionPane.showMessageDialog(null, "Invalid Account");
+         String username = un.getText().trim();
+    String password = pw.getText().trim();
+
+    // ✅ Check if fields are empty
+    if (username.isEmpty() || password.isEmpty()) {
+        JOptionPane.showMessageDialog(null, "Username and Password are required!", "Validation Error", JOptionPane.ERROR_MESSAGE);
+        return; // Exit method if validation fails
+    }
+
+    // ✅ Attempt login
+    if (loginAcc(username, password)) {
+        if (status == null || !status.equals("Active")) { // Check if status is null or not Active
+            JOptionPane.showMessageDialog(null, "Your account is inactive. Please contact the administrator.", "Account Inactive", JOptionPane.WARNING_MESSAGE);
+            return;
         }
-        // TODO add your handling code here:
+
+        // ✅ Redirect based on user type
+        if ("Admin".equals(type)) { 
+            JOptionPane.showMessageDialog(null, "Login successful!", "Success", JOptionPane.INFORMATION_MESSAGE);
+            dashboard ads = new dashboard();
+            ads.setVisible(true);
+            this.dispose(); // Close login form
+        } else if ("User".equals(type)) {
+            JOptionPane.showMessageDialog(null, "Login successful!", "Success", JOptionPane.INFORMATION_MESSAGE);
+            userDash uds = new userDash();
+            uds.setVisible(true);
+            this.dispose(); // Close login form
+        } else {
+            JOptionPane.showMessageDialog(null, "Invalid account type. Please contact support.", "Error", JOptionPane.ERROR_MESSAGE);
+        }
+    } else {
+        JOptionPane.showMessageDialog(null, "Invalid username or password!", "Login Failed", JOptionPane.ERROR_MESSAGE);
+    }
     }//GEN-LAST:event_jButton1MouseClicked
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed

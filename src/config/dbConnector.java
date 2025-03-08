@@ -20,52 +20,86 @@ import javax.swing.JOptionPane;
  */
 public class dbConnector {
     
-    private Connection connect;
+    public Connection connect;
     
       public dbConnector(){
-            try{
-                connect = DriverManager.getConnection("jdbc:mysql://localhost:3306/test", "root", "");
-            }catch(SQLException ex){
-                    System.out.println("Can't connect to database: "+ex.getMessage());
-            }
+           try {
+            connect = DriverManager.getConnection("jdbc:mysql://localhost:3306/test", "root", "");
+            System.out.println("Database Connected Successfully!");
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(null, 
+                "Database Connection Failed!\nError: " + ex.getMessage(), 
+                "Connection Error", 
+                JOptionPane.ERROR_MESSAGE);
+            connect = null; // Ensure connection is null if it fails
+        }
         }
      
      //Function to retrieve data
         public ResultSet getData(String sql) throws SQLException{
-            Statement stmt = connect.createStatement();
-            ResultSet rst = stmt.executeQuery(sql);
-            return rst;
+           try {
+        if (connect == null || connect.isClosed()) {
+            System.out.println("Database connection is not available.");
+            return null; // Return null if the connection is not established
+        }
+
+        Statement stmt = connect.createStatement();
+        return stmt.executeQuery(sql);
+    } catch (SQLException ex) {
+        System.out.println("Error executing query: " + ex.getMessage());
+        return null; // Return null if an error occurs
+    }
         }
         
         //Function to save data
-        public boolean insertData(String sql){
-            try{
-                PreparedStatement pst = connect.prepareStatement(sql);
-                pst.executeUpdate();
-                System.out.println("Inserted Successfully!");
-                pst.close();
-               return true;
-            }catch(SQLException ex){
-                System.out.println("Connection Error: "+ex);
-               return false;
-            }
+     
+      public boolean insertData(String sql) {
+    try {
+        if (connect == null || connect.isClosed()) {
+            System.out.println("Database connection is not available.");
+            return false; // Prevent executing SQL if the connection is down
         }
+
+        PreparedStatement pst = connect.prepareStatement(sql);
+        int rowsAffected = pst.executeUpdate();
+        pst.close();
+
+        if (rowsAffected > 0) {
+            System.out.println("Data inserted successfully!");
+            return true;
+        } else {
+            System.out.println("No data was inserted.");
+            return false;
+        }
+
+    } catch (SQLException ex) {
+        System.out.println("SQL Error: " + ex.getMessage());
+        return false;
+    }
+}
        
         
         //Function to update data
         public void updateData(String sql){
-            try{
-                PreparedStatement pst = connect.prepareStatement(sql);
-                    int rowsUpdated = pst.executeUpdate();
-                        if(rowsUpdated > 0){
-                            JOptionPane.showMessageDialog(null, "Data Updated Successfully!");
-                        }else{
-                            System.out.println("Data Update Failed!");
-                        }
-                        pst.close();
-            }catch(SQLException ex){
-                System.out.println("Connection Error: "+ex);
-            }
+          try {
+        if (connect == null || connect.isClosed()) {
+            System.out.println("Database connection is not available.");
+            return; // Prevent executing SQL if the connection is down
+        }
+
+        PreparedStatement pst = connect.prepareStatement(sql);
+        int rowsUpdated = pst.executeUpdate();
+        pst.close();
+
+        if (rowsUpdated > 0) {
+            JOptionPane.showMessageDialog(null, "Data updated successfully!");
+        } else {
+            JOptionPane.showMessageDialog(null, "No records were updated.", "Update Failed", JOptionPane.WARNING_MESSAGE);
+        }
+
+    } catch (SQLException ex) {
+        JOptionPane.showMessageDialog(null, "Error updating data: " + ex.getMessage(), "Database Error", JOptionPane.ERROR_MESSAGE);
+    }
         
         }
 

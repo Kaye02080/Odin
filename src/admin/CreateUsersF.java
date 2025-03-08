@@ -405,7 +405,7 @@ public class CreateUsersF extends javax.swing.JFrame {
              {
             
               
-      if (dbc.insertData("INSERT INTO tbl_user(u_fname, u_lname, u_email, u_username, u_password, u_food, u_drink, u_dessert, u_type, u_status)VALUES('"
+      if (dbc.insertData("INSERT INTO tbl_user(u_fname, u_lname, u_email, u_username, u_password,  u_type, u_status)VALUES('"
      + fn.getText() + "','"+ln.getText()+"','"+ mail.getText() + "','" 
      + us.getText() + "','" + pw + "','"+ ut.getSelectedItem() + "','"+stat.getSelectedItem()+"')")){
           
