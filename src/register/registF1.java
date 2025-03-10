@@ -220,7 +220,7 @@ public class registF1 extends javax.swing.JFrame {
         getContentPane().add(jPanel10, new org.netbeans.lib.awtextra.AbsoluteConstraints(310, 350, 180, 20));
 
         jLabel8.setIcon(new javax.swing.ImageIcon(getClass().getResource("/register/zz4-removebg-preview.png"))); // NOI18N
-        getContentPane().add(jLabel8, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 0, 770, 530));
+        getContentPane().add(jLabel8, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 780, 530));
 
         jPanel12.setBackground(new java.awt.Color(0, 0, 255));
         jPanel12.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());

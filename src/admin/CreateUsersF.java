@@ -203,7 +203,7 @@ public class CreateUsersF extends javax.swing.JFrame {
         jPanel7.setLayout(null);
 
         jLabel13.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
-        jLabel13.setText("PassWord");
+        jLabel13.setText("Password");
         jPanel7.add(jLabel13);
         jLabel13.setBounds(140, 0, 70, 30);
 
@@ -233,7 +233,7 @@ public class CreateUsersF extends javax.swing.JFrame {
 
         jLabel5.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
         jLabel5.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel5.setText("UserName");
+        jLabel5.setText("Username");
         jPanel6.add(jLabel5);
         jLabel5.setBounds(140, 0, 59, 30);
 

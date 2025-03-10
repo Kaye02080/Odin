@@ -202,6 +202,7 @@ public class accountD extends javax.swing.JFrame {
         cancel = new javax.swing.JButton();
         update = new javax.swing.JButton();
         jButton1 = new javax.swing.JButton();
+        jPanel7 = new javax.swing.JPanel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setPreferredSize(new java.awt.Dimension(650, 450));
@@ -223,7 +224,7 @@ public class accountD extends javax.swing.JFrame {
                 jLabel8MouseClicked(evt);
             }
         });
-        jPanel1.add(jLabel8, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 180, 180, 30));
+        jPanel1.add(jLabel8, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 270, 180, 30));
 
         jLabel1.setFont(new java.awt.Font("Century Gothic", 1, 18)); // NOI18N
         jLabel1.setText("Back");
@@ -232,18 +233,18 @@ public class accountD extends javax.swing.JFrame {
                 jLabel1MouseClicked(evt);
             }
         });
-        jPanel1.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 460, 50, 30));
+        jPanel1.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 450, 50, 30));
 
         jLabel2.setFont(new java.awt.Font("Century Gothic", 3, 18)); // NOI18N
         jLabel2.setText("ACCOUNT");
-        jPanel1.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 20, -1, -1));
+        jPanel1.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 110, -1, -1));
 
         sessUsn.setFont(new java.awt.Font("Yu Gothic UI", 0, 11)); // NOI18N
         sessUsn.setForeground(new java.awt.Color(204, 204, 204));
         sessUsn.setText("@");
-        jPanel1.add(sessUsn, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 50, 80, 20));
+        jPanel1.add(sessUsn, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 110, 80, 20));
 
-        getContentPane().add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 180, 570));
+        getContentPane().add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 180, 520));
 
         jPanel2.setBackground(new java.awt.Color(204, 255, 255));
         jPanel2.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
@@ -251,14 +252,14 @@ public class accountD extends javax.swing.JFrame {
         jLabel9.setFont(new java.awt.Font("Century Gothic", 3, 24)); // NOI18N
         jLabel9.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel9.setText("ACCOUNT INFROMATION");
-        jPanel2.add(jLabel9, new org.netbeans.lib.awtextra.AbsoluteConstraints(240, 10, 330, 34));
+        jPanel2.add(jLabel9, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 30, 330, 34));
 
         idd.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
         idd.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         idd.setText("(UID)");
-        jPanel2.add(idd, new org.netbeans.lib.awtextra.AbsoluteConstraints(560, 0, 90, 60));
+        jPanel2.add(idd, new org.netbeans.lib.awtextra.AbsoluteConstraints(440, 0, 90, 80));
 
-        getContentPane().add(jPanel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(180, 0, 880, 60));
+        getContentPane().add(jPanel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(180, 0, 580, 80));
 
         jPanel4.setBackground(new java.awt.Color(51, 255, 153));
         jPanel4.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
@@ -356,6 +357,9 @@ public class accountD extends javax.swing.JFrame {
             }
         });
         getContentPane().add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(620, 450, -1, 30));
+
+        jPanel7.setBackground(new java.awt.Color(204, 255, 204));
+        getContentPane().add(jPanel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(200, 110, 540, 390));
 
         pack();
         setLocationRelativeTo(null);
@@ -550,6 +554,7 @@ public class accountD extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel4;
     private javax.swing.JPanel jPanel5;
     private javax.swing.JPanel jPanel6;
+    private javax.swing.JPanel jPanel7;
     private javax.swing.JTextField ln;
     private javax.swing.JTextField mail;
     public javax.swing.JLabel sessUsn;

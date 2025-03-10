@@ -66,11 +66,11 @@ public class userLoginF extends javax.swing.JFrame {
         jLabel2 = new javax.swing.JLabel();
         jLabel15 = new javax.swing.JLabel();
         p_add = new javax.swing.JPanel();
-        jLabel13 = new javax.swing.JLabel();
         jLabel16 = new javax.swing.JLabel();
         p_edit = new javax.swing.JPanel();
-        jLabel17 = new javax.swing.JLabel();
+        jLabel13 = new javax.swing.JLabel();
         acc_id = new javax.swing.JLabel();
+        jLabel17 = new javax.swing.JLabel();
         jPanel2 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
@@ -93,11 +93,13 @@ public class userLoginF extends javax.swing.JFrame {
         jPanel1.setBackground(new java.awt.Color(255, 255, 255));
         jPanel1.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        jLabel2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/images.png"))); // NOI18N
-        jPanel1.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 10, 90, 90));
+        jLabel2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/VVT.png"))); // NOI18N
+        jPanel1.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 20, 60, 90));
 
+        jLabel15.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel15.setText("              Current User");
-        jPanel1.add(jLabel15, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 300, 140, 20));
+        jLabel15.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        jPanel1.add(jLabel15, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 290, 140, 20));
 
         p_add.setBackground(new java.awt.Color(255, 255, 255));
         p_add.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -113,18 +115,13 @@ public class userLoginF extends javax.swing.JFrame {
         });
         p_add.setLayout(null);
 
-        jLabel13.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
-        jLabel13.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel13.setText("ADD");
-        p_add.add(jLabel13);
-        jLabel13.setBounds(0, 10, 140, 20);
-
-        jPanel1.add(p_add, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 120, 140, 40));
-
         jLabel16.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
         jLabel16.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel16.setText("USERS");
-        jPanel1.add(jLabel16, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 90, 140, 30));
+        p_add.add(jLabel16);
+        jLabel16.setBounds(0, -10, 140, 30);
+
+        jPanel1.add(p_add, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 120, 140, 40));
 
         p_edit.setBackground(new java.awt.Color(255, 255, 255));
         p_edit.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -140,18 +137,23 @@ public class userLoginF extends javax.swing.JFrame {
         });
         p_edit.setLayout(null);
 
-        jLabel17.setBackground(new java.awt.Color(255, 51, 51));
-        jLabel17.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
-        jLabel17.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel17.setText("EDIT");
-        p_edit.add(jLabel17);
-        jLabel17.setBounds(10, 10, 120, 20);
+        jLabel13.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        jLabel13.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel13.setText("ADD");
+        p_edit.add(jLabel13);
+        jLabel13.setBounds(0, 0, 140, 20);
 
         jPanel1.add(p_edit, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 160, 140, 40));
 
         acc_id.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         acc_id.setText("ID");
-        jPanel1.add(acc_id, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 330, 140, 20));
+        jPanel1.add(acc_id, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 320, 140, 20));
+
+        jLabel17.setBackground(new java.awt.Color(255, 51, 51));
+        jLabel17.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        jLabel17.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel17.setText("EDIT");
+        jPanel1.add(jLabel17, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 210, 140, 20));
 
         getContentPane().add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, -1, 400));
 
@@ -160,7 +162,7 @@ public class userLoginF extends javax.swing.JFrame {
 
         jLabel1.setFont(new java.awt.Font("Tahoma", 1, 24)); // NOI18N
         jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel1.setText("USER LOGIN ");
+        jLabel1.setText("USER FORM");
         jPanel2.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(230, 20, 210, 34));
 
         jLabel4.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N

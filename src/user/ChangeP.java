@@ -79,8 +79,8 @@ public class ChangeP extends javax.swing.JFrame {
         jPanel1.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         jLabel2.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/images.png"))); // NOI18N
-        jPanel1.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 140, 80));
+        jLabel2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/VVT.png"))); // NOI18N
+        jPanel1.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 60, 150, 80));
 
         jButton2.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
         jButton2.setText("LOG-OUT");
@@ -94,12 +94,12 @@ public class ChangeP extends javax.swing.JFrame {
         acc_ln.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
         acc_ln.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         acc_ln.setText("USER");
-        jPanel1.add(acc_ln, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 100, 140, 20));
+        jPanel1.add(acc_ln, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 160, 150, 20));
 
         acc_fn.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
         acc_fn.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         acc_fn.setText("ACC_FN");
-        jPanel1.add(acc_fn, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 80, 150, 20));
+        jPanel1.add(acc_fn, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 140, 150, 20));
 
         sessUsn.setFont(new java.awt.Font("Yu Gothic UI", 0, 11)); // NOI18N
         sessUsn.setForeground(new java.awt.Color(204, 204, 204));
@@ -190,7 +190,7 @@ public class ChangeP extends javax.swing.JFrame {
 
         jPanel10.add(jPanel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(280, 200, 80, 20));
 
-        jPanel2.add(jPanel10, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 160, 380, 250));
+        jPanel2.add(jPanel10, new org.netbeans.lib.awtextra.AbsoluteConstraints(120, 130, 380, 250));
 
         jLabel8.setFont(new java.awt.Font("Tahoma", 3, 24)); // NOI18N
         jLabel8.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
@@ -226,21 +226,21 @@ public class ChangeP extends javax.swing.JFrame {
 
     private void formWindowActivated(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowActivated
         Session sess = Session.getInstance();
-int id = sess.getUid(); // Get user ID once
+   int id = sess.getUid(); // Get user ID once
 
-try {
+   try {
     dbConnector dbc = new dbConnector();
     ResultSet rs = dbc.getData("SELECT * FROM tbl_users WHERE u_id = '" + id + "'");
 
     if (rs.next()) {
-        sessUsn.setText("@" + rs.getString("u_usern")); // Set the username
+        sessUsn.setText("@" + rs.getString("u_username")); // Set the username
     }
 
     rs.close(); // Close ResultSet after use
 
-} catch (SQLException ex) {
+   } catch (SQLException ex) {
     System.out.println("Database Error: " + ex.getMessage());
-}
+    }
        
         
        
@@ -272,7 +272,9 @@ try {
     }//GEN-LAST:event_jLabel7MouseClicked
 
     private void confirmpMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_confirmpMouseClicked
-   if (oldp.getText().isEmpty() || newp.getText().isEmpty() || confirmp.getText().isEmpty()) { 
+   
+        
+    if (oldp.getText().isEmpty() || newp.getText().isEmpty() || confirmp.getText().isEmpty()) { 
     System.out.println("Empty Text Field!");
     JOptionPane.showMessageDialog(null, "All fields are required!");
 
@@ -300,7 +302,7 @@ try {
                 String npass = passwordHasher.hashPassword(newp.getText().trim()); // Trim to avoid invisible chars
 
                 // FIXED: Added WHERE clause to update the correct user
-                String updateQuery = "UPDATE tbl_users SET u_pass = '" + npass + "' WHERE u_id = '" + sess.getUid() + "'";
+                String updateQuery = "UPDATE tbl_users SET u_password = '" + npass + "' WHERE u_id = '" + sess.getUid() + "'";
                 dbc.updateData(updateQuery);
 
                 JOptionPane.showMessageDialog(null, "Password updated successfully!");

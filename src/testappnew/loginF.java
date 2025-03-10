@@ -6,9 +6,11 @@
 package testappnew;
 
 import admin.dashboard;
+import config.Session;
 
 
 import config.dbConnector;
+import config.passwordHasher;
 import java.security.NoSuchAlgorithmException;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -32,7 +34,7 @@ public class loginF extends javax.swing.JFrame {
      */
     public loginF() {
         initComponents();
-        un.setBorder(new EmptyBorder(0,10,0,0));
+        us.setBorder(new EmptyBorder(0,10,0,0));
         pw.setBorder(new EmptyBorder(0,10,0,0));
     }
     
@@ -40,7 +42,7 @@ public class loginF extends javax.swing.JFrame {
     static String type;
    
     public static boolean loginAcc(String username, String password) {
-    dbConnector connector = new dbConnector();
+     dbConnector connector = new dbConnector();
 
     try {
         String query = "SELECT * FROM tbl_users WHERE u_username = '" + username + "'";
@@ -85,7 +87,7 @@ public void logEvent(String userId, String event, String description) {
         
     }
 }
- public String getUserId(String username) {
+   public String getUserId(String username) {
        
         dbConnector dbc = new dbConnector();
         PreparedStatement pstmt = null;
@@ -125,9 +127,6 @@ public void logEvent(String userId, String event, String description) {
         return userId;
     }
 
-       
-   
-
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -148,7 +147,7 @@ public void logEvent(String userId, String event, String description) {
         pw = new javax.swing.JPasswordField();
         jPanel2 = new javax.swing.JPanel();
         jLabel2 = new javax.swing.JLabel();
-        un = new javax.swing.JTextField();
+        us = new javax.swing.JTextField();
         jLabel4 = new javax.swing.JLabel();
         jLabel13 = new javax.swing.JLabel();
         MRmoving = new javax.swing.JLabel();
@@ -232,9 +231,9 @@ public void logEvent(String userId, String event, String description) {
         jPanel2.add(jLabel2);
         jLabel2.setBounds(10, 0, 59, 30);
 
-        un.setHorizontalAlignment(javax.swing.JTextField.CENTER);
-        jPanel2.add(un);
-        un.setBounds(90, 0, 150, 30);
+        us.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        jPanel2.add(us);
+        us.setBounds(90, 0, 150, 30);
 
         jPanel1.add(jPanel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(210, 160, 250, 30));
 
@@ -288,8 +287,8 @@ public void logEvent(String userId, String event, String description) {
     }//GEN-LAST:event_checkActionPerformed
 
     private void jButton1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton1MouseClicked
-    String username = un.getText().trim();
-    String password = pw.getText().trim();
+      String username = us.getText().trim();
+      String password = pw.getText().trim();
 
     // ✅ Check if fields are empty
     if (username.isEmpty() || password.isEmpty()) {
@@ -379,6 +378,6 @@ public void logEvent(String userId, String event, String description) {
     private javax.swing.JPanel jPanel4;
     private javax.swing.JPanel jPanel5;
     private javax.swing.JPasswordField pw;
-    private javax.swing.JTextField un;
+    private javax.swing.JTextField us;
     // End of variables declaration//GEN-END:variables
 }

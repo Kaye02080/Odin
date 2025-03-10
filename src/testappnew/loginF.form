@@ -209,7 +209,7 @@
                 </Constraint>
               </Constraints>
             </Component>
-            <Component class="javax.swing.JTextField" name="un">
+            <Component class="javax.swing.JTextField" name="us">
               <Properties>
                 <Property name="horizontalAlignment" type="int" value="0"/>
               </Properties>
