@@ -8,7 +8,11 @@ package admin;
 
 
 import config.dbConnector;
+import config.passwordHasher;
 import java.security.NoSuchAlgorithmException;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import javax.swing.JOptionPane;
@@ -28,75 +32,74 @@ public class CreateUsersF extends javax.swing.JFrame {
         initComponents();
     }
     
-    public static String email,username;
-            
+ 
+       private String userId; // Declare userId at the class level
+
+    public void setUserId(String id) {
+        this.userId = id; // Store the user ID for later use
+    }
     
-    public boolean duplicateCheck(){
+   
+     
+        public static String email,username;
         
-        dbConnector dbc = new dbConnector();
+
+   public boolean duplicateCheck(String username, String email) { 
+    dbConnector dbc = new dbConnector();
+    
+    try {
+        String query = "SELECT * FROM tbl_users WHERE u_username = '" + username + "' OR u_email = '" + email + "'";
+        ResultSet resultSet = dbc.getData(query);
         
-        try{
-            String query = "SELECT * FROM tbl_users  WHERE u_username = '" + us.getText() + "' OR u_email = '" + mail.getText() + "'";
+        if (resultSet.next()) {
+            String existingEmail = resultSet.getString("u_email");
+            if (existingEmail.equals(email)) {
+                JOptionPane.showMessageDialog(null, "Email is already used!");
+                return true;
+            }
+
+            String existingUsername = resultSet.getString("u_username");
+            if (existingUsername.equals(username)) {
+                JOptionPane.showMessageDialog(null, "Username is already used!");
+                return true;
+            }
+        }
+    } catch (SQLException ex) {
+        System.out.println("" + ex);
+    }
+    
+    return false; // No duplicate found
+}
+
+    public boolean UpdateCheck(){
+        
+    dbConnector dbc = new dbConnector();
+        
+     try{
+            String query = "SELECT * FROM tbl_users  WHERE (u_username = '" +us.getText()+ "' OR u_email = '" +mail.getText()+ "') AND u_id != '"+uid.getText()+"'";
             ResultSet resultSet = dbc.getData(query);
-            
+           
             if(resultSet.next()){
                 email = resultSet.getString("u_email");
                 if(email.equals(mail.getText())){
-                      JOptionPane.showMessageDialog(null, "Email is Already Used!");
-                      mail.setText("");
+                JOptionPane.showMessageDialog(null, "Email is already used!");
+                mail.setText("");
                 }
                 username = resultSet.getString("u_username");
                 if(username.equals(us.getText())){
-                      JOptionPane.showMessageDialog(null, "Email is Already Used!");
-                      us.setText("");
-            }
-            return true;
-            }else{
-                return false;
-            }
-          
-        }catch (SQLException ex) {
-            System.out.println(""+ex);
-            return false;
-        }
-    }
-    
-    public boolean UpdateCheck(){
-        
-       dbConnector dbc = new dbConnector();
-        
-        try{
-            String query = "SELECT * FROM tbl_users  WHERE (u_username = '" +us.getText()+ "' OR u_email = '" +mail.getText()+ "') AND u_id != '"+id.getText()+"'";
-            ResultSet resultSet = dbc.getData(query);
-            
-            if(resultSet.next()){ 
-                email = resultSet.getString("u_email");
-   
-                if(email.equals(mail.getText())){
-                    JOptionPane.showMessageDialog(null, "Email is already used!");
-                    mail.setText("");
-                    
-                }
-                    
-                username = resultSet.getString("u_username");
-                if(username.equals(us.getText())){
-                    JOptionPane.showMessageDialog(null, "Username is already used!");
-                    us.setText("");
-                    
+                JOptionPane.showMessageDialog(null, "Username is already used!");
+                us.setText("");
                 }
                 return true;
-            }else{
-                return false;
+        }else{
                 
-            }
-            
-        }catch(SQLException ex){
-            System.out.println(""+ex);
-            return false;
-        }
+                return false;
+     }
+     }catch(SQLException ex){
+         System.out.println(""+ex);
+         return false;
+     }
     }
-    
-    
     
     
 
@@ -110,7 +113,7 @@ public class CreateUsersF extends javax.swing.JFrame {
     private void initComponents() {
 
         jLabel7 = new javax.swing.JLabel();
-        id = new javax.swing.JTextField();
+        uid = new javax.swing.JTextField();
         jPanel2 = new javax.swing.JPanel();
         jLabel2 = new javax.swing.JLabel();
         add = new javax.swing.JButton();
@@ -133,8 +136,8 @@ public class CreateUsersF extends javax.swing.JFrame {
         mail = new javax.swing.JTextField();
         jPanel4 = new javax.swing.JPanel();
         jLabel3 = new javax.swing.JLabel();
-        up = new javax.swing.JButton();
         ln = new javax.swing.JTextField();
+        jButton1 = new javax.swing.JButton();
         jPanel3 = new javax.swing.JPanel();
         jLabel10 = new javax.swing.JLabel();
         del = new javax.swing.JButton();
@@ -148,13 +151,12 @@ public class CreateUsersF extends javax.swing.JFrame {
         check = new javax.swing.JCheckBox();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setPreferredSize(new java.awt.Dimension(650, 460));
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
         getContentPane().add(jLabel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(160, 310, -1, -1));
 
-        id.setHorizontalAlignment(javax.swing.JTextField.CENTER);
-        id.setEnabled(false);
-        getContentPane().add(id, new org.netbeans.lib.awtextra.AbsoluteConstraints(320, 140, 190, 30));
+        uid.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        uid.setEnabled(false);
+        getContentPane().add(uid, new org.netbeans.lib.awtextra.AbsoluteConstraints(320, 140, 190, 30));
 
         jPanel2.setBackground(new java.awt.Color(51, 255, 153));
         jPanel2.setLayout(null);
@@ -289,21 +291,19 @@ public class CreateUsersF extends javax.swing.JFrame {
         jPanel4.add(jLabel3);
         jLabel3.setBounds(140, 0, 63, 30);
 
-        up.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
-        up.setForeground(new java.awt.Color(0, 0, 255));
-        up.setText("UPDATE");
-        up.setEnabled(false);
-        up.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                upActionPerformed(evt);
-            }
-        });
-        jPanel4.add(up);
-        up.setBounds(10, 0, 90, 30);
-
         ln.setHorizontalAlignment(javax.swing.JTextField.CENTER);
         jPanel4.add(ln);
         ln.setBounds(220, 0, 190, 30);
+
+        jButton1.setFont(new java.awt.Font("Tahoma", 1, 13)); // NOI18N
+        jButton1.setText("UPDATE");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
+        jPanel4.add(jButton1);
+        jButton1.setBounds(10, 0, 90, 30);
 
         jPanel10.add(jPanel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 130, 420, 30));
 
@@ -387,40 +387,76 @@ public class CreateUsersF extends javax.swing.JFrame {
 
     private void addActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addActionPerformed
         
+         dbConnector dbc = new dbConnector();
+    String fname = fn.getText().trim();
+    String lname = ln.getText().trim();
+    String uname = us.getText().trim();
+    String pass = pw.getText().trim();  // Using getText() for JTextField
+    String email = mail.getText().trim();
+    String status = ut.getSelectedItem().toString().trim();
+    String type = stat.getSelectedItem().toString();
+
+
+     
+// Input validation
+if (fn.getText().trim().isEmpty() || 
+    ln.getText().trim().isEmpty() || 
+    us.getText().trim().isEmpty() || 
+    pw.getText().trim().isEmpty() || 
+    mail.getText().trim().isEmpty() || 
+    ut.getSelectedItem() == null || ut.getSelectedItem().toString().trim().isEmpty() || 
+    stat.getSelectedItem() == null || stat.getSelectedItem().toString().trim().isEmpty()) {
+    
+    JOptionPane.showMessageDialog(null, "Please Fill All Fields");
+    return;
+}
+ else if (pass.length() < 8) {  // Fixed condition (password must be at least 8 characters)
+    JOptionPane.showMessageDialog(null, "Password Must Be At Least 8 Characters");
+    return;
+} else if (!email.matches("^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$")) {  // Better email validation
+    JOptionPane.showMessageDialog(null, "Enter a Valid Email Address");
+    return;
+  } else if (duplicateCheck(uname, email)) {  // Pass username and email to check duplicates
+    JOptionPane.showMessageDialog(null, "Username or Email Already Exists");
+    return;
+}
+
+try {
+    // Hash the password using passwordHasher
+    String hashedPassword = passwordHasher.hashPassword(pass);
+
+    // Use a PreparedStatement to avoid SQL injection
+    String insertQuery = "INSERT INTO tbl_users (u_fname, u_lname, u_username, u_status, u_password, u_email, u_type) "
+                   + "VALUES (?, ?, ?, ?, ?, ?, ?)";
+
+
+
+    try (Connection conn = dbc.getConnection();
+         PreparedStatement pst = conn.prepareStatement(insertQuery)) {
         
-        
-        
-        if(fn.getText().isEmpty()|| ln.getText().isEmpty() || mail.getText().isEmpty()
-                || us.getText().isEmpty()|| pw.getText().isEmpty()) {
-            JOptionPane.showMessageDialog(null, "All fields are required!");
-        }else if(pw.getText().length() < 8){
-            JOptionPane.showMessageDialog(null, "Characters password is 8 above!");
-            pw.setText("");
-        }else if(duplicateCheck()){
-            System.out.println("Duplicate Exist!");
-            
-        }else{
-            
-             dbConnector dbc = new dbConnector();
-             {
-            
-              
-      if (dbc.insertData("INSERT INTO tbl_users(u_fname, u_lname, u_email, u_username, u_password,  u_type, u_status)VALUES('"
-     + fn.getText() + "','"+ln.getText()+"','"+ mail.getText() + "','" 
-     + us.getText() + "','" + pw + "','"+ ut.getSelectedItem() + "','"+stat.getSelectedItem()+"')")){
-          
-        
-          JOptionPane.showMessageDialog(null, "Inserted Successfully!");
-          userLoginF ads = new userLoginF();
-         ads.setVisible(true);
-         this.dispose();
-        
-      }else{
-          JOptionPane.showMessageDialog(null, "Connection Error!");
-      }
-             }
-        }        
-        
+ pst.setString(1, fname);
+pst.setString(2, lname);
+pst.setString(3, uname);
+pst.setString(4, status);
+pst.setString(5, hashedPassword);
+pst.setString(6, email);
+pst.setString(7, type);  // Fix: Add Account Type (u_type)
+
+       
+
+
+        int rowsInserted = pst.executeUpdate();
+        if (rowsInserted > 0) {
+            JOptionPane.showMessageDialog(null, "Registered Successfully!");
+            new userLoginF().setVisible(true);
+            this.dispose();
+        } else {
+            JOptionPane.showMessageDialog(null, "Registration Failed!");
+        }
+    }
+} catch (Exception ex) {
+    JOptionPane.showMessageDialog(null, "Error: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+}
     }//GEN-LAST:event_addActionPerformed
 
     private void fnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_fnActionPerformed
@@ -431,31 +467,8 @@ public class CreateUsersF extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_rfActionPerformed
 
-    private void upActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_upActionPerformed
-       
-         if(fn.getText().isEmpty()|| ln.getText().isEmpty() || mail.getText().isEmpty()
-                || us.getText().isEmpty()|| pw.getText().isEmpty()){
-            JOptionPane.showMessageDialog(null, "All fields are required!");
-        }else if(pw.getText().length() < 8){
-            JOptionPane.showMessageDialog(null, "Characters password is 8 above!");
-            pw.setText("");
-        }else if(UpdateCheck()){
-            System.out.println("Duplicate Exist!");
-            
-        }else{
-       dbConnector dbc = new dbConnector();
-      dbc.updateData("UPDATE tbl_users SET u_fname ='"+fn.getText()+"', u_lname ='"+ln.getText()+"', u_email ='"+mail.getText()+"', u_username ='"+us.getText()+"', u_password ='"+pw.getText()+"', u_type ='"+ut.getSelectedItem()+"', u_status ='"+stat.getSelectedItem()+"' WHERE u_id ='"+id.getText()+"'");
-       
-       JOptionPane.showMessageDialog(null, "UPDATED SUCCESSFULLY!");
-       userLoginF ads = new userLoginF();
-         ads.setVisible(true);
-         this.dispose();
-       
-        }
-    }//GEN-LAST:event_upActionPerformed
-
     private void delActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_delActionPerformed
-        // TODO add your handling code here:
+                  // TODO add your handling code here:
     }//GEN-LAST:event_delActionPerformed
 
     private void clActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_clActionPerformed
@@ -482,6 +495,91 @@ public class CreateUsersF extends javax.swing.JFrame {
         pw.setEchoChar('*'); 
     }
     }//GEN-LAST:event_checkActionPerformed
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+String id = uid.getText().trim();
+String email = mail.getText().trim();
+String username = us.getText().trim();
+String password = pw.getText().trim();
+String firstName = fn.getText().trim();  // First name
+String lastName = ln.getText().trim();   // Last name
+String type = stat.getSelectedItem().toString();  // User type
+String statusValue = ut.getSelectedItem().toString(); // User status
+
+// Validation
+if (id.isEmpty()) {
+    JOptionPane.showMessageDialog(this, "Error: User ID is missing.", "Error", JOptionPane.ERROR_MESSAGE);
+    return;
+}
+
+if (firstName.isEmpty() || lastName.isEmpty()) {
+    JOptionPane.showMessageDialog(this, "Error: First Name and Last Name are required.", "Error", JOptionPane.ERROR_MESSAGE);
+    return;
+}
+
+// Email validation
+String emailRegex = "^[a-zA-Z0-9_+&*-]+(?:\\.[a-zA-Z0-9_+&*-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,7}$";
+if (!email.matches(emailRegex)) {
+    JOptionPane.showMessageDialog(this, "Invalid Email! Please enter a valid email address.", "Error", JOptionPane.ERROR_MESSAGE);
+    return;
+}
+
+// Username validation
+if (!username.matches("[a-zA-Z0-9_]{5,}")) {
+    JOptionPane.showMessageDialog(this, "Invalid Username! Must be at least 5 characters and contain only letters, numbers, and underscores.", "Error", JOptionPane.ERROR_MESSAGE);
+    return;
+}
+
+try {
+    // Hash the password using SHA-256 before storing
+    String hashedPassword = passwordHasher.hashPassword(password);
+
+    dbConnector dbc = new dbConnector();
+    String checkQuery = "SELECT COUNT(*) FROM tbl_users WHERE (u_username = ? OR u_email = ?) AND u_id != ?";
+
+    try (Connection conn = dbc.getConnection();
+         PreparedStatement pst = conn.prepareStatement(checkQuery)) {
+
+        pst.setString(1, username);
+        pst.setString(2, email);
+        pst.setInt(3, Integer.parseInt(id));
+
+        try (ResultSet rs = pst.executeQuery()) {
+            if (rs.next() && rs.getInt(1) > 0) {
+                JOptionPane.showMessageDialog(this, "Username or Email already exists! Please use different credentials.", "Error", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+        }
+
+        // ✅ Corrected the column order in the UPDATE query
+        String updateQuery = "UPDATE tbl_users SET u_fname = ?, u_lname = ?, u_username = ?, u_email = ?, u_password = ?, u_status = ?, u_type = ? WHERE u_id = ?";
+
+        try (Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/money_remittance", "root", "");
+             PreparedStatement updatePst = con.prepareStatement(updateQuery)) {
+
+            updatePst.setString(1, firstName);   // First name
+            updatePst.setString(2, lastName);    // Last name
+            updatePst.setString(3, username);    // Username
+            updatePst.setString(4, email);       // Email
+            updatePst.setString(5, hashedPassword);  // Store hashed password
+            updatePst.setString(6, statusValue); // Status (Corrected order)
+            updatePst.setString(7, type);        // Type (Corrected order)
+            updatePst.setInt(8, Integer.parseInt(id));  // User ID
+
+            int updated = updatePst.executeUpdate();
+            if (updated > 0) {
+                JOptionPane.showMessageDialog(this, "User updated successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);
+                new userLoginF().setVisible(true);
+                this.dispose();
+            } else {
+                JOptionPane.showMessageDialog(this, "Update failed!", "Error", JOptionPane.ERROR_MESSAGE);
+            }
+        }
+    }
+} catch (Exception ex) {
+    JOptionPane.showMessageDialog(this, "Error: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+}        // TODO add your handling code here:
+    }//GEN-LAST:event_jButton1ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -526,7 +624,7 @@ public class CreateUsersF extends javax.swing.JFrame {
     private javax.swing.JButton cl;
     private javax.swing.JButton del;
     public javax.swing.JTextField fn;
-    public javax.swing.JTextField id;
+    private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
@@ -554,7 +652,7 @@ public class CreateUsersF extends javax.swing.JFrame {
     public javax.swing.JPasswordField pw;
     private javax.swing.JButton rf;
     public javax.swing.JComboBox<String> stat;
-    public javax.swing.JButton up;
+    public javax.swing.JTextField uid;
     public javax.swing.JTextField us;
     public javax.swing.JComboBox<String> ut;
     // End of variables declaration//GEN-END:variables

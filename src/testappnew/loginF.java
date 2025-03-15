@@ -38,93 +38,41 @@ public class loginF extends javax.swing.JFrame {
         pw.setBorder(new EmptyBorder(0,10,0,0));
     }
     
-    static String status;
+     static String status;
     static String type;
+    
+    public static boolean loginAcc(String username, String password){
+        dbConnector connector = new dbConnector();
+        try{
+            String query = "SELECT * FROM tbl_users  WHERE u_username = '" + username + "'";
+            ResultSet resultSet = connector.getData(query);
+            if(resultSet.next()){     
    
-    public static boolean loginAcc(String username, String password) {
-     dbConnector connector = new dbConnector();
-
-    try {
-        String query = "SELECT * FROM tbl_users WHERE u_username = '" + username + "'";
-        ResultSet resultSet = connector.getData(query);
-        
-        if (resultSet.next()) {
-            String storedPass = resultSet.getString("u_password");
-
-            if (storedPass.equals(password)) { // Direct string comparison
-                status = resultSet.getString("u_status");
+                String hashedPass = resultSet.getString("u_password");
+                String rehashedPass = passwordHasher.hashPassword(password);
+                
+                if(hashedPass.equals(rehashedPass)){        
+                status = resultSet.getString("u_status");   
                 type = resultSet.getString("u_type");
-                return true;
-            } else {
+                Session sess = Session.getInstance();
+                sess.setUid(resultSet.getInt("u_id"));
+                sess.setFname(resultSet.getString("u_fname"));
+                sess.setLname(resultSet.getString("u_lname"));
+                sess.setEmail(resultSet.getString("u_email"));
+                sess.setUsername(resultSet.getString("u_username"));
+                sess.setType(resultSet.getString("u_type"));
+                sess.setStatus(resultSet.getString("u_status"));
+                return true;   
+                }else{
                 return false;
-            }
-        } else {
+                }
+        }else{
+            return false;
+        }          
+        }catch (SQLException | NoSuchAlgorithmException ex) {
             return false;
         }
-    } catch (SQLException ex) {
-        return false;
-    }
-}
-    
-public void logEvent(String userId, String event, String description) {
-   
-        dbConnector dbc = new dbConnector();
-        PreparedStatement pstmt = null;
-        
-    try {
-     
 
-        String sql = "INSERT INTO tbl_logs (l_timestamp, l_event, u_id, l_description) VALUES (?, ?, ?, ?)";
-        pstmt = dbc.connect.prepareStatement(sql);
-        pstmt.setTimestamp(1, new Timestamp(new Date().getTime()));
-        pstmt.setString(2, event);
-        pstmt.setString(3, userId);
-        pstmt.setString(4, description);
-        pstmt.executeUpdate();
-    } catch (SQLException e) {
-        e.printStackTrace();
-    } finally {
-        
-    }
-}
-   public String getUserId(String username) {
-       
-        dbConnector dbc = new dbConnector();
-        PreparedStatement pstmt = null;
-        ResultSet rs = null;
-        String userId = null;
-
-        try {
-         
-            String sql = "SELECT u_id FROM tbl_users WHERE u_username = ?";
-            pstmt = dbc.connect.prepareStatement(sql);
-                pstmt.setString(1, username);
-            rs = pstmt.executeQuery();
-
-            if (rs.next()) {
-                userId = rs.getString("u_id");
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        } finally {
-            if (rs != null) {
-                try {
-                    rs.close();
-                } catch (SQLException e) {
-                    e.printStackTrace();
-                }
-            }
-            if (pstmt != null) {
-                try {
-                    pstmt.close();
-                } catch (SQLException e) {
-                    e.printStackTrace();
-                }
-            }
-           
-       
-        }
-        return userId;
     }
 
     /**
@@ -287,39 +235,27 @@ public void logEvent(String userId, String event, String description) {
     }//GEN-LAST:event_checkActionPerformed
 
     private void jButton1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton1MouseClicked
-      String username = us.getText().trim();
-      String password = pw.getText().trim();
-
-    // ✅ Check if fields are empty
-    if (username.isEmpty() || password.isEmpty()) {
-        JOptionPane.showMessageDialog(null, "Username and Password are required!", "Validation Error", JOptionPane.ERROR_MESSAGE);
-        return; // Exit method if validation fails
-    }
-
-    // ✅ Attempt login
-    if (loginAcc(username, password)) {
-        if (status == null || !status.equals("Active")) { // Check if status is null or not Active
-            JOptionPane.showMessageDialog(null, "Your account is inactive. Please contact the administrator.", "Account Inactive", JOptionPane.WARNING_MESSAGE);
-            return;
-        }
-
-        // ✅ Redirect based on user type
-        if ("Admin".equals(type)) { 
-            JOptionPane.showMessageDialog(null, "Login successful!", "Success", JOptionPane.INFORMATION_MESSAGE);
-            dashboard ads = new dashboard();
-            ads.setVisible(true);
-            this.dispose(); // Close login form
-        } else if ("User".equals(type)) {
-            JOptionPane.showMessageDialog(null, "Login successful!", "Success", JOptionPane.INFORMATION_MESSAGE);
-            userDash uds = new userDash();
-            uds.setVisible(true);
-            this.dispose(); // Close login form
-        } else {
-            JOptionPane.showMessageDialog(null, "Invalid account type. Please contact support.", "Error", JOptionPane.ERROR_MESSAGE);
-        }
-    } else {
-        JOptionPane.showMessageDialog(null, "Invalid username or password!", "Login Failed", JOptionPane.ERROR_MESSAGE);
-    }
+        if(loginAcc(us.getText(),pw.getText())){
+            if(!status.equals("Active")){
+            JOptionPane.showMessageDialog(null, "In-Active Account, Contact the Admin!");
+            }else{
+                if(type.equals("Admin")){
+                JOptionPane.showMessageDialog(null, "Login Success!");
+                dashboard ads = new dashboard();
+                ads.setVisible(true);
+                this.dispose(); 
+            }else if(type.equals("User")){
+                JOptionPane.showMessageDialog(null, "Login Success!");
+                userDash usd = new userDash();
+                usd.setVisible(true);
+                this.dispose();     
+           }else{
+            JOptionPane.showMessageDialog(null, "No account type found, Contact the Admin!");                                 
+            }
+         }
+        }else{
+            JOptionPane.showMessageDialog(null, "Invalid Account!");
+        }          
     }//GEN-LAST:event_jButton1MouseClicked
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed

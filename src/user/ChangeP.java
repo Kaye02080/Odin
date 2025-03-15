@@ -18,6 +18,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import testappnew.loginF;
 import config.PassWordH;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
 
 
 /**
@@ -45,26 +47,26 @@ public class ChangeP extends javax.swing.JFrame {
         jPanel1 = new javax.swing.JPanel();
         jLabel2 = new javax.swing.JLabel();
         jButton2 = new javax.swing.JButton();
-        acc_ln = new javax.swing.JLabel();
-        acc_fn = new javax.swing.JLabel();
-        sessUsn = new javax.swing.JLabel();
+        acc_lname = new javax.swing.JLabel();
+        acc_fname = new javax.swing.JLabel();
+        acc_id = new javax.swing.JLabel();
         jPanel2 = new javax.swing.JPanel();
         jPanel10 = new javax.swing.JPanel();
         jPanel8 = new javax.swing.JPanel();
         check = new javax.swing.JCheckBox();
         jPanel7 = new javax.swing.JPanel();
-        firmp = new javax.swing.JPasswordField();
+        Cpassword = new javax.swing.JPasswordField();
         jLabel4 = new javax.swing.JLabel();
         jPanel6 = new javax.swing.JPanel();
         jLabel6 = new javax.swing.JLabel();
-        newp = new javax.swing.JTextField();
+        newPassword = new javax.swing.JPasswordField();
         jPanel5 = new javax.swing.JPanel();
         jLabel3 = new javax.swing.JLabel();
-        oldp = new javax.swing.JTextField();
-        jPanel4 = new javax.swing.JPanel();
-        confirmp = new javax.swing.JLabel();
+        oldpass = new javax.swing.JTextField();
+        jButton1 = new javax.swing.JButton();
         jLabel8 = new javax.swing.JLabel();
         idd = new javax.swing.JLabel();
+        jPanel3 = new javax.swing.JPanel();
         jLabel7 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -80,7 +82,7 @@ public class ChangeP extends javax.swing.JFrame {
 
         jLabel2.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/VVT.png"))); // NOI18N
-        jPanel1.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 60, 150, 80));
+        jPanel1.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 50, 150, 80));
 
         jButton2.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
         jButton2.setText("LOG-OUT");
@@ -91,20 +93,18 @@ public class ChangeP extends javax.swing.JFrame {
         });
         jPanel1.add(jButton2, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 420, -1, -1));
 
-        acc_ln.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
-        acc_ln.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        acc_ln.setText("USER");
-        jPanel1.add(acc_ln, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 160, 150, 20));
+        acc_lname.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        acc_lname.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        acc_lname.setText("USER");
+        jPanel1.add(acc_lname, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 160, 150, 20));
 
-        acc_fn.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
-        acc_fn.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        acc_fn.setText("ACC_FN");
-        jPanel1.add(acc_fn, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 140, 150, 20));
+        acc_fname.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        acc_fname.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        acc_fname.setText("ACC_USERNAME");
+        jPanel1.add(acc_fname, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 140, 150, 20));
 
-        sessUsn.setFont(new java.awt.Font("Yu Gothic UI", 0, 11)); // NOI18N
-        sessUsn.setForeground(new java.awt.Color(204, 204, 204));
-        sessUsn.setText("@");
-        jPanel1.add(sessUsn, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 50, 80, 50));
+        acc_id.setText("ID");
+        jPanel1.add(acc_id, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 180, -1, -1));
 
         getContentPane().add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, -1, 460));
 
@@ -132,8 +132,8 @@ public class ChangeP extends javax.swing.JFrame {
 
         jPanel7.setBackground(new java.awt.Color(255, 204, 153));
         jPanel7.setLayout(null);
-        jPanel7.add(firmp);
-        firmp.setBounds(160, 0, 190, 30);
+        jPanel7.add(Cpassword);
+        Cpassword.setBounds(160, 0, 190, 30);
 
         jLabel4.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
         jLabel4.setText("CONFIRM PASSWORD");
@@ -149,7 +149,7 @@ public class ChangeP extends javax.swing.JFrame {
         jLabel6.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel6.setText("NEW PASSWORD");
         jPanel6.add(jLabel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(3, -5, 130, 40));
-        jPanel6.add(newp, new org.netbeans.lib.awtextra.AbsoluteConstraints(160, 0, 190, 30));
+        jPanel6.add(newPassword, new org.netbeans.lib.awtextra.AbsoluteConstraints(160, 0, 190, 30));
 
         jPanel10.add(jPanel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 90, 360, 30));
 
@@ -161,34 +161,22 @@ public class ChangeP extends javax.swing.JFrame {
         jLabel3.setText("OLD PASSWORD");
         jPanel5.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(1, 5, 140, 20));
 
-        oldp.addActionListener(new java.awt.event.ActionListener() {
+        oldpass.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                oldpActionPerformed(evt);
+                oldpassActionPerformed(evt);
             }
         });
-        jPanel5.add(oldp, new org.netbeans.lib.awtextra.AbsoluteConstraints(160, 0, 190, 30));
+        jPanel5.add(oldpass, new org.netbeans.lib.awtextra.AbsoluteConstraints(160, 0, 190, 30));
 
         jPanel10.add(jPanel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 50, 360, 30));
 
-        jPanel4.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                jPanel4MouseClicked(evt);
+        jButton1.setText("Confirm");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
             }
         });
-        jPanel4.setLayout(null);
-
-        confirmp.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
-        confirmp.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        confirmp.setText("SAVE");
-        confirmp.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                confirmpMouseClicked(evt);
-            }
-        });
-        jPanel4.add(confirmp);
-        confirmp.setBounds(0, 0, 80, 20);
-
-        jPanel10.add(jPanel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(280, 200, 80, 20));
+        jPanel10.add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(280, 200, -1, 30));
 
         jPanel2.add(jPanel10, new org.netbeans.lib.awtextra.AbsoluteConstraints(120, 130, 380, 250));
 
@@ -209,7 +197,9 @@ public class ChangeP extends javax.swing.JFrame {
                 jLabel7MouseClicked(evt);
             }
         });
-        jPanel2.add(jLabel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(540, 410, -1, 30));
+        jPanel3.add(jLabel7);
+
+        jPanel2.add(jPanel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(540, 410, 50, 30));
 
         getContentPane().add(jPanel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 0, 610, 460));
 
@@ -225,45 +215,34 @@ public class ChangeP extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void formWindowActivated(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowActivated
-        Session sess = Session.getInstance();
-   int id = sess.getUid(); // Get user ID once
+      Session sess = Session.getInstance();
+        if (sess.getUid() == 0) {
 
-   try {
-    dbConnector dbc = new dbConnector();
-    ResultSet rs = dbc.getData("SELECT * FROM tbl_users WHERE u_id = '" + id + "'");
-
-    if (rs.next()) {
-        sessUsn.setText("@" + rs.getString("u_username")); // Set the username
-    }
-
-    rs.close(); // Close ResultSet after use
-
-   } catch (SQLException ex) {
-    System.out.println("Database Error: " + ex.getMessage());
-    }
-       
+            loginF l = new loginF();
+            l.setVisible(true);
+            this.dispose();
+            JOptionPane.showMessageDialog(null, "No Account, Login FIrst");
+        } else {
         
-       
+            acc_fname.setText("Username: " + sess.getFname());
+            acc_lname.setText("Usertype: " + sess.getLname());
+            acc_id.setText("User ID: " + sess.getUid());
+        }
     }//GEN-LAST:event_formWindowActivated
-
-    private void jPanel4MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jPanel4MouseClicked
-        
-   
-    }//GEN-LAST:event_jPanel4MouseClicked
 
     private void checkActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_checkActionPerformed
       boolean isSelected = check.isSelected();
 
     if (isSelected) {      
-        firmp.setEchoChar((char)0);
+        Cpassword.setEchoChar((char)0);
     } else {      
-        firmp.setEchoChar('*'); 
+        Cpassword.setEchoChar('*'); 
     }
     }//GEN-LAST:event_checkActionPerformed
 
-    private void oldpActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_oldpActionPerformed
+    private void oldpassActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_oldpassActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_oldpActionPerformed
+    }//GEN-LAST:event_oldpassActionPerformed
 
     private void jLabel7MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel7MouseClicked
      accountD ds = new accountD();
@@ -271,60 +250,74 @@ public class ChangeP extends javax.swing.JFrame {
      this.dispose();           // TODO add your handling code here:
     }//GEN-LAST:event_jLabel7MouseClicked
 
-    private void confirmpMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_confirmpMouseClicked
-   
-        
-    if (oldp.getText().isEmpty() || newp.getText().isEmpty() || confirmp.getText().isEmpty()) { 
-    System.out.println("Empty Text Field!");
-    JOptionPane.showMessageDialog(null, "All fields are required!");
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+   String passw = new String(newPassword.getPassword()).trim();
+   String Cpassw = new String(Cpassword.getPassword()).trim();
+   String oldPassInput = oldpass.getText().trim();
+ // Use this for JPasswordField
 
-   } else if (newp.getText().length() < 8) {
-    System.out.println("Password Invalid!");
-    JOptionPane.showMessageDialog(null, "Password must be at least 8 characters long!");
-    newp.setText("");
-    confirmp.setText(""); 
 
-   } else if (!newp.getText().trim().equals(confirmp.getText().trim())) {  // FIXED: Trim spaces to prevent invisible mismatch
-    JOptionPane.showMessageDialog(null, "New Password and Confirm Password do not match!");
-  } else {
+if (passw.isEmpty() || Cpassw.isEmpty() || oldPassInput.isEmpty()) {
+    JOptionPane.showMessageDialog(null, "Please fill all fields");
+} else if (passw.length() < 8) {
+    JOptionPane.showMessageDialog(null, "Password must be at least 8 characters long");
+} else if (!passw.equals(Cpassw)) {
+    JOptionPane.showMessageDialog(null, "New password does not match confirmation password");
+} else {
     try {
         dbConnector dbc = new dbConnector();
         Session sess = Session.getInstance();
 
-        String query = "SELECT * FROM tbl_users WHERE u_id = '" + sess.getUid() + "'";
-        ResultSet rs = dbc.getData(query);
+        String query = "SELECT u_password FROM tbl_users WHERE u_id = ?";
+        try (Connection conn = dbc.getConnection();
+             PreparedStatement pst = conn.prepareStatement(query)) {
 
-        if (rs.next()) {
-            String olddbpass = rs.getString("u_password"); // Get old hashed password from DB
-            String oldhash = passwordHasher.hashPassword(oldp.getText()); // Hash user input
+            pst.setInt(1, sess.getUid());
+            ResultSet rs = pst.executeQuery();
 
-            if (olddbpass.equals(oldhash)) { // Compare hashed passwords
-                String npass = passwordHasher.hashPassword(newp.getText().trim()); // Trim to avoid invisible chars
+            if (rs.next()) {
+                String olddbPassword = rs.getString("u_password");
+                String oldhash = passwordHasher.hashPassword(oldPassInput);
+                String newhash = passwordHasher.hashPassword(passw);
 
-                // FIXED: Added WHERE clause to update the correct user
-                String updateQuery = "UPDATE tbl_users SET u_password = '" + npass + "' WHERE u_id = '" + sess.getUid() + "'";
-                dbc.updateData(updateQuery);
+                // Check if the old password matches the stored one
+                if (!olddbPassword.equals(oldhash)) {
+                    JOptionPane.showMessageDialog(null, "Old password is incorrect");
+                    return;
+                }
 
-                JOptionPane.showMessageDialog(null, "Password updated successfully!");
-                loginF lg = new loginF();
-                lg.setVisible(true);
-                this.dispose();
+                // Prevent user from reusing the old password
+                if (olddbPassword.equals(newhash)) {
+                    JOptionPane.showMessageDialog(null, "New password must be different from the old password");
+                    return;
+                }
+
+                // Update the password
+                String updateQuery = "UPDATE tbl_users SET u_password = ? WHERE u_id = ?";
+                try (PreparedStatement updatePst = conn.prepareStatement(updateQuery)) {
+                    updatePst.setString(1, newhash);
+                    updatePst.setInt(2, sess.getUid());
+
+                    int updated = updatePst.executeUpdate();
+                    if (updated > 0) {
+                        JOptionPane.showMessageDialog(null, "Password updated successfully");
+                        new userDash().setVisible(true);
+                        this.dispose();
+                    } else {
+                        JOptionPane.showMessageDialog(null, "Password update failed");
+                    }
+                }
             } else {
-                JOptionPane.showMessageDialog(null, "Old Password is Incorrect!");
+                JOptionPane.showMessageDialog(null, "User not found");
             }
         }
-
-        rs.close(); // Close ResultSet to prevent memory leaks
     } catch (SQLException | NoSuchAlgorithmException ex) {
-        System.out.println("Error: " + ex.getMessage());
+        JOptionPane.showMessageDialog(null, "Error: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
     }
+}
+    }//GEN-LAST:event_jButton1ActionPerformed
+    
 
-
-
-
-
-    }//GEN-LAST:event_confirmpMouseClicked
-    }
     /**
      * @param args the command line arguments
      */
@@ -368,12 +361,13 @@ public class ChangeP extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    public javax.swing.JLabel acc_fn;
-    public javax.swing.JLabel acc_ln;
+    private javax.swing.JPasswordField Cpassword;
+    public javax.swing.JLabel acc_fname;
+    private javax.swing.JLabel acc_id;
+    public javax.swing.JLabel acc_lname;
     private javax.swing.JCheckBox check;
-    private javax.swing.JLabel confirmp;
-    private javax.swing.JPasswordField firmp;
     private javax.swing.JLabel idd;
+    private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
@@ -384,13 +378,12 @@ public class ChangeP extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel10;
     private javax.swing.JPanel jPanel2;
-    private javax.swing.JPanel jPanel4;
+    private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel5;
     private javax.swing.JPanel jPanel6;
     private javax.swing.JPanel jPanel7;
     private javax.swing.JPanel jPanel8;
-    private javax.swing.JTextField newp;
-    private javax.swing.JTextField oldp;
-    public javax.swing.JLabel sessUsn;
+    private javax.swing.JPasswordField newPassword;
+    private javax.swing.JTextField oldpass;
     // End of variables declaration//GEN-END:variables
 }

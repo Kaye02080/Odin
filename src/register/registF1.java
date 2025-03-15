@@ -7,8 +7,9 @@ package register;
 
 
 import config.dbConnector;
+import config.passwordHasher;
 import java.security.NoSuchAlgorithmException;
-import java.sql.PreparedStatement;
+
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import javax.swing.JOptionPane;
@@ -243,36 +244,34 @@ public class registF1 extends javax.swing.JFrame {
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         
         
-        
-        
-        if(fn.getText().isEmpty()|| ln.getText().isEmpty() || mail.getText().isEmpty()
-                || us.getText().isEmpty()|| pw.getText().isEmpty()){
-            JOptionPane.showMessageDialog(null, "All fields are required!");
-        }else if(pw.getText().length() < 8){
-            JOptionPane.showMessageDialog(null, "Characters password is 8 above!");
-            pw.setText("");
-        }else if(duplicateCheck()){
-            System.out.println("Duplicate Exist!");
-            
-        }else{
-            
-             dbConnector dbc = new dbConnector();
-             
-            String imagePath = "uploads/" + us.getText() + ".jpg"; // Save image with username as filename
+      if(fn.getText().isEmpty() || ln.getText().isEmpty() || mail.getText().isEmpty() || us.getText().isEmpty() || 
+   pw.getText().isEmpty()) {
+    JOptionPane.showMessageDialog(null, "All fields are required!");   
+} else if(pw.getText().length() < 8) {
+    JOptionPane.showMessageDialog(null, "Password character should be 8 and above");
+    pw.setText("");
+} else if(duplicateCheck()) {
+    System.out.println("Duplicate Exist!");
+} else {
+    dbConnector dbc = new dbConnector();
+    try {
+        String pass = passwordHasher.hashPassword(pw.getText()); // Hash the password
 
-if (dbc.insertData("INSERT INTO tbl_users (u_fname, u_lname, u_email, u_username, u_password, u_type, u_status, u_image) VALUES('"
-     + fn.getText() + "','" + ln.getText() + "','" + mail.getText() + "','" + us.getText() + "','" + pw.getText() + "','" + ut.getSelectedItem() + "','Pending','" + imagePath + "')")) {
-                 
-                 
-                 JOptionPane.showMessageDialog(null, "Inserted Successfully!");
-                 loginF ads = new loginF();
-                 ads.setVisible(true);
-                 this.dispose();
-                 
-             }else{
-                 JOptionPane.showMessageDialog(null, "Connection Error!");
-             }    
-        }        
+        if(dbc.insertData("INSERT INTO tbl_users (u_fname, u_lname, u_email, u_username, u_password, u_type, u_status) "
+                + "VALUES ('" + fn.getText() + "','" + ln.getText() + "','" + mail.getText() + "','" + us.getText() + "','" + pass + "','" + ut.getSelectedItem() + "','Pending')")) 
+        {
+            JOptionPane.showMessageDialog(null, "Inserted Success!");
+            loginF lfr = new loginF();
+            lfr.setVisible(true);
+            this.dispose();
+        } else {
+            JOptionPane.showMessageDialog(null, "Connection Error!");      
+        }     
+    } catch(NoSuchAlgorithmException ex) {
+        System.out.println("Error hashing password: " + ex.getMessage());
+    }
+}
+
         
     }//GEN-LAST:event_jButton2ActionPerformed
 
