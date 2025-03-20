@@ -9,6 +9,7 @@ package admin;
 import config.Session;
 import config.dbConnector;
 import java.awt.Color;
+import java.awt.List;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.sql.Connection;
@@ -16,6 +17,9 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+
+import java.util.ArrayList;
+import java.util.Arrays;
 import javax.swing.JComboBox;
 import javax.swing.JOptionPane;
 import javax.swing.event.TableModelEvent;
@@ -47,7 +51,7 @@ public class userLoginF extends javax.swing.JFrame {
         Color navcolor = new Color(51,255,255);
         Color hovercolor = new Color(204,255,204);
     
-      public void displayData(){
+     public void displayData(){
         try{
             dbConnector dbc = new dbConnector();
             ResultSet rs = dbc.getData("SELECT u_id, u_fname, u_lname, u_username, u_email, u_status FROM tbl_users");
@@ -60,6 +64,7 @@ public class userLoginF extends javax.swing.JFrame {
         
     
     }
+    
       
         DefaultTableModel model = new DefaultTableModel();
         
@@ -83,7 +88,7 @@ public class userLoginF extends javax.swing.JFrame {
 
     String sql = "SELECT u_id, u_email, u_type, u_username, u_password, u_status FROM tbl_users WHERE u_id != '"+sess.getUid()+"';";
 
-    try (Connection connect = (Connection) new dbConnector().getConnection();
+    try (Connection connect = new dbConnector().getConnection();
          PreparedStatement pst = connect.prepareStatement(sql);
          ResultSet rs = pst.executeQuery()) {
 
@@ -122,18 +127,20 @@ public class userLoginF extends javax.swing.JFrame {
         JOptionPane.showMessageDialog(null, "Database Error: " + ex.getMessage());
     }
 }
+
+
       void addUser() {
    
      CreateUsersF createuserform = new CreateUsersF();
      createuserform.setVisible(true);
 }
-       public boolean addUser(String firstname, String lastname, String email, String type, String username, String password, String status) {
+   public boolean addUser(String firstname, String lastname, String email, String type, String username, String password, String status) {
     Connection con = null;
     PreparedStatement pst = null;
 
     try {
         // Get database connection
-        con = (Connection) new dbConnector().getConnection();
+        con = new dbConnector().getConnection();
 
         // SQL query to insert user data
         String query = "INSERT INTO tbl_users (u_fname, u_lname, u_username, u_email, u_password, u_status, u_type) VALUES (?, ?, ?, ?, ?, ?, ?)";
@@ -165,11 +172,11 @@ public class userLoginF extends javax.swing.JFrame {
         }
     }
 }
-         public boolean updateUser(String firstname, String lastname, String email, String type, String username, String password, String status) {
+
+      public boolean updateUser(String firstname, String lastname, String email, String type, String username, String password, String status) {
     try {
         
-
-        Connection con = (Connection) new dbConnector().getConnection();
+        Connection con = new dbConnector().getConnection();
         String query = "UPDATE tbl_users SET u_fname=?, u_lname=?, u_email=?, u_type=?, u_password=?, u_status=? WHERE u_username=?";
         PreparedStatement pst = con.prepareStatement(query);
        pst.setString(1, firstname);
@@ -187,6 +194,7 @@ public class userLoginF extends javax.swing.JFrame {
         return false;
     }
 }
+
            private void loadUsersData() {
     DefaultTableModel model = (DefaultTableModel) user_table.getModel();
     model.setRowCount(0); // Clear the table before reloading
@@ -458,11 +466,12 @@ public class userLoginF extends javax.swing.JFrame {
                     cuf.uid.setText(userId);
                     cuf.fn.setText(rs.getString("u_fname"));  // Ensure u_fname is the correct column name
                     cuf.ln.setText(rs.getString("u_lname"));
-                    cuf.ut.setSelectedItem(rs.getString("u_status"));
-                    cuf.stat.setSelectedItem(rs.getString("u_type"));
+                    cuf.stat.setSelectedItem(rs.getString("u_status"));  // Ensure 'status' is set first
+                    cuf.ut.setSelectedItem(rs.getString("u_type"));      // And 'type' is set second
                     cuf.mail.setText(rs.getString("u_email"));
                     cuf.us.setText(rs.getString("u_username"));
-                    cuf.pw.setEnabled(true);
+                    cuf.pw.setText(rs.getString("u_password"));
+                    cuf.pw.setEnabled(false);
 
                     cuf.setVisible(true);
                     this.dispose();

@@ -348,7 +348,7 @@ public class CreateUsersF extends javax.swing.JFrame {
         jLabel9.setBounds(0, 0, 90, 30);
 
         ut.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
-        ut.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "User", "Admin", " " }));
+        ut.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "User", "Admin" }));
         jPanel8.add(ut);
         ut.setBounds(90, 0, 190, 30);
 

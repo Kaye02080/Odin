@@ -168,7 +168,7 @@ public class registF1 extends javax.swing.JFrame {
         getContentPane().add(check, new org.netbeans.lib.awtextra.AbsoluteConstraints(440, 270, -1, -1));
 
         ut.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
-        ut.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "User", "Admin", " ", " " }));
+        ut.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "User", "Admin" }));
         getContentPane().add(ut, new org.netbeans.lib.awtextra.AbsoluteConstraints(310, 300, 180, 20));
 
         jButton1.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
