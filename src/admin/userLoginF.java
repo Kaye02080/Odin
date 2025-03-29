@@ -38,7 +38,7 @@ import testappnew.loginF;
 public class userLoginF extends javax.swing.JFrame {
 
     /**
-     * Creates new form dashboard
+     * Creates new form Admindashboard
      */
     public userLoginF() {
         initComponents();
@@ -195,11 +195,11 @@ public class userLoginF extends javax.swing.JFrame {
     }
 }
 
-           private void loadUsersData() {
+        private void loadUsersData() {
     DefaultTableModel model = (DefaultTableModel) user_table.getModel();
     model.setRowCount(0); // Clear the table before reloading
 
-    String sql = "SELECT * FROM tbl_users";
+    String sql = "SELECT u_id, u_fname, u_lname, u_username, u_email, u_status FROM tbl_users";
 
     try (Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/money_remittance", "root", "");
          PreparedStatement pst = con.prepareStatement(sql);
@@ -208,22 +208,26 @@ public class userLoginF extends javax.swing.JFrame {
         while (rs.next()) {
             model.addRow(new Object[]{
                 rs.getInt("u_id"),
+                rs.getString("u_fname"),
+                rs.getString("u_lname"),
                 rs.getString("u_username"),
-                rs.getString("u_email")
+                rs.getString("u_email"),
+                rs.getString("u_status")
             });
         }
     } catch (SQLException ex) {
         JOptionPane.showMessageDialog(this, "Error loading user data: " + ex.getMessage(), "Database Error", JOptionPane.ERROR_MESSAGE);
     }
 }
-             private void deleteUser() {
-         int selectedRow = user_table.getSelectedRow();
+
+            private void deleteUser() {
+    int selectedRow = user_table.getSelectedRow();
     if (selectedRow == -1) {
         JOptionPane.showMessageDialog(this, "Please select a user to delete.");
         return;
     }
 
-    int userId = (int) user_table.getValueAt(selectedRow, 0);
+    int userId = (int) user_table.getValueAt(selectedRow, 0); // Ensure u_id is at column 0
     int confirm = JOptionPane.showConfirmDialog(this, "Are you sure you want to delete this user?", "Confirm Deletion", JOptionPane.YES_NO_OPTION);
     
     if (confirm == JOptionPane.YES_OPTION) {
@@ -237,7 +241,7 @@ public class userLoginF extends javax.swing.JFrame {
 
             if (affectedRows > 0) {
                 JOptionPane.showMessageDialog(this, "User Deleted Successfully!");
-                loadUsersData();  // Ensure this method exists
+                loadUsersData();  // Reload the table
             } else {
                 JOptionPane.showMessageDialog(this, "No user found to delete.", "Deletion Failed", JOptionPane.WARNING_MESSAGE);
             }
@@ -246,7 +250,8 @@ public class userLoginF extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(this, "Error: " + ex.getMessage(), "Database Error", JOptionPane.ERROR_MESSAGE);
         }
     }
-    }
+}
+
          private String hashPassword(String password) {
     try {
         MessageDigest md = MessageDigest.getInstance("SHA-256");
@@ -323,21 +328,22 @@ public class userLoginF extends javax.swing.JFrame {
 
         getContentPane().add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, -1, 400));
 
-        jPanel2.setBackground(new java.awt.Color(204, 255, 255));
+        jPanel2.setBackground(new java.awt.Color(153, 153, 153));
         jPanel2.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         jLabel4.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
         jLabel4.setText("USERS");
         jPanel2.add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 90, 50, 30));
 
-        jLabel5.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
-        jLabel5.setText("BACK");
+        jLabel5.setFont(new java.awt.Font("Yu Gothic", 1, 36)); // NOI18N
+        jLabel5.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel5.setText("x");
         jLabel5.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 jLabel5MouseClicked(evt);
             }
         });
-        jPanel2.add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(620, 20, 60, 20));
+        jPanel2.add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(640, 20, 30, 20));
 
         add.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
         add.setText("ADD");
@@ -402,7 +408,7 @@ public class userLoginF extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jLabel5MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel5MouseClicked
-     dashboard ds = new dashboard();
+     Admindashboard ds = new Admindashboard();
      ds.setVisible(true);
      this.dispose();
     }//GEN-LAST:event_jLabel5MouseClicked

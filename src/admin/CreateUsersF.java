@@ -7,6 +7,7 @@ package admin;
 
 
 
+import config.Session;
 import config.dbConnector;
 import config.passwordHasher;
 import java.security.NoSuchAlgorithmException;
@@ -180,7 +181,7 @@ public class CreateUsersF extends javax.swing.JFrame {
 
         getContentPane().add(jPanel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 140, 420, 30));
 
-        jPanel1.setBackground(new java.awt.Color(204, 255, 255));
+        jPanel1.setBackground(new java.awt.Color(153, 153, 153));
         jPanel1.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         jLabel1.setFont(new java.awt.Font("Tahoma", 1, 24)); // NOI18N
@@ -434,13 +435,15 @@ try {
     try (Connection conn = dbc.getConnection();
          PreparedStatement pst = conn.prepareStatement(insertQuery)) {
         
- pst.setString(1, fname);
+// Correcting parameter order
+pst.setString(1, fname);
 pst.setString(2, lname);
 pst.setString(3, uname);
-pst.setString(4, status);
+pst.setString(4, type); // u_type (Admin/User)
 pst.setString(5, hashedPassword);
 pst.setString(6, email);
-pst.setString(7, type);  // Fix: Add Account Type (u_type)
+pst.setString(7, status); // u_status (Active/Inactive)
+// Fix: Add Account Type (u_type)
 
        
 
@@ -505,6 +508,7 @@ String firstName = fn.getText().trim();  // First name
 String lastName = ln.getText().trim();   // Last name
 String type = stat.getSelectedItem().toString();  // User type
 String statusValue = ut.getSelectedItem().toString(); // User status
+Session sess = Session.getInstance();
 
 // Validation
 if (id.isEmpty()) {
@@ -531,6 +535,7 @@ if (!username.matches("[a-zA-Z0-9_]{5,}")) {
 }
 
 try {
+    
     // Hash the password using SHA-256 before storing
     String hashedPassword = passwordHasher.hashPassword(password);
 
@@ -552,27 +557,38 @@ try {
         }
 
         // ✅ Corrected the column order in the UPDATE query
-        String updateQuery = "UPDATE tbl_users SET u_fname = ?, u_lname = ?, u_username = ?, u_email = ?, u_password = ?, u_status = ?, u_type = ? WHERE u_id = ?";
+        String updateQuery = "UPDATE tbl_users SET u_fname = ?, u_lname = ?, u_username = ?, u_email = ?, u_password = ?, u_type = ?, u_status = ? WHERE u_id = ?";
 
         try (Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/money_remittance", "root", "");
              PreparedStatement updatePst = con.prepareStatement(updateQuery)) {
+            
+            
+            String query = "SELECT * FROM tbl_users WHERE u_id = '"+sess.getUid()+"'";
+            ResultSet rs = dbc.getData(query);
+            if(rs.next())
+            {
+                String npass = rs.getString("u_password");
 
-            updatePst.setString(1, firstName);   // First name
-            updatePst.setString(2, lastName);    // Last name
-            updatePst.setString(3, username);    // Username
-            updatePst.setString(4, email);       // Email
-            updatePst.setString(5, hashedPassword);  // Store hashed password
-            updatePst.setString(6, statusValue); // Status (Corrected order)
-            updatePst.setString(7, type);        // Type (Corrected order)
-            updatePst.setInt(8, Integer.parseInt(id));  // User ID
+                updatePst.setString(1, firstName);   // First name
+                updatePst.setString(2, lastName);    // Last name
+                updatePst.setString(3, username);    // Username
+                updatePst.setString(4, email);       // Email
+                updatePst.setString(5, npass);  // Store hashed password
+                updatePst.setString(6, statusValue); // Status (Corrected order)
+                updatePst.setString(7, type);        // Type (Corrected order)
+                updatePst.setInt(8, Integer.parseInt(id));  // User ID
+                
 
-            int updated = updatePst.executeUpdate();
-            if (updated > 0) {
-                JOptionPane.showMessageDialog(this, "User updated successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);
-                new userLoginF().setVisible(true);
-                this.dispose();
-            } else {
-                JOptionPane.showMessageDialog(this, "Update failed!", "Error", JOptionPane.ERROR_MESSAGE);
+
+
+                int updated = updatePst.executeUpdate();
+                if (updated > 0) {
+                    JOptionPane.showMessageDialog(this, "User updated successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);
+                    new userLoginF().setVisible(true);
+                    this.dispose();
+                } else {
+                    JOptionPane.showMessageDialog(this, "Update failed!", "Error", JOptionPane.ERROR_MESSAGE);
+                }
             }
         }
     }

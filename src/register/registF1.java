@@ -8,10 +8,16 @@ package register;
 
 import config.dbConnector;
 import config.passwordHasher;
+import java.io.File;
 import java.security.NoSuchAlgorithmException;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
+import java.util.Date;
+import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import testappnew.loginF;
 
@@ -63,6 +69,34 @@ public class registF1 extends javax.swing.JFrame {
             return false;
         }
     }
+    
+      public void logEvent(int userId, String username, String userType) {
+    dbConnector dbc = new dbConnector();
+    Connection con = dbc.getConnection();
+    PreparedStatement pstmt = null;
+
+    try {
+        String sql = "INSERT INTO tbl_log (u_id, u_username, login_time, u_type) VALUES (?, ?, ?, ?)";
+        pstmt = con.prepareStatement(sql);
+
+        pstmt.setInt(1, userId);
+        pstmt.setString(2, username);
+        pstmt.setTimestamp(3, new Timestamp(new Date().getTime()));
+        pstmt.setString(4, userType);
+
+        pstmt.executeUpdate();
+        System.out.println("Login log recorded successfully.");
+    } catch (SQLException e) {
+        JOptionPane.showMessageDialog(null, "Error recording log: " + e.getMessage());
+    } finally {
+        try {
+            if (pstmt != null) pstmt.close();
+            if (con != null) con.close();
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(null, "Error closing resources: " + e.getMessage());
+        }
+    }
+}
     
     
     
@@ -242,8 +276,7 @@ public class registF1 extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        
-        
+    
       if(fn.getText().isEmpty() || ln.getText().isEmpty() || mail.getText().isEmpty() || us.getText().isEmpty() || 
    pw.getText().isEmpty()) {
     JOptionPane.showMessageDialog(null, "All fields are required!");   
@@ -271,6 +304,7 @@ public class registF1 extends javax.swing.JFrame {
         System.out.println("Error hashing password: " + ex.getMessage());
     }
 }
+
 
         
     }//GEN-LAST:event_jButton2ActionPerformed

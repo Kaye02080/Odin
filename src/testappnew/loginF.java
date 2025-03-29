@@ -5,18 +5,22 @@
  */
 package testappnew;
 
-import admin.dashboard;
+import admin.Admindashboard;
+import static com.sun.jmx.remote.internal.IIOPHelper.connect;
 import config.Session;
 
 
 import config.dbConnector;
 import config.passwordHasher;
 import java.security.NoSuchAlgorithmException;
+import java.sql.Connection;
+import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.Date;
+import static javax.management.remote.JMXConnectorFactory.connect;
 import javax.swing.JOptionPane;
 import javax.swing.border.EmptyBorder;
 import register.registF1;
@@ -41,39 +45,109 @@ public class loginF extends javax.swing.JFrame {
      static String status;
     static String type;
     
-    public static boolean loginAcc(String username, String password){
-        dbConnector connector = new dbConnector();
-        try{
-            String query = "SELECT * FROM tbl_users  WHERE u_username = '" + username + "'";
-            ResultSet resultSet = connector.getData(query);
-            if(resultSet.next()){     
-   
-                String hashedPass = resultSet.getString("u_password");
-                String rehashedPass = passwordHasher.hashPassword(password);
-                
-                if(hashedPass.equals(rehashedPass)){        
-                status = resultSet.getString("u_status");   
+    public static boolean loginAcc(String username, String password) {
+    dbConnector connector = new dbConnector();
+    try (Connection con = connector.getConnection();
+         PreparedStatement pstmt = con.prepareStatement("SELECT * FROM tbl_users WHERE u_username = ?")) {
+        
+        pstmt.setString(1, username);
+        ResultSet resultSet = pstmt.executeQuery();
+
+        if (resultSet.next()) {
+            String hashedPass = resultSet.getString("u_password");
+            String rehashedPass = passwordHasher.hashPassword(password);
+
+            if (hashedPass.equals(rehashedPass)) {
+                status = resultSet.getString("u_status");
                 type = resultSet.getString("u_type");
+
                 Session sess = Session.getInstance();
                 sess.setUid(resultSet.getInt("u_id"));
                 sess.setFname(resultSet.getString("u_fname"));
                 sess.setLname(resultSet.getString("u_lname"));
                 sess.setEmail(resultSet.getString("u_email"));
                 sess.setUsername(resultSet.getString("u_username"));
-                sess.setType(resultSet.getString("u_type"));
-                sess.setStatus(resultSet.getString("u_status"));
-                return true;   
-                }else{
-                return false;
-                }
-        }else{
-            return false;
-        }          
-        }catch (SQLException | NoSuchAlgorithmException ex) {
-            return false;
-        }
+                sess.setType(type);
+                sess.setStatus(status);
 
+                return true;
+            }
+        }
+    } catch (SQLException | NoSuchAlgorithmException ex) {
+        ex.printStackTrace();
     }
+    return false;
+}
+
+    
+      public String getUserId(String username) {
+       
+        dbConnector dbc = new dbConnector();
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
+        String userId = null;
+
+        try {
+         
+            String sql = "SELECT u_id FROM tbl_users WHERE u_username = ?";
+            pstmt = dbc.connect.prepareStatement(sql);
+            pstmt.setString(1, username);
+            rs = pstmt.executeQuery();
+
+            if (rs.next()) {
+                userId = rs.getString("u_id");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            if (rs != null) {
+                try {
+                    rs.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
+            if (pstmt != null) {
+                try {
+                    pstmt.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
+           
+       
+        }
+        return userId;
+    }
+     public void logEvent(int userId, String username, String userType) {
+    dbConnector dbc = new dbConnector();
+    Connection con = dbc.getConnection();
+    PreparedStatement pstmt = null;
+
+    try {
+        String sql = "INSERT INTO tbl_log (u_id, u_username, login_time, u_type) VALUES (?, ?, ?, ?)";
+        pstmt = con.prepareStatement(sql);
+
+        pstmt.setInt(1, userId);
+        pstmt.setString(2, username);
+        pstmt.setTimestamp(3, new Timestamp(new Date().getTime()));
+        pstmt.setString(4, userType);
+
+        pstmt.executeUpdate();
+        System.out.println("Login log recorded successfully.");
+    } catch (SQLException e) {
+        JOptionPane.showMessageDialog(null, "Error recording log: " + e.getMessage());
+    } finally {
+        try {
+            if (pstmt != null) pstmt.close();
+            if (con != null) con.close();
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(null, "Error closing resources: " + e.getMessage());
+        }
+    }
+}
+     
+
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -186,7 +260,7 @@ public class loginF extends javax.swing.JFrame {
         jPanel1.add(jPanel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(210, 160, 250, 30));
 
         jLabel4.setIcon(new javax.swing.ImageIcon(getClass().getResource("/testappnew/zz21-removebg-preview.png"))); // NOI18N
-        jPanel1.add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 20, 720, 450));
+        jPanel1.add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 0, 720, 450));
 
         jLabel13.setForeground(new java.awt.Color(255, 255, 255));
         jLabel13.setIcon(new javax.swing.ImageIcon(getClass().getResource("/register/YU.png"))); // NOI18N
@@ -235,27 +309,34 @@ public class loginF extends javax.swing.JFrame {
     }//GEN-LAST:event_checkActionPerformed
 
     private void jButton1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton1MouseClicked
-        if(loginAcc(us.getText(),pw.getText())){
-            if(!status.equals("Active")){
+     String username = us.getText();
+    String password = new String(pw.getPassword());
+
+    if (loginAcc(username, password)) {
+        Session sess = Session.getInstance();
+        int userId = sess.getUid();
+
+        if (!status.equals("Active")) {
             JOptionPane.showMessageDialog(null, "In-Active Account, Contact the Admin!");
-            }else{
-                if(type.equals("Admin")){
-                JOptionPane.showMessageDialog(null, "Login Success!");
-                dashboard ads = new dashboard();
-                ads.setVisible(true);
-                this.dispose(); 
-            }else if(type.equals("User")){
-                JOptionPane.showMessageDialog(null, "Login Success!");
-                userDash usd = new userDash();
-                usd.setVisible(true);
-                this.dispose();     
-           }else{
-            JOptionPane.showMessageDialog(null, "No account type found, Contact the Admin!");                                 
+            logEvent(userId, username, "Failed - Inactive Account");
+        } else {
+            if (type.equals("Admin")) {
+                JOptionPane.showMessageDialog(null, "Login Success! Welcome Admin.");
+                new Admindashboard().setVisible(true);
+                logEvent(userId, username, "Success - Admin Login");
+            } else if (type.equals("User")) {
+                JOptionPane.showMessageDialog(null, "Login Success! Welcome User.");
+                new userDash().setVisible(true);
+                logEvent(userId, username, "Success - User Login");
             }
-         }
-        }else{
-            JOptionPane.showMessageDialog(null, "Invalid Account!");
-        }          
+            this.dispose();
+        }
+    } else {
+        JOptionPane.showMessageDialog(null, "Invalid Username or Password!");
+        logEvent(-1, username, "Failed - Invalid Login");
+    }
+
+
     }//GEN-LAST:event_jButton1MouseClicked
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
