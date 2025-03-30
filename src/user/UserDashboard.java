@@ -69,7 +69,6 @@ public class UserDashboard extends javax.swing.JFrame {
         jButton2 = new javax.swing.JButton();
         jPanel7 = new javax.swing.JPanel();
         u_image = new javax.swing.JLabel();
-        acc_fname = new javax.swing.JLabel();
         jPanel6 = new javax.swing.JPanel();
         jLabel9 = new javax.swing.JLabel();
         jPanel4 = new javax.swing.JPanel();
@@ -77,6 +76,7 @@ public class UserDashboard extends javax.swing.JFrame {
         jPanel5 = new javax.swing.JPanel();
         jLabel7 = new javax.swing.JLabel();
         jLabel8 = new javax.swing.JLabel();
+        acc_fname = new javax.swing.JLabel();
         jPanel2 = new javax.swing.JPanel();
         jPanel3 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
@@ -105,14 +105,9 @@ public class UserDashboard extends javax.swing.JFrame {
         jPanel7.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         u_image.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jPanel7.add(u_image, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 90, 110));
+        jPanel7.add(u_image, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 150, 130));
 
-        acc_fname.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
-        acc_fname.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        acc_fname.setText("USER");
-        jPanel7.add(acc_fname, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 30, 80, 30));
-
-        jPanel1.add(jPanel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 20, 150, 110));
+        jPanel1.add(jPanel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 20, 150, 130));
 
         jPanel6.setBackground(new java.awt.Color(255, 255, 255));
         jPanel6.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0), 2));
@@ -172,6 +167,12 @@ public class UserDashboard extends javax.swing.JFrame {
 
         jPanel1.add(jPanel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 290, 190, 60));
 
+        acc_fname.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        acc_fname.setForeground(new java.awt.Color(255, 255, 255));
+        acc_fname.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        acc_fname.setText("USER");
+        jPanel1.add(acc_fname, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 160, 80, 30));
+
         getContentPane().add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 190, 560));
 
         jPanel2.setBackground(new java.awt.Color(255, 255, 255));
@@ -179,7 +180,7 @@ public class UserDashboard extends javax.swing.JFrame {
 
         jPanel3.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0), 3));
         jPanel3.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
-        jPanel2.add(jPanel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 200, 670, 340));
+        jPanel2.add(jPanel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 210, 670, 330));
 
         jLabel1.setFont(new java.awt.Font("Century Gothic", 3, 36)); // NOI18N
         jLabel1.setText("USER DASHBOARD");
