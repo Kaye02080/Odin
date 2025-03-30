@@ -38,14 +38,14 @@ public class Admindashboard extends javax.swing.JFrame {
     dbConnector connector = new dbConnector();
     try (Connection con = connector.getConnection()) {
         
-        // 1️⃣ Update log_status from 'Pending' to 'Active' for recent logins
+        // Update 'Pending' log_status to 'Active' for recent logins
         String updateQuery = "UPDATE tbl_log SET log_status = 'Active' WHERE log_status = 'Pending'";
         try (PreparedStatement updateStmt = con.prepareStatement(updateQuery)) {
             updateStmt.executeUpdate();
         }
 
-        // 2️⃣ Fetch and display updated logs
-        String selectQuery = "SELECT l.log_id, l.u_username, l.login_time, l.u_type, " +
+        // Fetch updated logs including logout time
+        String selectQuery = "SELECT l.log_id, l.u_username, l.login_time, l.logout_time, l.u_type, " +
                              "CASE WHEN u.u_username IS NULL THEN 'Invalid User' ELSE l.log_status END AS log_status " +
                              "FROM tbl_log l LEFT JOIN tbl_users u ON l.u_username = u.u_username " +
                              "ORDER BY l.login_time DESC";
@@ -53,13 +53,16 @@ public class Admindashboard extends javax.swing.JFrame {
         try (Statement stmt = con.createStatement();
              ResultSet rs = stmt.executeQuery(selectQuery)) {
 
-            DefaultTableModel model = new DefaultTableModel(new String[]{"Log ID", "Username", "Login Time", "User Type", "Status"}, 0);
+            DefaultTableModel model = new DefaultTableModel(
+                new String[]{"Log ID", "Username", "Login Time", "Logout Time", "User Type", "Status"}, 0
+            );
 
             while (rs.next()) {
                 model.addRow(new Object[]{
                         rs.getInt("log_id"),
                         rs.getString("u_username"),
                         rs.getTimestamp("login_time"),
+                        rs.getTimestamp("logout_time"),  // Now showing logout time
                         rs.getString("u_type"),
                         rs.getString("log_status")
                 });
@@ -72,6 +75,33 @@ public class Admindashboard extends javax.swing.JFrame {
         JOptionPane.showMessageDialog(null, "Error loading logs: " + ex.getMessage());
     }
 }
+
+ 
+ private void logoutUser(String username) {
+    dbConnector connector = new dbConnector();
+    try (Connection con = connector.getConnection()) {
+        
+        // Update log_status to "Inactive" and set logout_time
+        String updateQuery = "UPDATE tbl_log SET log_status = 'Inactive', logout_time = NOW() " +
+                             "WHERE u_username = ? AND log_status = 'Active'";
+        
+        try (PreparedStatement stmt = con.prepareStatement(updateQuery)) {
+            stmt.setString(1, username);
+            int updatedRows = stmt.executeUpdate();
+
+            if (updatedRows > 0) {
+                JOptionPane.showMessageDialog(null, "User " + username + " has logged out successfully!");
+            } else {
+                JOptionPane.showMessageDialog(null, "No active session found for " + username);
+            }
+        }
+
+    } catch (SQLException ex) {
+        JOptionPane.showMessageDialog(null, "Error logging out: " + ex.getMessage());
+    }
+}
+
+
 
 
 
@@ -211,10 +241,15 @@ public class Admindashboard extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        loginF ads = new loginF();
-        JOptionPane.showMessageDialog(null, "log-out Success! ");
-        ads.setVisible(true);
-        this.dispose();
+      Session sess = Session.getInstance();
+    if (sess.getUid() != 0) {
+        logoutUser(sess.getUsername());  // Log out the current user
+    }
+
+    loginF loginFrame = new loginF();
+    JOptionPane.showMessageDialog(null, "Log-out Success!");
+    loginFrame.setVisible(true);
+    this.dispose();
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void jPanel4MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jPanel4MouseClicked

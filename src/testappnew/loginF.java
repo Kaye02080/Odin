@@ -24,7 +24,7 @@ import static javax.management.remote.JMXConnectorFactory.connect;
 import javax.swing.JOptionPane;
 import javax.swing.border.EmptyBorder;
 import register.registF1;
-import user.userDash;
+import user.UserDashboard;
 
 
 /**
@@ -326,7 +326,7 @@ public class loginF extends javax.swing.JFrame {
                 logEvent(userId, username, "Success - Admin Login");
             } else if (type.equals("User")) {
                 JOptionPane.showMessageDialog(null, "Login Success! Welcome User.");
-                new userDash().setVisible(true);
+                new UserDashboard().setVisible(true);
                 logEvent(userId, username, "Success - User Login");
             }
             this.dispose();

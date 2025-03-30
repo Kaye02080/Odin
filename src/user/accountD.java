@@ -396,7 +396,7 @@ public class accountD extends javax.swing.JFrame {
 
     private void cancelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cancelActionPerformed
 
-        userDash ru = new userDash();
+        UserDashboard ru = new UserDashboard();
         ru.setVisible(true);
         this.dispose();
     }//GEN-LAST:event_cancelActionPerformed

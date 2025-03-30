@@ -300,7 +300,7 @@ if (passw.isEmpty() || Cpassw.isEmpty() || oldPassInput.isEmpty()) {
                     int updated = updatePst.executeUpdate();
                     if (updated > 0) {
                         JOptionPane.showMessageDialog(null, "Password updated successfully");
-                        new userDash().setVisible(true);
+                        new UserDashboard().setVisible(true);
                         this.dispose();
                     } else {
                         JOptionPane.showMessageDialog(null, "Password update failed");
