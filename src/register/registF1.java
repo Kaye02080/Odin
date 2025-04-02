@@ -322,8 +322,8 @@ public class registF1 extends javax.swing.JFrame {
         String secAnswer = ans.getText();
 
         // Use PreparedStatement to prevent SQL Injection
-        String query = "INSERT INTO tbl_users (u_fname, u_lname, u_email, u_username, u_password, security_question, security_answer, u_type, u_status) "
-                + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, 'Pending')";
+        String query = "INSERT INTO tbl_users (u_fname, u_lname, u_email, u_username, u_password, security_question, security_answer, u_type, u_image, u_status) "
+                + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, 'Null', 'Pending')";
 
         try (Connection con = dbc.getConnection();
              PreparedStatement stmt = con.prepareStatement(query)) {

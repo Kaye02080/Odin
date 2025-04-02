@@ -333,7 +333,7 @@ private void selectImage() {
                 imageMouseClicked(evt);
             }
         });
-        jPanel9.add(image, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 10, 190, 140));
+        jPanel9.add(image, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 30, 190, 120));
 
         jPanel7.add(jPanel9, new org.netbeans.lib.awtextra.AbsoluteConstraints(320, 40, 210, 160));
 

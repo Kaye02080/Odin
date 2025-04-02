@@ -58,7 +58,10 @@ public class loginF extends javax.swing.JFrame {
             String hashedPass = resultSet.getString("u_password");
             String rehashedPass = passwordHasher.hashPassword(password);
 
-            if (hashedPass.equals(rehashedPass)) {
+            if(!rehashedPass.equals(hashedPass))
+            {
+                JOptionPane.showMessageDialog(null, "Password is Incorrect");
+            }else if (hashedPass.equals(rehashedPass)) {
                 status = resultSet.getString("u_status");
                 type = resultSet.getString("u_type");
 
@@ -137,7 +140,8 @@ public class loginF extends javax.swing.JFrame {
         pstmt.executeUpdate();
         System.out.println("Login log recorded successfully.");
     } catch (SQLException e) {
-        JOptionPane.showMessageDialog(null, "Error recording log: " + e.getMessage());
+//        JOptionPane.showMessageDialog(null, "Error recording log: " + e.getMessage());
+        System.out.println("Error recording log: " + e.getMessage());
     } finally {
         try {
             if (pstmt != null) pstmt.close();
@@ -207,6 +211,11 @@ public class loginF extends javax.swing.JFrame {
         jButton1.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 jButton1MouseClicked(evt);
+            }
+        });
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
             }
         });
         jPanel4.add(jButton1);
@@ -359,6 +368,7 @@ public class loginF extends javax.swing.JFrame {
     String password = new String(pw.getPassword());
 
     if (loginAcc(username, password)) {
+        System.out.println("1");
         Session sess = Session.getInstance();
         int userId = sess.getUid();
 
@@ -378,8 +388,8 @@ public class loginF extends javax.swing.JFrame {
             this.dispose();
         }
     } else {
-        JOptionPane.showMessageDialog(null, "Invalid Username or Password!");
-        logEvent(-1, username, "Failed - Invalid Login");
+//        JOptionPane.showMessageDialog(null, "Invalid Username or Password!");
+//        logEvent(-1, username, "Failed - Invalid Login");
     }
 
 
@@ -395,6 +405,10 @@ public class loginF extends javax.swing.JFrame {
           new ForgetPassword().setVisible(true); // Open ForgotPassword form
           dispose();
     }//GEN-LAST:event_jPanel7MouseClicked
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jButton1ActionPerformed
 
     /**
      * @param args the command line arguments
