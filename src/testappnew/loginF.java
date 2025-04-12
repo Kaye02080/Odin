@@ -46,39 +46,40 @@ public class loginF extends javax.swing.JFrame {
      static String status;
     static String type;
     
-    public static boolean loginAcc(String username, String password) {
-    dbConnector connector = new dbConnector();
-    try (Connection con = connector.getConnection();
-         PreparedStatement pstmt = con.prepareStatement("SELECT * FROM tbl_users WHERE u_username = ?")) {
-        
-        pstmt.setString(1, username);
-        ResultSet resultSet = pstmt.executeQuery();
+  public static boolean loginAcc(String username, String password) {
+    dbConnector conn = new dbConnector(); // Create the dbConnector instance
+
+    String query = "SELECT * FROM tbl_users WHERE u_username = ?";
+
+    try (Connection connection = conn.getConnection(); // Use conn to get the connection
+         PreparedStatement stmt = connection.prepareStatement(query)) {
+
+        stmt.setString(1, username);
+        ResultSet resultSet = stmt.executeQuery();
 
         if (resultSet.next()) {
             String hashedPass = resultSet.getString("u_password");
             String rehashedPass = passwordHasher.hashPassword(password);
 
-            if(!rehashedPass.equals(hashedPass))
-            {
-                JOptionPane.showMessageDialog(null, "Password is Incorrect");
-            }else if (hashedPass.equals(rehashedPass)) {
+            if (hashedPass.equals(rehashedPass)) {
                 status = resultSet.getString("u_status");
                 type = resultSet.getString("u_type");
 
+                // Set session details
                 Session sess = Session.getInstance();
                 sess.setUid(resultSet.getInt("u_id"));
                 sess.setFname(resultSet.getString("u_fname"));
                 sess.setLname(resultSet.getString("u_lname"));
                 sess.setEmail(resultSet.getString("u_email"));
                 sess.setUsername(resultSet.getString("u_username"));
-                sess.setType(type);
-                sess.setStatus(status);
+                sess.setType(resultSet.getString("u_type"));
+                sess.setStatus(resultSet.getString("u_status"));
 
                 return true;
             }
         }
     } catch (SQLException | NoSuchAlgorithmException ex) {
-        ex.printStackTrace();
+        // Log the error for debugging
     }
     return false;
 }
@@ -123,24 +124,27 @@ public class loginF extends javax.swing.JFrame {
         }
         return userId;
     }
-     public void logEvent(int userId, String username, String userType) {
+    public void logEvent(int userId, String username, String userType) {
     dbConnector dbc = new dbConnector();
     Connection con = dbc.getConnection();
     PreparedStatement pstmt = null;
+    String ut = null;
 
     try {
-        String sql = "INSERT INTO tbl_log (u_id, u_username, login_time, u_type) VALUES (?, ?, ?, ?)";
+        // Assuming there's no 'log_time' column, remove it from the query
+        String sql = "INSERT INTO tbl_log (u_id, u_username, login_time, u_type, log_status) VALUES (?, ?, ?, ?, ?)";
         pstmt = con.prepareStatement(sql);
 
         pstmt.setInt(1, userId);
         pstmt.setString(2, username);
-        pstmt.setTimestamp(3, new Timestamp(new Date().getTime()));
+        pstmt.setTimestamp(3, new Timestamp(new Date().getTime())); // Make sure 'login_time' column exists
         pstmt.setString(4, userType);
+        ut = "Active";
+        pstmt.setString(5, ut);
 
         pstmt.executeUpdate();
         System.out.println("Login log recorded successfully.");
     } catch (SQLException e) {
-//        JOptionPane.showMessageDialog(null, "Error recording log: " + e.getMessage());
         System.out.println("Error recording log: " + e.getMessage());
     } finally {
         try {
@@ -150,6 +154,44 @@ public class loginF extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(null, "Error closing resources: " + e.getMessage());
         }
     }
+}
+
+     public String getUserTypeFromDatabase(String username) {
+    String type = "";
+    String query = "SELECT u_type FROM tbl_users WHERE LOWER(u_username) = LOWER(?)";
+    
+    // Use an instance of dbConnector to get the connection
+    dbConnector connector = new dbConnector();  // Create instance of dbConnector
+    try (Connection con = connector.getConnection(); 
+         PreparedStatement stmt = con.prepareStatement(query)) {
+        stmt.setString(1, username);
+        ResultSet rs = stmt.executeQuery();
+        if (rs.next()) {
+            type = rs.getString("u_type");
+        }
+    } catch (SQLException e) {
+        e.printStackTrace();
+    }
+    return type;
+}
+      public String getStatusFromDatabase(String username) {
+    String status = "";
+    String query = "SELECT log_status FROM tbl_log WHERE LOWER(u_username) = LOWER(?) ORDER BY login_time DESC LIMIT 1";
+    
+    // Use an instance of dbConnector to get the connection
+    dbConnector connector = new dbConnector();  // Create instance of dbConnector
+    try (Connection con = connector.getConnection(); 
+         PreparedStatement stmt = con.prepareStatement(query)) {
+        stmt.setString(1, username);
+        ResultSet rs = stmt.executeQuery();
+        if (rs.next()) {
+            status = rs.getString("log_status");
+            System.out.println("status: "+status);
+        }
+    } catch (SQLException e) {
+        e.printStackTrace();
+    }
+    return status;
 }
      
 
@@ -364,33 +406,56 @@ public class loginF extends javax.swing.JFrame {
     }//GEN-LAST:event_checkActionPerformed
 
     private void jButton1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton1MouseClicked
-     String username = us.getText();
-    String password = new String(pw.getPassword());
+    String username = us.getText();
+String password = pw.getText();
+        dbConnector connector = new dbConnector();
+        String status2 = null;
 
-    if (loginAcc(username, password)) {
-        System.out.println("1");
-        Session sess = Session.getInstance();
-        int userId = sess.getUid();
+if (loginAcc(username, password)) {
+    Session sess = Session.getInstance();
+    int userId = sess.getUid();
 
-        if (!status.equals("Active")) {
-            JOptionPane.showMessageDialog(null, "In-Active Account, Contact the Admin!");
-            logEvent(userId, username, "Failed - Inactive Account");
-        } else {
-            if (type.equals("Admin")) {
-                JOptionPane.showMessageDialog(null, "Login Success! Welcome Admin.");
-                new Admindashboard().setVisible(true);
-                logEvent(userId, username, "Success - Admin Login");
-            } else if (type.equals("User")) {
-                JOptionPane.showMessageDialog(null, "Login Success! Welcome User.");
-                new UserDashboard().setVisible(true);
-                logEvent(userId, username, "Success - User Login");
-            }
-            this.dispose();
+    // Retrieve the status and type after the login
+    String status = getStatusFromDatabase(username);  // Method to get the status (Active/Inactive)
+    String type = getUserTypeFromDatabase(username);  // Method to get the user type (Admin/User)
+    
+    
+    
+    try {
+        String query2 = "SELECT * FROM tbl_users WHERE u_username = '" + us.getText() + "'";
+        PreparedStatement pstmt = connector.getConnection().prepareStatement(query2);
+
+        ResultSet resultSet = pstmt.executeQuery();
+
+        if (resultSet.next()) {
+            status2 = resultSet.getString("u_status");
         }
-    } else {
-//        JOptionPane.showMessageDialog(null, "Invalid Username or Password!");
-//        logEvent(-1, username, "Failed - Invalid Login");
+    } catch (SQLException ex) {
+        System.out.println("SQL Exception: " + ex);
     }
+    
+    
+
+    if (!status2.equals("Active")) {
+        JOptionPane.showMessageDialog(null, "In-Active Account, Contact the Admin!");
+       logEvent(userId, username, "Failed - Inactive Account");
+    } else {
+        if (type.equals("Admin")) {
+            JOptionPane.showMessageDialog(null, "Login Success! Welcome Admin.");
+            new Admindashboard().setVisible(true);
+            logEvent(userId, username, "Success - Admin Login");
+        } else if (type.equals("User")) {
+            JOptionPane.showMessageDialog(null, "Login Success! Welcome User.");
+            new UserDashboard().setVisible(true);
+            logEvent(userId, username, "Success - User Login");
+            
+        }
+        this.dispose();
+    }
+} else {
+    JOptionPane.showMessageDialog(null, "Invalid Username or Password!");
+    logEvent(-1, username, "Failed - Invalid Login");
+}
 
 
     }//GEN-LAST:event_jButton1MouseClicked

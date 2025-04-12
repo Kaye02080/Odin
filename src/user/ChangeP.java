@@ -19,6 +19,8 @@ import java.util.logging.Logger;
 import testappnew.loginF;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.Timestamp;
+import java.util.Date;
 
 
 /**
@@ -34,6 +36,36 @@ public class ChangeP extends javax.swing.JFrame {
         initComponents();
     }
 
+    public void logEvent(int userId, String username, String description) {
+    dbConnector dbc = new dbConnector();
+    Connection con = dbc.getConnection();
+    PreparedStatement pstmt = null;
+
+    try {
+        // Fixed: include `log_description` in your INSERT
+        String sql = "INSERT INTO tbl_log (u_id, u_username, login_time, u_type, log_status, log_description) VALUES (?, ?, ?, ?, ?, ?)";
+        pstmt = con.prepareStatement(sql);
+
+        pstmt.setInt(1, userId);
+        pstmt.setString(2, username);
+        pstmt.setTimestamp(3, new Timestamp(new Date().getTime())); // login_time
+        pstmt.setString(4, "Success - User Action"); // u_type (general category)
+        pstmt.setString(5, "Active"); // log_status
+        pstmt.setString(6, description); // log_description (e.g., "User Reset Their Password")
+
+        pstmt.executeUpdate();
+        System.out.println("Log event recorded successfully.");
+    } catch (SQLException e) {
+        System.out.println("Error recording log: " + e.getMessage());
+    } finally {
+        try {
+            if (pstmt != null) pstmt.close();
+            if (con != null) con.close();
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(null, "Error closing resources: " + e.getMessage());
+        }
+    }
+}
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -250,11 +282,15 @@ public class ChangeP extends javax.swing.JFrame {
     }//GEN-LAST:event_jLabel7MouseClicked
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-   String passw = new String(newPassword.getPassword()).trim();
+        
+    String passw = new String(newPassword.getPassword()).trim();
    String Cpassw = new String(Cpassword.getPassword()).trim();
    String oldPassInput = oldpass.getText().trim();
  // Use this for JPasswordField
-
+ 
+        int userId = 0;
+        String uname2 = null;
+  
 
 if (passw.isEmpty() || Cpassw.isEmpty() || oldPassInput.isEmpty()) {
     JOptionPane.showMessageDialog(null, "Please fill all fields");
@@ -266,6 +302,7 @@ if (passw.isEmpty() || Cpassw.isEmpty() || oldPassInput.isEmpty()) {
     try {
         dbConnector dbc = new dbConnector();
         Session sess = Session.getInstance();
+        dbConnector connector = new dbConnector();
 
         String query = "SELECT u_password FROM tbl_users WHERE u_id = ?";
         try (Connection conn = dbc.getConnection();
@@ -300,6 +337,24 @@ if (passw.isEmpty() || Cpassw.isEmpty() || oldPassInput.isEmpty()) {
                     int updated = updatePst.executeUpdate();
                     if (updated > 0) {
                         JOptionPane.showMessageDialog(null, "Password updated successfully");
+                        
+                              try 
+                        {
+                            String query2 = "SELECT * FROM tbl_users WHERE u_id = '" + sess.getUid() + "'";
+                            PreparedStatement pstmt = connector.getConnection().prepareStatement(query2);
+
+                            ResultSet resultSet = pstmt.executeQuery();
+
+                            if (resultSet.next()) {
+                                userId = resultSet.getInt("u_id");   // Update the outer `userId` correctly
+                                uname2 = resultSet.getString("u_username");
+                            }
+                        } catch (SQLException ex) {
+                            System.out.println("SQL Exception: " + ex);
+                        }
+
+                        logEvent(userId, uname2, "User Changed Their Password");
+                        
                         new UserDashboard().setVisible(true);
                         this.dispose();
                     } else {
@@ -314,6 +369,7 @@ if (passw.isEmpty() || Cpassw.isEmpty() || oldPassInput.isEmpty()) {
         JOptionPane.showMessageDialog(null, "Error: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
     }
 }
+                        
     }//GEN-LAST:event_jButton1ActionPerformed
     
 

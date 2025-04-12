@@ -5,6 +5,7 @@
  */
 package user;
 
+import config.Session;
 import config.dbConnector;
 import config.passwordHasher;
 import java.security.NoSuchAlgorithmException;
@@ -12,6 +13,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
+import java.util.Date;
 import javax.swing.JButton;
 import javax.swing.JOptionPane;
 import testappnew.loginF;
@@ -79,25 +82,61 @@ public class ForgetPassword extends javax.swing.JFrame {
         }
     }
 }
+   
+public void logEvent(int userId, String username, String description) {
+    dbConnector dbc = new dbConnector();
+    Connection con = dbc.getConnection();
+    PreparedStatement pstmt = null;
 
+    try {
+        // Fixed: include `log_description` in your INSERT
+        String sql = "INSERT INTO tbl_log (u_id, u_username, login_time, u_type, log_status, log_description) VALUES (?, ?, ?, ?, ?, ?)";
+        pstmt = con.prepareStatement(sql);
+
+        pstmt.setInt(1, userId);
+        pstmt.setString(2, username);
+        pstmt.setTimestamp(3, new Timestamp(new Date().getTime())); // login_time
+        pstmt.setString(4, "Success - User Action"); // u_type (general category)
+        pstmt.setString(5, "Active"); // log_status
+        pstmt.setString(6, description); // log_description (e.g., "User Reset Their Password")
+
+        pstmt.executeUpdate();
+        System.out.println("Log event recorded successfully.");
+    } catch (SQLException e) {
+        System.out.println("Error recording log: " + e.getMessage());
+    } finally {
+        try {
+            if (pstmt != null) pstmt.close();
+            if (con != null) con.close();
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(null, "Error closing resources: " + e.getMessage());
+        }
+    }
+}
+
+   
 
 
    private void resetPassword() {
     String enteredAnswer = ans.getText();
     String newPassword = new String(Newpass.getPassword());
 
+    // Declare variables here to fix your error
+    int userId = -1;
+    String uname2 = "";
+
     if (correctAnswer == null) {
         JOptionPane.showMessageDialog(this, "Please search for your username first.");
         return;
     }
 
-    if (!enteredAnswer.equalsIgnoreCase(correctAnswer)) {
-        JOptionPane.showMessageDialog(this, "Incorrect security answer.");
-        return;
-    }
-
-    if (newPassword.isEmpty()) {
-        JOptionPane.showMessageDialog(this, "Password cannot be empty.");
+    try {
+        if (!passwordHasher.hashPassword(enteredAnswer).equals(correctAnswer)) {
+            JOptionPane.showMessageDialog(this, "Incorrect security answer.");
+            return;
+        }
+    } catch (NoSuchAlgorithmException ex) {
+        JOptionPane.showMessageDialog(this, "Error verifying answer: " + ex.getMessage());
         return;
     }
 
@@ -108,6 +147,8 @@ public class ForgetPassword extends javax.swing.JFrame {
         // Instantiate the database connection
         dbConnector db = new dbConnector();
         Connection con = db.getConnection();
+        dbConnector connector = new dbConnector(); // For logging query
+        Session sess = Session.getInstance();
 
         if (con == null) {
             JOptionPane.showMessageDialog(this, "Database connection failed. Please try again later.");
@@ -119,18 +160,39 @@ public class ForgetPassword extends javax.swing.JFrame {
             PreparedStatement stmt = con.prepareStatement(
                 "UPDATE tbl_users SET u_password = ? WHERE u_username = ?"
             );
-            stmt.setString(1, hashedPassword);  // Store the hashed password
+            stmt.setString(1, hashedPassword);
             stmt.setString(2, un.getText());
 
             int rowsUpdated = stmt.executeUpdate();
             if (rowsUpdated > 0) {
                 JOptionPane.showMessageDialog(this, "Password successfully reset!");
-                dispose(); // Close the window after successful password reset
+
+                // Try to log the password reset
+                try {
+                    String query2 = "SELECT * FROM tbl_users WHERE u_username = ?";
+                    PreparedStatement pstmt = connector.getConnection().prepareStatement(query2);
+                    pstmt.setString(1, un.getText());
+
+                    ResultSet resultSet = pstmt.executeQuery();
+                    if (resultSet.next()) {
+                        userId = resultSet.getInt("u_id");
+                        uname2 = resultSet.getString("u_username");
+
+                        // Log the event
+                   logEvent(userId, uname2, "User Reset Their Password");
+
+                    }
+                } catch (SQLException ex) {
+                    System.out.println("Log Error (SQL): " + ex.getMessage());
+                }
+
+                dispose(); // Close the window
             } else {
                 JOptionPane.showMessageDialog(this, "Error: Username not found or password update failed.");
             }
+
         } finally {
-            con.close(); // Close the database connection after use
+            con.close();
         }
 
     } catch (NoSuchAlgorithmException ex) {
@@ -140,9 +202,6 @@ public class ForgetPassword extends javax.swing.JFrame {
     }
 }
 
-
-
-   
     
     
     /**
@@ -226,13 +285,8 @@ public class ForgetPassword extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void SubmitMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_SubmitMouseClicked
-        if (un.getText().isEmpty() || ans.getText().isEmpty() || new String(Newpass.getPassword()).isEmpty()) {
-        JOptionPane.showMessageDialog(this, "Please fill in all fields before submitting.");
-        return;
-    }
-
-    // Call resetPassword method to validate and update password
-    resetPassword();        // TODO add your handling code here:
+    
+      resetPassword();  
     }//GEN-LAST:event_SubmitMouseClicked
 
     private void SearchMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_SearchMouseClicked
@@ -262,7 +316,8 @@ public class ForgetPassword extends javax.swing.JFrame {
             sq.removeAllItems();
             sq.addItem(rs.getString("security_question"));
             sq.setEnabled(true);
-            correctAnswer = rs.getString("security_answer");
+          correctAnswer = rs.getString("security_answer"); // still okay if hashed
+
             Submit.setEnabled(true);
         } else {
             JOptionPane.showMessageDialog(this, "Username not found.");

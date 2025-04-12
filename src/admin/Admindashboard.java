@@ -37,16 +37,17 @@ public class Admindashboard extends javax.swing.JFrame {
  private void loadLogs() {
     dbConnector connector = new dbConnector();
     try (Connection con = connector.getConnection()) {
-        
+
         // Update 'Pending' log_status to 'Active' for recent logins
         String updateQuery = "UPDATE tbl_log SET log_status = 'Active' WHERE log_status = 'Pending'";
         try (PreparedStatement updateStmt = con.prepareStatement(updateQuery)) {
             updateStmt.executeUpdate();
         }
 
-        // Fetch updated logs including logout time
+        // Fetch updated logs including logout time and log_description
         String selectQuery = "SELECT l.log_id, l.u_username, l.login_time, l.logout_time, l.u_type, " +
-                             "CASE WHEN u.u_username IS NULL THEN 'Invalid User' ELSE l.log_status END AS log_status " +
+                             "CASE WHEN u.u_username IS NULL THEN 'Invalid User' ELSE l.log_status END AS log_status, " +
+                             "l.log_description " + // Include log_description
                              "FROM tbl_log l LEFT JOIN tbl_users u ON l.u_username = u.u_username " +
                              "ORDER BY l.login_time DESC";
 
@@ -54,17 +55,18 @@ public class Admindashboard extends javax.swing.JFrame {
              ResultSet rs = stmt.executeQuery(selectQuery)) {
 
             DefaultTableModel model = new DefaultTableModel(
-                new String[]{"Log ID", "Username", "Login Time", "Logout Time", "User Type", "Status"}, 0
+                new String[]{"Log ID", "Username", "Login Time", "Logout Time", "User Type", "Status", "Description"}, 0 // Add "Description" column
             );
 
             while (rs.next()) {
                 model.addRow(new Object[]{
-                        rs.getInt("log_id"),
-                        rs.getString("u_username"),
-                        rs.getTimestamp("login_time"),
-                        rs.getTimestamp("logout_time"),  // Now showing logout time
-                        rs.getString("u_type"),
-                        rs.getString("log_status")
+                    rs.getInt("log_id"),
+                    rs.getString("u_username"),
+                    rs.getTimestamp("login_time"),
+                    rs.getTimestamp("logout_time"),
+                    rs.getString("u_type"),
+                    rs.getString("log_status"),
+                    rs.getString("log_description") // Add log_description value
                 });
             }
 
@@ -80,6 +82,7 @@ public class Admindashboard extends javax.swing.JFrame {
  private void logoutUser(String username) {
     dbConnector connector = new dbConnector();
     try (Connection con = connector.getConnection()) {
+        
         
         // Update log_status to "Inactive" and set logout_time
         String updateQuery = "UPDATE tbl_log SET log_status = 'Inactive', logout_time = NOW() " +
@@ -220,18 +223,18 @@ public class Admindashboard extends javax.swing.JFrame {
 
         logstbl.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null}
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null}
             },
             new String [] {
-                "log_id", "u_username", "login_time", "u_type", "log_status"
+                "log_id", "u_username", "login_time", "u_type", "log_status", "log_description"
             }
         ));
         jScrollPane1.setViewportView(logstbl);
 
-        jPanel3.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 310, 730, 400));
+        jPanel3.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 300, 730, 400));
 
         getContentPane().add(jPanel3);
         jPanel3.setBounds(240, 0, 770, 720);

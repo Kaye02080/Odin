@@ -23,6 +23,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
+import java.util.Date;
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.JFileChooser;
@@ -119,68 +121,42 @@ public class accountD extends javax.swing.JFrame {
         }
     }
 }
-     private void updateProfile() {
-    dbConnector dbc = new dbConnector();
-    Session sess = Session.getInstance();
-
-    // Check if username or email already exists
-    if (updateCheck()) {
-        return;
-    }
-
-    // Validate inputs
-    if (acc_fname.getText().isEmpty() || acc_lname.getText().isEmpty() ||
-        acc_email.getText().isEmpty() || acc_uname.getText().isEmpty()) {
-        JOptionPane.showMessageDialog(this, "All fields are required!", "Error", JOptionPane.ERROR_MESSAGE);
-        return;
-    }
-
-    // SQL Query to update the user profile
-    String query = "UPDATE tbl_users SET u_fname=?, u_lname=?, u_email=?, u_username=?, u_image=? WHERE u_id=?";
-
-    try (Connection conn = dbc.getConnection();
-         PreparedStatement pstmt = conn.prepareStatement(query)) {
-
-        pstmt.setString(1, acc_fname.getText());
-        pstmt.setString(2, acc_lname.getText());
-        pstmt.setString(3, acc_email.getText());
-        pstmt.setString(4, acc_uname.getText());
-        pstmt.setString(5, selectedImagePath);  // Store uploaded image path
-        pstmt.setInt(6, sess.getUid());
-
-        int rowsAffected = pstmt.executeUpdate();
-
-        if (rowsAffected > 0) {
-            JOptionPane.showMessageDialog(this, "Profile updated successfully!");
-        } else {
-            JOptionPane.showMessageDialog(this, "Failed to update profile!", "Error", JOptionPane.ERROR_MESSAGE);
-        }
-
-    } catch (SQLException e) {
-        JOptionPane.showMessageDialog(this, "Database error: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-    }
-}
-
+   
      private String selectedImagePath = "";
       
 
-private void selectImage() {
-    JFileChooser fileChooser = new JFileChooser();
-    fileChooser.setFileFilter(new FileNameExtensionFilter("Image Files", "jpg", "jpeg", "png"));
 
-    int result = fileChooser.showOpenDialog(this);
-    if (result == JFileChooser.APPROVE_OPTION) {
-        File selectedFile = fileChooser.getSelectedFile();
-        selectedImagePath = selectedFile.getAbsolutePath(); // Get the selected image path
-
-        // Display selected image in JLabel
-        image.setIcon(new javax.swing.ImageIcon(selectedImagePath));
-
-        JOptionPane.showMessageDialog(this, "Image Selected: " + selectedImagePath);
-    }
-}
 
     
+        public void logEvent(int userId, String username, String userType, String logDescription) {
+    dbConnector dbc = new dbConnector();
+    Connection con = dbc.getConnection();
+    PreparedStatement pstmt = null;
+
+    try {
+        String sql = "INSERT INTO tbl_log (u_id, u_username, login_time, u_type, log_status, log_description) VALUES (?, ?, ?, ?, ?, ?)";
+        pstmt = con.prepareStatement(sql);
+
+        pstmt.setInt(1, userId);
+        pstmt.setString(2, username);
+        pstmt.setTimestamp(3, new Timestamp(new Date().getTime()));
+        pstmt.setString(4, userType); // This should be "Admin" or "User"
+        pstmt.setString(5, "Active");
+        pstmt.setString(6, logDescription); // Insert the log description
+
+        pstmt.executeUpdate();
+        System.out.println("Log recorded successfully.");
+    } catch (SQLException e) {
+        System.out.println("Error recording log: " + e.getMessage());
+    } finally {
+        try {
+            if (pstmt != null) pstmt.close();
+            if (con != null) con.close();
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(null, "Error closing resources: " + e.getMessage());
+        }
+    }
+}
        
     /**
      * This method is called from within the constructor to initialize the form.
@@ -364,7 +340,7 @@ private void selectImage() {
         });
         jPanel7.add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(390, 210, -1, -1));
 
-        jPanel8.add(jPanel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 90, 610, 390));
+        jPanel8.add(jPanel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 100, 610, 390));
 
         getContentPane().add(jPanel8, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 760, 520));
 
@@ -412,30 +388,65 @@ private void selectImage() {
     }//GEN-LAST:event_updateMouseClicked
 
     private void updateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_updateActionPerformed
-    if (selectedImagePath.isEmpty()) {
-        JOptionPane.showMessageDialog(this, "No image selected!");
-        return;
+  dbConnector dbc = new dbConnector();
+Session sess = Session.getInstance();
+dbConnector connector = new dbConnector();
+int userId = 0;
+String uname2 = null;
+
+// Check if username or email already exists
+if (updateCheck()) {
+    return;
+}
+
+// Validate inputs
+if (acc_fname.getText().isEmpty() || acc_lname.getText().isEmpty() ||
+    acc_email.getText().isEmpty() || acc_uname.getText().isEmpty()) {
+    JOptionPane.showMessageDialog(this, "All fields are required!", "Error", JOptionPane.ERROR_MESSAGE);
+    return;
+}
+
+// SQL Query to update the user profile
+String query = "UPDATE tbl_users SET u_fname=?, u_lname=?, u_email=?, u_username=?, u_image=? WHERE u_id=?";
+
+try (Connection conn = dbc.getConnection();
+     PreparedStatement pstmt = conn.prepareStatement(query)) {
+
+    pstmt.setString(1, acc_fname.getText());
+    pstmt.setString(2, acc_lname.getText());
+    pstmt.setString(3, acc_email.getText());
+    pstmt.setString(4, acc_uname.getText());
+    pstmt.setString(5, selectedImagePath);  // Store uploaded image path
+    pstmt.setInt(6, sess.getUid());
+
+    int rowsAffected = pstmt.executeUpdate();
+
+    if (rowsAffected > 0) {
+        JOptionPane.showMessageDialog(this, "Profile updated successfully!");
+
+        try {
+            String query2 = "SELECT * FROM tbl_users WHERE u_id = ?"; //use prepared statement.
+            PreparedStatement pstmt2 = connector.getConnection().prepareStatement(query2);
+            pstmt2.setInt(1, sess.getUid());
+
+            ResultSet resultSet = pstmt2.executeQuery();
+
+            if (resultSet.next()) {
+                userId = resultSet.getInt("u_id");  // Update the outer `userId` correctly
+                uname2 = resultSet.getString("u_username");
+            }
+        } catch (SQLException ex) {
+            System.out.println("SQL Exception: " + ex);
+        }
+
+        logEvent(userId, uname2, sess.getType(), "User Changed Their Details"); //fixed
+    } else {
+        JOptionPane.showMessageDialog(this, "Failed to update profile!", "Error", JOptionPane.ERROR_MESSAGE);
     }
 
-    dbConnector dbc = new dbConnector();
-    Session sess = Session.getInstance();
-    
-    String query = "UPDATE tbl_users SET u_image = ? WHERE u_id = ?";
-    
-    try {
-        PreparedStatement pstmt = dbc.getConnection().prepareStatement(query);
-        pstmt.setString(1, selectedImagePath); // Store image path
-        pstmt.setInt(2, sess.getUid()); // User ID
-        
-        int updated = pstmt.executeUpdate();
-        if (updated > 0) {
-            JOptionPane.showMessageDialog(this, "Profile updated successfully!");
-        } else {
-            JOptionPane.showMessageDialog(this, "Failed to update profile.");
-        }
-    } catch (SQLException e) {
-        e.printStackTrace();
-    }
+} catch (SQLException e) {
+    JOptionPane.showMessageDialog(this, "Database error: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+}
 
     }//GEN-LAST:event_updateActionPerformed
 
@@ -454,7 +465,36 @@ private void selectImage() {
     }//GEN-LAST:event_imageMouseClicked
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-     selectImage();    // TODO add your handling code here:
+      JFileChooser fileChooser = new JFileChooser();
+    fileChooser.setFileFilter(new FileNameExtensionFilter("Image Files", "jpg", "jpeg", "png"));
+
+    int result = fileChooser.showOpenDialog(this);
+    if (result == JFileChooser.APPROVE_OPTION) {
+        File selectedFile = fileChooser.getSelectedFile();
+        
+        // Define destination path inside src/images/
+        File destinationFolder = new File("src/images/");
+        if (!destinationFolder.exists()) {
+            destinationFolder.mkdirs(); // Create folder if it does not exist
+        }
+
+        File destinationFile = new File(destinationFolder, selectedFile.getName());
+
+        try {
+            // Copy file to the destination folder
+            Files.copy(selectedFile.toPath(), destinationFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
+            
+            // Store the image path
+            selectedImagePath = "src/images/" + selectedFile.getName();
+
+            // Update the image label
+            image.setIcon(new javax.swing.ImageIcon(destinationFile.getAbsolutePath()));
+
+            JOptionPane.showMessageDialog(this, "Image uploaded successfully!");
+        } catch (IOException e) {
+            JOptionPane.showMessageDialog(this, "Error uploading image: " + e.getMessage());
+        }
+    }    // TODO add your handling code here:
     }//GEN-LAST:event_jButton1ActionPerformed
 
     /**

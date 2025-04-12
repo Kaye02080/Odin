@@ -15,6 +15,7 @@ import java.sql.PreparedStatement;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.sql.Timestamp;
 import java.util.Date;
 import javax.swing.JFileChooser;
@@ -70,24 +71,27 @@ public class registF1 extends javax.swing.JFrame {
         }
     }
     
-      public void logEvent(int userId, String username, String userType) {
+     public void logEvent(int userId, String username, String description) {
     dbConnector dbc = new dbConnector();
     Connection con = dbc.getConnection();
     PreparedStatement pstmt = null;
 
     try {
-        String sql = "INSERT INTO tbl_log (u_id, u_username, login_time, u_type) VALUES (?, ?, ?, ?)";
+        // Fixed: include `log_description` in your INSERT
+        String sql = "INSERT INTO tbl_log (u_id, u_username, login_time, u_type, log_status, log_description) VALUES (?, ?, ?, ?, ?, ?)";
         pstmt = con.prepareStatement(sql);
 
         pstmt.setInt(1, userId);
         pstmt.setString(2, username);
-        pstmt.setTimestamp(3, new Timestamp(new Date().getTime()));
-        pstmt.setString(4, userType);
+        pstmt.setTimestamp(3, new Timestamp(new Date().getTime())); // login_time
+        pstmt.setString(4, "Success - User Action"); // u_type (general category)
+        pstmt.setString(5, "Active"); // log_status
+        pstmt.setString(6, description); // log_description (e.g., "User Reset Their Password")
 
         pstmt.executeUpdate();
-        System.out.println("Login log recorded successfully.");
+        System.out.println("Log event recorded successfully.");
     } catch (SQLException e) {
-        JOptionPane.showMessageDialog(null, "Error recording log: " + e.getMessage());
+        System.out.println("Error recording log: " + e.getMessage());
     } finally {
         try {
             if (pstmt != null) pstmt.close();
@@ -306,50 +310,59 @@ public class registF1 extends javax.swing.JFrame {
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
     
-    if(fn.getText().isEmpty() || ln.getText().isEmpty() || mail.getText().isEmpty() || us.getText().isEmpty() || 
-   pw.getText().isEmpty() || ans.getText().isEmpty()) {  // Check if answer is empty
-    JOptionPane.showMessageDialog(null, "All fields are required!");   
-} else if(pw.getText().length() < 8) {
-    JOptionPane.showMessageDialog(null, "Password must be at least 8 characters.");
-    pw.setText("");
-} else if(duplicateCheck()) {
-    System.out.println("Duplicate Exists!");
-} else {
-    dbConnector dbc = new dbConnector();
-    try {
-        String pass = passwordHasher.hashPassword(pw.getText()); // Hash password
-        String secQuestion = sq.getSelectedItem().toString();
-        String secAnswer = ans.getText();
+   if(fn.getText().isEmpty() || ln.getText().isEmpty() || mail.getText().isEmpty() || us.getText().isEmpty() || 
+       pw.getText().isEmpty() || ans.getText().isEmpty()) {  // Check if answer is empty
+        JOptionPane.showMessageDialog(null, "All fields are required!");   
+    } else if(pw.getText().length() < 8) {
+        JOptionPane.showMessageDialog(null, "Password must be at least 8 characters.");
+        pw.setText("");
+    } else if(duplicateCheck()) {
+        System.out.println("Duplicate Exists!");
+    } else {
+        dbConnector dbc = new dbConnector();
+        try {
+            String pass = passwordHasher.hashPassword(pw.getText()); // Hash password
+            String secQuestion = sq.getSelectedItem().toString();
+            String secAnswer = passwordHasher.hashPassword(ans.getText()); // 🔐 Hash security answer
 
-        // Use PreparedStatement to prevent SQL Injection
-        String query = "INSERT INTO tbl_users (u_fname, u_lname, u_email, u_username, u_password, security_question, security_answer, u_type, u_image, u_status) "
-                + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, 'Null', 'Pending')";
+            String query = "INSERT INTO tbl_users (u_fname, u_lname, u_email, u_username, u_password, security_question, security_answer, u_type, u_image, u_status) "
+                    + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, 'Null', 'Pending')";
 
-        try (Connection con = dbc.getConnection();
-             PreparedStatement stmt = con.prepareStatement(query)) {
-            stmt.setString(1, fn.getText());
-            stmt.setString(2, ln.getText());
-            stmt.setString(3, mail.getText());
-            stmt.setString(4, us.getText());
-            stmt.setString(5, pass);
-            stmt.setString(6, secQuestion);
-            stmt.setString(7, secAnswer);
-            stmt.setString(8, ut.getSelectedItem().toString());
+            try (Connection con = dbc.getConnection();
+                 PreparedStatement stmt = con.prepareStatement(query, Statement.RETURN_GENERATED_KEYS)) {
+                stmt.setString(1, fn.getText());
+                stmt.setString(2, ln.getText());
+                stmt.setString(3, mail.getText());
+                stmt.setString(4, us.getText());
+                stmt.setString(5, pass);           // Hashed password
+                stmt.setString(6, secQuestion);
+                stmt.setString(7, secAnswer);      // Hashed security answer
+                stmt.setString(8, ut.getSelectedItem().toString());
 
-            int rowsInserted = stmt.executeUpdate();
-            if (rowsInserted > 0) {
-                JOptionPane.showMessageDialog(null, "Registration Successful!");
-                loginF lfr = new loginF();
-                lfr.setVisible(true);
-                this.dispose();
-            } else {
-                JOptionPane.showMessageDialog(null, "Registration Failed. Try again!");      
+                int rowsInserted = stmt.executeUpdate();
+                if (rowsInserted > 0) {
+                    // Get the generated user ID
+                    try (ResultSet rs = stmt.getGeneratedKeys()) {
+                        if (rs.next()) {
+                            int userId = rs.getInt(1); // The auto-generated user ID
+                            
+                            // Log the event (registration)
+                            logEvent(userId, us.getText(), "New user registered: " + us.getText());
+                            
+                            JOptionPane.showMessageDialog(null, "Registration Successful!");
+                            loginF lfr = new loginF();
+                            lfr.setVisible(true);
+                            this.dispose();
+                        }
+                    }
+                } else {
+                    JOptionPane.showMessageDialog(null, "Registration Failed. Try again!");      
+                }
             }
+        } catch (SQLException | NoSuchAlgorithmException ex) {
+            System.out.println("Error: " + ex.getMessage());
         }
-    } catch (SQLException | NoSuchAlgorithmException ex) {
-        System.out.println("Error: " + ex.getMessage());
     }
-}
 
 
         
