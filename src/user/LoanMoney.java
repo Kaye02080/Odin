@@ -85,11 +85,7 @@ public class LoanMoney extends javax.swing.JFrame {
         loanamount = new javax.swing.JTextField();
         jLabel3 = new javax.swing.JLabel();
         jButton1 = new javax.swing.JButton();
-        jScrollPane2 = new javax.swing.JScrollPane();
-        area = new javax.swing.JTextArea();
-        jButton3 = new javax.swing.JButton();
-        jButton4 = new javax.swing.JButton();
-        jButton5 = new javax.swing.JButton();
+        cancel = new javax.swing.JButton();
         jLabel4 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -168,42 +164,21 @@ public class LoanMoney extends javax.swing.JFrame {
         });
         jPanel5.add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 320, 90, 30));
 
-        area.setColumns(20);
-        area.setFont(new java.awt.Font("Monospaced", 1, 13)); // NOI18N
-        area.setRows(5);
-        jScrollPane2.setViewportView(area);
-
-        jPanel5.add(jScrollPane2, new org.netbeans.lib.awtextra.AbsoluteConstraints(320, 110, 220, 230));
-
-        jButton3.setBackground(new java.awt.Color(255, 255, 255));
-        jButton3.setText("Generate Receipt");
-        jButton3.setBorder(javax.swing.BorderFactory.createEtchedBorder());
-        jButton3.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton3ActionPerformed(evt);
+        cancel.setBackground(new java.awt.Color(255, 255, 255));
+        cancel.setFont(new java.awt.Font("Yu Gothic UI", 1, 12)); // NOI18N
+        cancel.setForeground(new java.awt.Color(27, 57, 77));
+        cancel.setText("Cancel");
+        cancel.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                cancelMouseClicked(evt);
             }
         });
-        jPanel5.add(jButton3, new org.netbeans.lib.awtextra.AbsoluteConstraints(290, 350, -1, 40));
-
-        jButton4.setBackground(new java.awt.Color(255, 255, 255));
-        jButton4.setText("Reset");
-        jButton4.setBorder(javax.swing.BorderFactory.createEtchedBorder());
-        jButton4.addActionListener(new java.awt.event.ActionListener() {
+        cancel.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton4ActionPerformed(evt);
+                cancelActionPerformed(evt);
             }
         });
-        jPanel5.add(jButton4, new org.netbeans.lib.awtextra.AbsoluteConstraints(400, 350, 80, 40));
-
-        jButton5.setBackground(new java.awt.Color(255, 255, 255));
-        jButton5.setText("Print Receipt");
-        jButton5.setBorder(javax.swing.BorderFactory.createEtchedBorder());
-        jButton5.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton5ActionPerformed(evt);
-            }
-        });
-        jPanel5.add(jButton5, new org.netbeans.lib.awtextra.AbsoluteConstraints(490, 350, -1, 40));
+        jPanel5.add(cancel, new org.netbeans.lib.awtextra.AbsoluteConstraints(420, 320, 70, 30));
 
         jPanel4.add(jPanel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 110, 590, 410));
 
@@ -298,32 +273,16 @@ try {
 
     }//GEN-LAST:event_jButton1ActionPerformed
 
-    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
-        area.setText("*********************************************\n");
-        area.setText(area.getText()+"*              Money Remittance's Receipt System         *\n");
-        area.setText(area.getText()+"*********************************************\n");
+    private void cancelMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_cancelMouseClicked
+        // TODO add your handling code here:
+    }//GEN-LAST:event_cancelMouseClicked
 
-        Date obj = new Date();
+    private void cancelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cancelActionPerformed
 
-        String date = obj.toString();
-        area.setText(area.getText()+"\n"+date+"\n\n");
-        area.setText(area.getText()+"User's Username: "+username.getText()+"\n");
-        area.setText(area.getText()+"Loan's Amount: "+loanamount.getText()+"\n");
-    }//GEN-LAST:event_jButton3ActionPerformed
-
-    private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
-        area.setText("");
-        username.setText("");
-        loanamount.setText("");
-    }//GEN-LAST:event_jButton4ActionPerformed
-
-    private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
-        try{
-            area.print();
-        }catch(Exception e){
-        }
-
-    }//GEN-LAST:event_jButton5ActionPerformed
+        UserDashboard ru = new UserDashboard();
+        ru.setVisible(true);
+        this.dispose();
+    }//GEN-LAST:event_cancelActionPerformed
 
     /**
      * @param args the command line arguments
@@ -363,12 +322,9 @@ try {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel acc_fname;
     private javax.swing.JLabel acc_id;
-    public javax.swing.JTextArea area;
+    public javax.swing.JButton cancel;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
-    public javax.swing.JButton jButton3;
-    public javax.swing.JButton jButton4;
-    public javax.swing.JButton jButton5;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
@@ -378,7 +334,6 @@ try {
     private javax.swing.JPanel jPanel4;
     private javax.swing.JPanel jPanel5;
     private javax.swing.JPanel jPanel6;
-    private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JTextField loanamount;
     private javax.swing.JTextField username;
     // End of variables declaration//GEN-END:variables
