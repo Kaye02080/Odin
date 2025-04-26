@@ -105,6 +105,7 @@ public class UserDashboard extends javax.swing.JFrame {
         jLabel7 = new javax.swing.JLabel();
         jLabel8 = new javax.swing.JLabel();
         acc_fname = new javax.swing.JLabel();
+        acc_balance = new javax.swing.JLabel();
         jPanel2 = new javax.swing.JPanel();
         jPanel3 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
@@ -152,7 +153,7 @@ public class UserDashboard extends javax.swing.JFrame {
         jLabel9.setText("ACCOUNT");
         jPanel6.add(jLabel9, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 0, 120, 60));
 
-        jPanel1.add(jPanel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 200, 190, -1));
+        jPanel1.add(jPanel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 260, 190, -1));
 
         jPanel4.setBackground(new java.awt.Color(255, 255, 255));
         jPanel4.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0), 2));
@@ -193,13 +194,18 @@ public class UserDashboard extends javax.swing.JFrame {
         jPanel4.add(jPanel5);
         jPanel5.setBounds(300, 110, 180, 130);
 
-        jPanel1.add(jPanel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 290, 190, 60));
+        jPanel1.add(jPanel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 330, 190, 60));
 
         acc_fname.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         acc_fname.setForeground(new java.awt.Color(255, 255, 255));
         acc_fname.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         acc_fname.setText("USER");
         jPanel1.add(acc_fname, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 160, 80, 30));
+
+        acc_balance.setBackground(new java.awt.Color(255, 255, 255));
+        acc_balance.setForeground(new java.awt.Color(255, 255, 255));
+        acc_balance.setText("Balance :");
+        jPanel1.add(acc_balance, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 200, -1, 20));
 
         getContentPane().add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 190, 560));
 
@@ -239,14 +245,37 @@ public class UserDashboard extends javax.swing.JFrame {
     }//GEN-LAST:event_jPanel4MouseClicked
 
     private void formWindowActivated(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowActivated
-      Session sess = Session.getInstance();
-        if(sess.getUid() == 0){
-           JOptionPane.showMessageDialog(null, "No account, Login First!"); 
-           loginF lf = new loginF();
-           lf.setVisible(true);
-           this.dispose();
-        }
-        acc_fname.setText(""+sess.getFname());          
+   Session sess = Session.getInstance();
+if (sess.getUid() == 0) {
+    JOptionPane.showMessageDialog(null, "No account, Login First!"); 
+    loginF lf = new loginF();
+    lf.setVisible(true);
+    this.dispose();
+}
+
+
+acc_fname.setText("" + sess.getFname());
+
+
+dbConnector dbc = new dbConnector();
+try (Connection conn = dbc.getConnection();
+     PreparedStatement pst = conn.prepareStatement("SELECT balance FROM tbl_users WHERE u_id = ?")) {
+
+    pst.setInt(1, sess.getUid()); 
+
+    ResultSet rs = pst.executeQuery();
+    if (rs.next()) {
+        double balance = rs.getDouble("balance");
+        acc_balance.setText("₱ " + String.format("%.2f", balance)); 
+    } else {
+        acc_balance.setText("₱ 0.00"); 
+    }
+
+} catch (Exception e) {
+    JOptionPane.showMessageDialog(null, "Error loading balance: " + e.getMessage());
+}
+
+        
     }//GEN-LAST:event_formWindowActivated
 
     private void jPanel5MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jPanel5MouseClicked
@@ -298,6 +327,7 @@ public class UserDashboard extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JLabel acc_balance;
     public javax.swing.JLabel acc_fname;
     private javax.swing.JButton jButton2;
     private javax.swing.JLabel jLabel1;

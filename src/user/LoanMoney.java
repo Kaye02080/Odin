@@ -217,8 +217,7 @@ public class LoanMoney extends javax.swing.JFrame {
  Session sess = Session.getInstance();
 int userId = sess.getUid(); // Get user ID
 
-// Check if the user ID is valid
-if (userId == -1) {  // You might need to adjust this based on how your system handles invalid user IDs
+if (userId <= 0) {
     JOptionPane.showMessageDialog(this, "User not logged in!", "Error", JOptionPane.ERROR_MESSAGE);
     return;
 }
@@ -227,7 +226,6 @@ String user = username.getText().trim();
 String amountStr = loanamount.getText().trim();
 String uname2 = user; // Set the username for the log
 
-// Validation for empty fields
 if (user.isEmpty() || amountStr.isEmpty()) {
     JOptionPane.showMessageDialog(this, "All fields are required!", "Error", JOptionPane.ERROR_MESSAGE);
     return;
@@ -235,6 +233,17 @@ if (user.isEmpty() || amountStr.isEmpty()) {
 
 try {
     double amount = Double.parseDouble(amountStr);
+
+    // Custom validation
+    if (amount <= 0) {
+        JOptionPane.showMessageDialog(this, "Loan amount must be greater than 0.", "Validation Error", JOptionPane.WARNING_MESSAGE);
+        return;
+    }
+
+    if (amount > 1000000) {
+        JOptionPane.showMessageDialog(this, "Loan amount exceeds the maximum allowed (₱1,000,000).", "Validation Error", JOptionPane.WARNING_MESSAGE);
+        return;
+    }
 
     dbConnector dbc = new dbConnector();
     String sql = "INSERT INTO tbl_loans (u_id, u_username, loan_amount, loan_description, loan_status) VALUES (?, ?, ?, ?, ?)";
@@ -247,16 +256,15 @@ try {
         pst.setDouble(3, amount); // loan amount
         pst.setString(4, "Loan request submitted"); // loan description
         pst.setString(5, "PENDING"); // loan status (ENUM)
-        
+
         int result = pst.executeUpdate();
-        
+
         if (result > 0) {
             JOptionPane.showMessageDialog(this, "Loan request submitted successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);
-            
+
             // Log the event with the username
             logEvent(userId, uname2, "User Loan a Money");
 
-            // Clear fields after submission
             username.setText("");
             loanamount.setText("");
         } else {
