@@ -9,6 +9,7 @@ import config.Session;
 import config.dbConnector;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.Date;
@@ -188,7 +189,7 @@ public class SendMoneyDashoard extends javax.swing.JFrame {
     }//GEN-LAST:event_ReceivernameActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-    Session sess = Session.getInstance();
+ Session sess = Session.getInstance();
 int senderId = sess.getUid(); // Get sender's user ID
 
 if (senderId <= 0) {
@@ -196,7 +197,7 @@ if (senderId <= 0) {
     return;
 }
 
-// Get the inputs
+// Get input values
 String senderUsername = Senderusername.getText().trim();
 String receiverUsername = Receivername.getText().trim();
 String amountStr = loanamount.getText().trim(); // Assuming your amount textfield is loanamount
@@ -221,33 +222,85 @@ try {
     }
 
     dbConnector dbc = new dbConnector();
-    String sql = "INSERT INTO tbl_sendmoney (sender_id, sender_username, receiver_username, amount, description, status) VALUES (?, ?, ?, ?, ?, ?)";
+    try (Connection conn = dbc.getConnection()) {
+        conn.setAutoCommit(false); // Start transaction
 
-    try (Connection conn = dbc.getConnection();
-         PreparedStatement pst = conn.prepareStatement(sql)) {
+        // 1. Get sender's current balance
+        String balanceQuery = "SELECT balance FROM tbl_users WHERE u_username = ?";
+        try (PreparedStatement pstBalance = conn.prepareStatement(balanceQuery)) {
+            pstBalance.setString(1, senderUsername);
+            ResultSet rs = pstBalance.executeQuery();
 
-        pst.setInt(1, senderId); // sender's user ID from session
-        pst.setString(2, senderUsername); // sender's username from textfield
-        pst.setString(3, receiverUsername); // receiver's username from textfield
-        pst.setDouble(4, amount); // amount
-        pst.setString(5, "Money Sent"); // description
-        pst.setString(6, "COMPLETED"); // status
+            double senderBalance = 0.0;
+            if (rs.next()) {
+                senderBalance = rs.getDouble("balance");
+            } else {
+                JOptionPane.showMessageDialog(this, "Sender not found!", "Error", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
 
-        int result = pst.executeUpdate();
+            // 2. Check if sender has enough balance
+            if (senderBalance < amount) {
+                JOptionPane.showMessageDialog(this, "Insufficient balance!", "Error", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
 
-        if (result > 0) {
-            JOptionPane.showMessageDialog(this, "Money sent successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);
+            // 3. Deduct from sender
+            String deductSender = "UPDATE tbl_users SET balance = balance - ? WHERE u_username = ?";
+            try (PreparedStatement pstDeduct = conn.prepareStatement(deductSender)) {
+                pstDeduct.setDouble(1, amount);
+                pstDeduct.setString(2, senderUsername);
+                pstDeduct.executeUpdate();
+            }
 
-            // Log the event
-            logEvent(senderId, senderUsername, "User Sent Money to " + receiverUsername);
+            // 4. Add to receiver
+            String addReceiver = "UPDATE tbl_users SET balance = balance + ? WHERE u_username = ?";
+            try (PreparedStatement pstAdd = conn.prepareStatement(addReceiver)) {
+                pstAdd.setDouble(1, amount);
+                pstAdd.setString(2, receiverUsername);
+                int receiverUpdateResult = pstAdd.executeUpdate();
 
-            // Clear fields
-            Senderusername.setText("");
-            Receivername.setText("");
-            loanamount.setText("");
-        } else {
-            JOptionPane.showMessageDialog(this, "Failed to send money.", "Error", JOptionPane.ERROR_MESSAGE);
+                if (receiverUpdateResult == 0) {
+                    conn.rollback();
+                    JOptionPane.showMessageDialog(this, "Receiver not found!", "Error", JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+            }
+
+            // 5. Insert send money transaction
+            String sql = "INSERT INTO tbl_sendmoney (sender_id, sender_username, receiver_username, amount, description, status) VALUES (?, ?, ?, ?, ?, ?)";
+            try (PreparedStatement pst = conn.prepareStatement(sql)) {
+                pst.setInt(1, senderId);
+                pst.setString(2, senderUsername);
+                pst.setString(3, receiverUsername);
+                pst.setDouble(4, amount);
+                pst.setString(5, "Money Sent");
+                pst.setString(6, "COMPLETED");
+
+                int result = pst.executeUpdate();
+
+                if (result > 0) {
+                    conn.commit(); // Commit transaction
+
+                    JOptionPane.showMessageDialog(this, "Money sent successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);
+
+                    // Log the event
+                    logEvent(senderId, senderUsername, "User Sent Money to " + receiverUsername);
+
+                    // Clear input fields
+                    Senderusername.setText("");
+                    Receivername.setText("");
+                    loanamount.setText("");
+                } else {
+                    conn.rollback();
+                    JOptionPane.showMessageDialog(this, "Failed to send money.", "Error", JOptionPane.ERROR_MESSAGE);
+                }
+            }
+        } catch (Exception ex) {
+            conn.rollback();
+            JOptionPane.showMessageDialog(this, "Transaction failed: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         }
+
     }
 
 } catch (NumberFormatException e) {
@@ -255,6 +308,8 @@ try {
 } catch (Exception e) {
     JOptionPane.showMessageDialog(this, "Error: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
 }
+
+
         // TODO add your handling code here:
     }//GEN-LAST:event_jButton2ActionPerformed
 

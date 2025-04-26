@@ -76,10 +76,10 @@ public class LoanApproval extends javax.swing.JFrame {
 
         pstmt.setInt(1, userId);
         pstmt.setString(2, username);
-        pstmt.setTimestamp(3, new Timestamp(new Date().getTime())); // login_time
-        pstmt.setString(4, "Success - User Action"); // u_type (general category)
-        pstmt.setString(5, "Active"); // log_status
-        pstmt.setString(6, description); // log_description (e.g., "User Reset Their Password")
+        pstmt.setTimestamp(3, new Timestamp(new Date().getTime())); 
+        pstmt.setString(4, "Success - User Action"); 
+        pstmt.setString(5, "Active"); 
+        pstmt.setString(6, description);
 
         pstmt.executeUpdate();
         System.out.println("Log event recorded successfully.");
@@ -227,67 +227,127 @@ public class LoanApproval extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-     int selectedRow = loantbl.getSelectedRow();
-    if (selectedRow == -1) {
-        JOptionPane.showMessageDialog(null, "Please select a loan request to approve.");
-        return;
-    }
+int selectedRow = loantbl.getSelectedRow();
+if (selectedRow == -1) {
+    JOptionPane.showMessageDialog(null, "Please select a loan request to approve.");
+    return;
+}
 
-    int loanId = (int) loantbl.getValueAt(selectedRow, 0); // Loan ID column
-    String username = loantbl.getValueAt(selectedRow, 1).toString(); // Username column
-    String loanAmount = loantbl.getValueAt(selectedRow, 2).toString(); // Loan Amount column
-    String currentStatus = loantbl.getValueAt(selectedRow, 3).toString(); // Loan Status column
+int loanId = (int) loantbl.getValueAt(selectedRow, 0); // Loan ID column
+String username = loantbl.getValueAt(selectedRow, 1).toString(); // Username column
+String loanAmountStr = loantbl.getValueAt(selectedRow, 2).toString(); // Loan Amount column
+double loanAmount = Double.parseDouble(loanAmountStr); // Convert loan amount to double
+String currentStatus = loantbl.getValueAt(selectedRow, 3).toString(); // Loan Status column
 
-    // Check if the loan is already approved or rejected
-    if ("APPROVED".equals(currentStatus) || "REJECTED".equals(currentStatus)) {
-        JOptionPane.showMessageDialog(null, "This loan has already been processed.");
-        return;
-    }
+// Check if the loan is already approved or rejected
+if ("APPROVED".equals(currentStatus) || "REJECTED".equals(currentStatus)) {
+    JOptionPane.showMessageDialog(null, "This loan has already been processed.");
+    return;
+}
 
-    // Get admin session details
-    Session sess = Session.getInstance();
-    int adminId = sess.getUid();
-    String adminUsername = sess.getUsername();
+// Get admin session details
+Session sess = Session.getInstance();
+int adminId = sess.getUid();
+String adminUsername = sess.getUsername();
 
-    if (adminId == -1) {
-        JOptionPane.showMessageDialog(null, "Admin not logged in!", "Error", JOptionPane.ERROR_MESSAGE);
-        return;
-    }
+if (adminId == -1) {
+    JOptionPane.showMessageDialog(null, "Admin not logged in!", "Error", JOptionPane.ERROR_MESSAGE);
+    return;
+}
 
-    try {
-        dbConnector dbc = new dbConnector();
-        String sql = "UPDATE tbl_loans SET loan_status = 'APPROVED' WHERE loan_id = ? AND loan_status = 'PENDING'";
-        try (Connection conn = dbc.getConnection();
-             PreparedStatement pst = conn.prepareStatement(sql)) {
-            pst.setInt(1, loanId);
-            int result = pst.executeUpdate();
+Connection conn = null;
+PreparedStatement pstLoanUpdate = null;
+PreparedStatement pstBalanceUpdate = null;
 
-            if (result > 0) {
-                JOptionPane.showMessageDialog(null, "Loan Approved.");
+try {
+    dbConnector dbc = new dbConnector();
+    conn = dbc.getConnection();
+    conn.setAutoCommit(false); // Start transaction
 
-                // Log the approval
-                String description = "Admin approved Loan ID: " + loanId;
-                logEvent(adminId, adminUsername, description);
+    // 1. Update loan status to APPROVED
+    String sqlLoanUpdate = "UPDATE tbl_loans SET loan_status = 'APPROVED' WHERE loan_id = ? AND loan_status = 'PENDING'";
+    pstLoanUpdate = conn.prepareStatement(sqlLoanUpdate);
+    pstLoanUpdate.setInt(1, loanId);
+    int loanUpdateResult = pstLoanUpdate.executeUpdate();
 
-                // Refresh table
-                loadPendingLoans();
+    // Check if loan update was successful
+    if (loanUpdateResult > 0) {
+        // 2. Get user's current balance
+        String getBalanceQuery = "SELECT balance FROM tbl_users WHERE u_username = ?";
+        pstBalanceUpdate = conn.prepareStatement(getBalanceQuery);
+        pstBalanceUpdate.setString(1, username);
+        ResultSet rsBalance = pstBalanceUpdate.executeQuery();
 
-                // Generate receipt
-                area.setText(""); // Clear previous content
-                area.append("*********************************************\n");
-                area.append("*        Money Remittance's Receipt System        *\n");
-                area.append("*********************************************\n\n");
-                Date date = new Date();
-                area.append(date.toString() + "\n\n");
-                area.append("User's Username: " + username + "\n");
-                area.append("Loan's Amount: " + loanAmount + "\n");
-            } else {
-                JOptionPane.showMessageDialog(null, "Loan approval failed. Loan may not be in pending status.");
-            }
+        double currentBalance = 0.0;
+        if (rsBalance.next()) {
+            currentBalance = rsBalance.getDouble("balance");
+            System.out.println("Current balance for " + username + ": " + currentBalance);  // Debugging line
+        } else {
+            JOptionPane.showMessageDialog(null, "User not found!");
+            return;
         }
-    } catch (Exception e) {
-        JOptionPane.showMessageDialog(null, "Error: " + e.getMessage());
+
+        // 3. Update user's balance by ADDING loan amount
+        double newBalance = currentBalance + loanAmount;  // Add loan amount to current balance
+        System.out.println("New balance after loan: " + newBalance);  // Debugging line
+        
+        String updateBalanceQuery = "UPDATE tbl_users SET balance = ? WHERE u_username = ?";
+        pstBalanceUpdate = conn.prepareStatement(updateBalanceQuery);
+        pstBalanceUpdate.setDouble(1, newBalance);
+        pstBalanceUpdate.setString(2, username);
+        int balanceUpdateResult = pstBalanceUpdate.executeUpdate();
+
+        // If both operations succeed, commit the transaction
+        if (balanceUpdateResult > 0) {
+            conn.commit(); // Commit the transaction
+            JOptionPane.showMessageDialog(null, "Loan Approved and Balance Updated.");
+
+            // Log the approval
+            String description = "Admin approved Loan ID: " + loanId + " for user " + username;
+            logEvent(adminId, adminUsername, description);
+
+            // Refresh the table with the updated loan statuses
+            loadPendingLoans();
+
+            // Generate a receipt
+            area.setText(""); // Clear previous content
+            area.append("*********************************************\n");
+            area.append("*        Money Remittance's Receipt System        *\n");
+            area.append("*********************************************\n\n");
+            Date date = new Date();
+            area.append(date.toString() + "\n\n");
+            area.append("User's Username: " + username + "\n");
+            area.append("Loan's Amount: " + loanAmount + "\n");
+
+        } else {
+            conn.rollback(); // Rollback transaction if balance update fails
+            JOptionPane.showMessageDialog(null, "Error updating user balance.");
+        }
+    } else {
+        conn.rollback(); // Rollback transaction if loan update fails
+        JOptionPane.showMessageDialog(null, "Loan approval failed. Loan may not be in pending status.");
     }
+
+} catch (Exception e) {
+    if (conn != null) {
+        try {
+            conn.rollback(); // Rollback the transaction in case of error
+        } catch (SQLException sqlEx) {
+            JOptionPane.showMessageDialog(null, "Error rolling back transaction: " + sqlEx.getMessage());
+        }
+    }
+    JOptionPane.showMessageDialog(null, "Error: " + e.getMessage());
+} finally {
+    try {
+        if (pstLoanUpdate != null) pstLoanUpdate.close();
+        if (pstBalanceUpdate != null) pstBalanceUpdate.close();
+        if (conn != null) conn.close(); // Close the connection
+    } catch (SQLException e) {
+        JOptionPane.showMessageDialog(null, "Error closing resources: " + e.getMessage());
+    }
+}
+
+
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed

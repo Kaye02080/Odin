@@ -13,6 +13,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
@@ -29,6 +30,8 @@ public class Admindashboard extends javax.swing.JFrame {
      */
     public Admindashboard() {
         initComponents();
+        
+        loadUserProfile();
         
     }
 
@@ -104,7 +107,31 @@ public class Admindashboard extends javax.swing.JFrame {
     }
 }
 
+ private void loadUserProfile() {
+    dbConnector dbc = new dbConnector();
+    Session sess = Session.getInstance();
 
+    String query = "SELECT u_image FROM tbl_users WHERE u_id = ?";
+
+    try (Connection conn = dbc.getConnection();
+         PreparedStatement pstmt = conn.prepareStatement(query)) {
+
+        pstmt.setInt(1, sess.getUid());
+        ResultSet rs = pstmt.executeQuery();
+
+        if (rs.next()) {
+            String imagePath = rs.getString("u_image");
+
+            if (imagePath != null && !imagePath.isEmpty()) {
+                ImageIcon icon = new ImageIcon(imagePath);
+                u_image.setIcon(icon);
+            }
+        }
+    } catch (SQLException e) {
+        e.printStackTrace(); // Log the error
+        JOptionPane.showMessageDialog(this, "Error loading profile image: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+    }
+}   
 
 
 
@@ -125,12 +152,14 @@ public class Admindashboard extends javax.swing.JFrame {
         jPanel4 = new javax.swing.JPanel();
         jLabel4 = new javax.swing.JLabel();
         jPanel6 = new javax.swing.JPanel();
-        jLabel2 = new javax.swing.JLabel();
-        acc_lname = new javax.swing.JLabel();
-        acc_fname = new javax.swing.JLabel();
+        u_image = new javax.swing.JLabel();
         jPanel2 = new javax.swing.JPanel();
         jLabel5 = new javax.swing.JLabel();
         jLabel7 = new javax.swing.JLabel();
+        jPanel7 = new javax.swing.JPanel();
+        jLabel9 = new javax.swing.JLabel();
+        acc_lname = new javax.swing.JLabel();
+        acc_fname = new javax.swing.JLabel();
         jPanel3 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
@@ -171,7 +200,7 @@ public class Admindashboard extends javax.swing.JFrame {
         jLabel6.setText("VIEW TRANSACTION");
         jPanel5.add(jLabel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 0, 220, 60));
 
-        jPanel1.add(jPanel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 250, 240, 60));
+        jPanel1.add(jPanel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 330, 240, 60));
 
         jPanel4.setBackground(new java.awt.Color(255, 255, 255));
         jPanel4.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0), 2));
@@ -188,24 +217,13 @@ public class Admindashboard extends javax.swing.JFrame {
         jLabel4.setText("USERS");
         jPanel4.add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 0, 130, 60));
 
-        jPanel1.add(jPanel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 350, 240, 60));
+        jPanel1.add(jPanel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 410, 240, 60));
 
         jPanel6.setBackground(new java.awt.Color(204, 204, 204));
         jPanel6.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        jLabel2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/VVT.png"))); // NOI18N
-        jLabel2.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        jPanel6.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 0, 60, 140));
-
-        acc_lname.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
-        acc_lname.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        acc_lname.setText("ADMIN");
-        jPanel6.add(acc_lname, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 50, 70, 20));
-
-        acc_fname.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
-        acc_fname.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        acc_fname.setText("ADMIN");
-        jPanel6.add(acc_fname, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 70, -1, -1));
+        u_image.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jPanel6.add(u_image, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 180, 140));
 
         jPanel1.add(jPanel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 40, 180, 140));
 
@@ -227,7 +245,37 @@ public class Admindashboard extends javax.swing.JFrame {
         jLabel7.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/approved.png"))); // NOI18N
         jPanel2.add(jLabel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 0, 60, 60));
 
-        jPanel1.add(jPanel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 450, 240, 60));
+        jPanel1.add(jPanel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 490, 240, 60));
+
+        jPanel7.setBackground(new java.awt.Color(255, 255, 255));
+        jPanel7.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0), 2));
+        jPanel7.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jPanel7MouseClicked(evt);
+            }
+        });
+        jPanel7.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        jLabel9.setBackground(new java.awt.Color(0, 255, 255));
+        jLabel9.setFont(new java.awt.Font("Yu Gothic", 1, 14)); // NOI18N
+        jLabel9.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel9.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/users.png"))); // NOI18N
+        jLabel9.setText("ACCOUNT");
+        jPanel7.add(jLabel9, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 170, 60));
+
+        jPanel1.add(jPanel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 250, 240, -1));
+
+        acc_lname.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        acc_lname.setForeground(new java.awt.Color(255, 255, 255));
+        acc_lname.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        acc_lname.setText("ADMIN");
+        jPanel1.add(acc_lname, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 180, 70, 20));
+
+        acc_fname.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        acc_fname.setForeground(new java.awt.Color(255, 255, 255));
+        acc_fname.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        acc_fname.setText("ADMIN");
+        jPanel1.add(acc_fname, new org.netbeans.lib.awtextra.AbsoluteConstraints(120, 200, -1, -1));
 
         getContentPane().add(jPanel1);
         jPanel1.setBounds(0, 0, 240, 720);
@@ -310,6 +358,12 @@ public class Admindashboard extends javax.swing.JFrame {
        this.dispose();      // TODO add your handling code here:
     }//GEN-LAST:event_jPanel2MouseClicked
 
+    private void jPanel7MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jPanel7MouseClicked
+        AccountAdminDetails ads = new AccountAdminDetails();
+        ads.setVisible(true);
+        this.dispose();
+    }//GEN-LAST:event_jPanel7MouseClicked
+
     /**
      * @param args the command line arguments
      */
@@ -351,19 +405,21 @@ public class Admindashboard extends javax.swing.JFrame {
     private javax.swing.JLabel acc_lname;
     private javax.swing.JButton jButton2;
     private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
+    private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
     private javax.swing.JPanel jPanel5;
     private javax.swing.JPanel jPanel6;
+    private javax.swing.JPanel jPanel7;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable logstbl;
+    private javax.swing.JLabel u_image;
     // End of variables declaration//GEN-END:variables
 }

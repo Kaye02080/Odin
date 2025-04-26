@@ -310,59 +310,59 @@ public class registF1 extends javax.swing.JFrame {
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
     
-   if(fn.getText().isEmpty() || ln.getText().isEmpty() || mail.getText().isEmpty() || us.getText().isEmpty() || 
-       pw.getText().isEmpty() || ans.getText().isEmpty()) {  // Check if answer is empty
-        JOptionPane.showMessageDialog(null, "All fields are required!");   
-    } else if(pw.getText().length() < 8) {
-        JOptionPane.showMessageDialog(null, "Password must be at least 8 characters.");
-        pw.setText("");
-    } else if(duplicateCheck()) {
-        System.out.println("Duplicate Exists!");
-    } else {
-        dbConnector dbc = new dbConnector();
-        try {
-            String pass = passwordHasher.hashPassword(pw.getText()); // Hash password
-            String secQuestion = sq.getSelectedItem().toString();
-            String secAnswer = passwordHasher.hashPassword(ans.getText()); // 🔐 Hash security answer
+if(fn.getText().isEmpty() || ln.getText().isEmpty() || mail.getText().isEmpty() || us.getText().isEmpty() || 
+   pw.getText().isEmpty() || ans.getText().isEmpty()) {  // Check if answer is empty
+    JOptionPane.showMessageDialog(null, "All fields are required!");   
+} else if(pw.getText().length() < 8) {
+    JOptionPane.showMessageDialog(null, "Password must be at least 8 characters.");
+    pw.setText("");
+} else if(duplicateCheck()) {
+    System.out.println("Duplicate Exists!");
+} else {
+    dbConnector dbc = new dbConnector();
+    try {
+        String pass = passwordHasher.hashPassword(pw.getText()); // Hash password
+        String secQuestion = sq.getSelectedItem().toString();
+        String secAnswer = passwordHasher.hashPassword(ans.getText()); // 🔐 Hash security answer
 
-            String query = "INSERT INTO tbl_users (u_fname, u_lname, u_email, u_username, u_password, security_question, security_answer, u_type, u_image, u_status) "
-                    + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, 'Null', 'Pending')";
+        // ✅ Added balance field
+        String query = "INSERT INTO tbl_users (u_fname, u_lname, u_email, u_username, u_password, security_question, security_answer, u_type, u_image, u_status, balance) "
+                     + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, 'Null', 'Pending', ?)";
 
-            try (Connection con = dbc.getConnection();
-                 PreparedStatement stmt = con.prepareStatement(query, Statement.RETURN_GENERATED_KEYS)) {
-                stmt.setString(1, fn.getText());
-                stmt.setString(2, ln.getText());
-                stmt.setString(3, mail.getText());
-                stmt.setString(4, us.getText());
-                stmt.setString(5, pass);           // Hashed password
-                stmt.setString(6, secQuestion);
-                stmt.setString(7, secAnswer);      // Hashed security answer
-                stmt.setString(8, ut.getSelectedItem().toString());
+        try (Connection con = dbc.getConnection();
+             PreparedStatement stmt = con.prepareStatement(query, Statement.RETURN_GENERATED_KEYS)) {
+            stmt.setString(1, fn.getText());
+            stmt.setString(2, ln.getText());
+            stmt.setString(3, mail.getText());
+            stmt.setString(4, us.getText());
+            stmt.setString(5, pass);           // Hashed password
+            stmt.setString(6, secQuestion);
+            stmt.setString(7, secAnswer);      // Hashed security answer
+            stmt.setString(8, ut.getSelectedItem().toString());
+            stmt.setDouble(9, 0.00);           // ✅ Initial balance is 0.00
 
-                int rowsInserted = stmt.executeUpdate();
-                if (rowsInserted > 0) {
-                    // Get the generated user ID
-                    try (ResultSet rs = stmt.getGeneratedKeys()) {
-                        if (rs.next()) {
-                            int userId = rs.getInt(1); // The auto-generated user ID
-                            
-                            // Log the event (registration)
-                            logEvent(userId, us.getText(), "New user registered: " + us.getText());
-                            
-                            JOptionPane.showMessageDialog(null, "Registration Successful!");
-                            loginF lfr = new loginF();
-                            lfr.setVisible(true);
-                            this.dispose();
-                        }
+            int rowsInserted = stmt.executeUpdate();
+            if (rowsInserted > 0) {
+                try (ResultSet rs = stmt.getGeneratedKeys()) {
+                    if (rs.next()) {
+                        int userId = rs.getInt(1); // The auto-generated user ID
+                        logEvent(userId, us.getText(), "New user registered: " + us.getText());
+
+                        JOptionPane.showMessageDialog(null, "Registration Successful!");
+                        loginF lfr = new loginF();
+                        lfr.setVisible(true);
+                        this.dispose();
                     }
-                } else {
-                    JOptionPane.showMessageDialog(null, "Registration Failed. Try again!");      
                 }
+            } else {
+                JOptionPane.showMessageDialog(null, "Registration Failed. Try again!");      
             }
-        } catch (SQLException | NoSuchAlgorithmException ex) {
-            System.out.println("Error: " + ex.getMessage());
         }
+    } catch (SQLException | NoSuchAlgorithmException ex) {
+        System.out.println("Error: " + ex.getMessage());
     }
+}
+
 
 
         

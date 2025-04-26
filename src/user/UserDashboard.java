@@ -16,6 +16,7 @@ import java.sql.SQLException;
 import javax.swing.ImageIcon;
 
 import javax.swing.JOptionPane;
+import javax.swing.SwingUtilities;
 import testappnew.loginF;
 
 /**
@@ -29,7 +30,9 @@ public class UserDashboard extends javax.swing.JFrame {
      */
     public UserDashboard() {
         initComponents();
-        
+         Session sess = Session.getInstance();
+    acc_fname.setText(sess.getFname());
+    updateBalance(sess.getUid());
         loadUserProfile();
     }
 
@@ -82,7 +85,39 @@ public class UserDashboard extends javax.swing.JFrame {
         JOptionPane.showMessageDialog(null, "Error logging out: " + ex.getMessage());
     }
 }
+  private void updateBalance(int userId) {
+    dbConnector dbc = new dbConnector();
+    String query = "SELECT balance FROM tbl_users WHERE u_id = ?";
     
+    try (Connection conn = dbc.getConnection();
+         PreparedStatement pst = conn.prepareStatement(query)) {
+
+        pst.setInt(1, userId);
+
+        try (ResultSet rs = pst.executeQuery()) {
+            if (rs.next()) {
+                double balance = rs.getDouble("balance");
+
+                // Update UI on the EDT (Event Dispatch Thread)
+                SwingUtilities.invokeLater(() -> {
+                    acc_balance.setText("₱ " + String.format("%.2f", balance));
+                });
+            } else {
+                // If no balance found, display 0.00
+                SwingUtilities.invokeLater(() -> {
+                    acc_balance.setText("₱ 0.00");
+                });
+            }
+        }
+
+        System.out.println("Updating balance for UID: " + userId);
+
+    } catch (Exception e) {
+        JOptionPane.showMessageDialog(null, "Error loading balance: " + e.getMessage());
+        System.err.println("Error loading balance for user ID " + userId + ": " + e.getMessage());
+    }
+}
+
     
     /**
      * This method is called from within the constructor to initialize the form.
@@ -106,6 +141,8 @@ public class UserDashboard extends javax.swing.JFrame {
         jLabel8 = new javax.swing.JLabel();
         acc_fname = new javax.swing.JLabel();
         acc_balance = new javax.swing.JLabel();
+        jPanel8 = new javax.swing.JPanel();
+        jLabel3 = new javax.swing.JLabel();
         jPanel2 = new javax.swing.JPanel();
         jPanel3 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
@@ -205,7 +242,23 @@ public class UserDashboard extends javax.swing.JFrame {
         acc_balance.setBackground(new java.awt.Color(255, 255, 255));
         acc_balance.setForeground(new java.awt.Color(255, 255, 255));
         acc_balance.setText("Balance :");
-        jPanel1.add(acc_balance, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 200, -1, 20));
+        jPanel1.add(acc_balance, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 200, -1, 20));
+
+        jPanel8.setBackground(new java.awt.Color(255, 255, 255));
+        jPanel8.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0), 2));
+        jPanel8.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jPanel8MouseClicked(evt);
+            }
+        });
+        jPanel8.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        jLabel3.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/user/send (1).png"))); // NOI18N
+        jLabel3.setText("SEND MONEY");
+        jPanel8.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 0, 130, 50));
+
+        jPanel1.add(jPanel8, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 400, 190, 50));
 
         getContentPane().add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 190, 560));
 
@@ -246,35 +299,20 @@ public class UserDashboard extends javax.swing.JFrame {
 
     private void formWindowActivated(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowActivated
    Session sess = Session.getInstance();
-if (sess.getUid() == 0) {
-    JOptionPane.showMessageDialog(null, "No account, Login First!"); 
-    loginF lf = new loginF();
-    lf.setVisible(true);
-    this.dispose();
-}
 
-
-acc_fname.setText("" + sess.getFname());
-
-
-dbConnector dbc = new dbConnector();
-try (Connection conn = dbc.getConnection();
-     PreparedStatement pst = conn.prepareStatement("SELECT balance FROM tbl_users WHERE u_id = ?")) {
-
-    pst.setInt(1, sess.getUid()); 
-
-    ResultSet rs = pst.executeQuery();
-    if (rs.next()) {
-        double balance = rs.getDouble("balance");
-        acc_balance.setText("₱ " + String.format("%.2f", balance)); 
-    } else {
-        acc_balance.setText("₱ 0.00"); 
+    if (sess.getUid() == 0) {
+        JOptionPane.showMessageDialog(null, "No account, Login First!");
+        loginF lf = new loginF();
+        lf.setVisible(true);
+        this.dispose();
+        return; // Stop the method from continuing
     }
 
-} catch (Exception e) {
-    JOptionPane.showMessageDialog(null, "Error loading balance: " + e.getMessage());
-}
+    acc_fname.setText("" + sess.getFname());
 
+    // Fetch and update balance
+    updateBalance(sess.getUid());
+    
         
     }//GEN-LAST:event_formWindowActivated
 
@@ -287,6 +325,12 @@ try (Connection conn = dbc.getConnection();
         ads.setVisible(true);
         this.dispose();
     }//GEN-LAST:event_jPanel6MouseClicked
+
+    private void jPanel8MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jPanel8MouseClicked
+        SendMoneyDashoard ads = new SendMoneyDashoard();
+        ads.setVisible(true);
+        this.dispose();        // TODO add your handling code here:
+    }//GEN-LAST:event_jPanel8MouseClicked
 
     /**
      * @param args the command line arguments
@@ -331,6 +375,7 @@ try (Connection conn = dbc.getConnection();
     public javax.swing.JLabel acc_fname;
     private javax.swing.JButton jButton2;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
@@ -342,6 +387,7 @@ try (Connection conn = dbc.getConnection();
     private javax.swing.JPanel jPanel5;
     private javax.swing.JPanel jPanel6;
     private javax.swing.JPanel jPanel7;
+    private javax.swing.JPanel jPanel8;
     private javax.swing.JLabel u_image;
     // End of variables declaration//GEN-END:variables
 }
