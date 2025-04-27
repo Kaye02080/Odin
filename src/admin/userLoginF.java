@@ -282,6 +282,8 @@ public class userLoginF extends javax.swing.JFrame {
         throw new RuntimeException(e);
     }
 }
+         
+
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -305,6 +307,7 @@ public class userLoginF extends javax.swing.JFrame {
         add = new javax.swing.JButton();
         update = new javax.swing.JButton();
         register1 = new javax.swing.JButton();
+        jButton1 = new javax.swing.JButton();
         jPanel3 = new javax.swing.JPanel();
         jPanel4 = new javax.swing.JPanel();
         jPanel6 = new javax.swing.JPanel();
@@ -369,7 +372,7 @@ public class userLoginF extends javax.swing.JFrame {
                 addActionPerformed(evt);
             }
         });
-        jPanel2.add(add, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 20, 140, 40));
+        jPanel2.add(add, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 20, 140, 40));
 
         update.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
         update.setText("UPDATE");
@@ -383,7 +386,7 @@ public class userLoginF extends javax.swing.JFrame {
                 updateActionPerformed(evt);
             }
         });
-        jPanel2.add(update, new org.netbeans.lib.awtextra.AbsoluteConstraints(200, 20, 140, 40));
+        jPanel2.add(update, new org.netbeans.lib.awtextra.AbsoluteConstraints(160, 20, 140, 40));
 
         register1.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
         register1.setText("DELETE");
@@ -392,7 +395,16 @@ public class userLoginF extends javax.swing.JFrame {
                 register1ActionPerformed(evt);
             }
         });
-        jPanel2.add(register1, new org.netbeans.lib.awtextra.AbsoluteConstraints(370, 20, 130, 40));
+        jPanel2.add(register1, new org.netbeans.lib.awtextra.AbsoluteConstraints(310, 20, 130, 40));
+
+        jButton1.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
+        jButton1.setText("REFRESH");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
+        jPanel2.add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(450, 20, 130, 40));
 
         getContentPane().add(jPanel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 0, 710, 70));
 
@@ -508,6 +520,10 @@ public class userLoginF extends javax.swing.JFrame {
         deleteUser();
     }//GEN-LAST:event_register1ActionPerformed
 
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        loadUsersData(); // TODO add your handling code here:
+    }//GEN-LAST:event_jButton1ActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -549,6 +565,7 @@ public class userLoginF extends javax.swing.JFrame {
     private javax.swing.JLabel acc_id;
     private javax.swing.JLabel acc_lname;
     private javax.swing.JButton add;
+    private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel15;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel4;

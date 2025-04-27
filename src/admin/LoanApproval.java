@@ -176,7 +176,7 @@ public class LoanApproval extends javax.swing.JFrame {
         ));
         jScrollPane1.setViewportView(loantbl);
 
-        jPanel1.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(210, 160, 570, 400));
+        jPanel1.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(210, 160, 590, 400));
 
         jButton1.setText("Approve");
         jButton1.addActionListener(new java.awt.event.ActionListener() {
@@ -462,7 +462,6 @@ try {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     public javax.swing.JTextArea area;
-    public javax.swing.JButton cancel;
     public javax.swing.JButton cancel1;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;

@@ -227,6 +227,8 @@ public class CreateUsersF extends javax.swing.JFrame {
             }
         }
     }
+     
+     
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -245,7 +247,6 @@ public class CreateUsersF extends javax.swing.JFrame {
         jPanel10 = new javax.swing.JPanel();
         jPanel7 = new javax.swing.JPanel();
         jLabel13 = new javax.swing.JLabel();
-        rf = new javax.swing.JButton();
         pw = new javax.swing.JPasswordField();
         jPanel6 = new javax.swing.JPanel();
         jLabel5 = new javax.swing.JLabel();
@@ -313,17 +314,6 @@ public class CreateUsersF extends javax.swing.JFrame {
         jLabel13.setText("Password");
         jPanel7.add(jLabel13);
         jLabel13.setBounds(140, 0, 70, 30);
-
-        rf.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
-        rf.setForeground(new java.awt.Color(102, 0, 255));
-        rf.setText("REFRESH");
-        rf.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                rfActionPerformed(evt);
-            }
-        });
-        jPanel7.add(rf);
-        rf.setBounds(10, 0, 90, 30);
 
         pw.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -658,16 +648,18 @@ try (PreparedStatement logPst = conn.prepareStatement(logQuery)) {
         // TODO add your handling code here:
     }//GEN-LAST:event_fnActionPerformed
 
-    private void rfActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rfActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_rfActionPerformed
-
     private void delActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_delActionPerformed
                   // TODO add your handling code here:
     }//GEN-LAST:event_delActionPerformed
 
     private void clActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_clActionPerformed
-        // TODO add your handling code here:
+      fn.setText("");
+    ln.setText("");
+    mail.setText("");
+    us.setText("");
+    pw.setText("");
+   sq.setSelectedIndex(0);
+    ans.setText("");      // TODO add your handling code here:
     }//GEN-LAST:event_clActionPerformed
 
     private void ccActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ccActionPerformed
@@ -894,7 +886,6 @@ try {
     public javax.swing.JTextField mail;
     public javax.swing.JPasswordField pw;
     public javax.swing.JButton remove;
-    private javax.swing.JButton rf;
     public javax.swing.JButton select;
     private javax.swing.JComboBox<String> sq;
     public javax.swing.JComboBox<String> stat;
