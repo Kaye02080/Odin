@@ -453,7 +453,7 @@ public class AccountAdminDetails extends javax.swing.JFrame {
                     System.out.println("SQL Exception: " + ex);
                 }
 
-                logEvent(userId, uname2, sess.getType(), "User Changed Their Details"); //fixed
+                logEvent(userId, uname2, sess.getType(), "Admin Changed Their Profile"); //fixed
             } else {
                 JOptionPane.showMessageDialog(this, "Failed to update profile!", "Error", JOptionPane.ERROR_MESSAGE);
             }

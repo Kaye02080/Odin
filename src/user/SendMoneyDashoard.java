@@ -190,62 +190,85 @@ public class SendMoneyDashoard extends javax.swing.JFrame {
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
  Session sess = Session.getInstance();
-int senderId = sess.getUid(); // Get sender's user ID
+    int senderId = sess.getUid(); // Get sender's user ID
 
-if (senderId <= 0) {
-    JOptionPane.showMessageDialog(this, "User not logged in!", "Error", JOptionPane.ERROR_MESSAGE);
-    return;
-}
-
-// Get input values
-String senderUsername = Senderusername.getText().trim();
-String receiverUsername = Receivername.getText().trim();
-String amountStr = loanamount.getText().trim(); // Assuming your amount textfield is loanamount
-
-if (senderUsername.isEmpty() || receiverUsername.isEmpty() || amountStr.isEmpty()) {
-    JOptionPane.showMessageDialog(this, "All fields are required!", "Error", JOptionPane.ERROR_MESSAGE);
-    return;
-}
-
-try {
-    double amount = Double.parseDouble(amountStr);
-
-    // Amount validation
-    if (amount <= 0) {
-        JOptionPane.showMessageDialog(this, "Send amount must be greater than 0.", "Validation Error", JOptionPane.WARNING_MESSAGE);
+    if (senderId <= 0) {
+        JOptionPane.showMessageDialog(this, "User not logged in!", "Error", JOptionPane.ERROR_MESSAGE);
         return;
     }
 
-    if (amount > 1000000) {
-        JOptionPane.showMessageDialog(this, "Send amount exceeds the maximum allowed (₱1,000,000).", "Validation Error", JOptionPane.WARNING_MESSAGE);
+    // Get input values
+    String senderUsername = Senderusername.getText().trim();
+    String receiverUsername = Receivername.getText().trim();
+    String amountStr = loanamount.getText().trim(); // Assuming your amount textfield is loanamount
+
+    if (senderUsername.isEmpty() || receiverUsername.isEmpty() || amountStr.isEmpty()) {
+        JOptionPane.showMessageDialog(this, "All fields are required!", "Error", JOptionPane.ERROR_MESSAGE);
         return;
     }
 
-    dbConnector dbc = new dbConnector();
-    try (Connection conn = dbc.getConnection()) {
-        conn.setAutoCommit(false); // Start transaction
+    try {
+        double amount = Double.parseDouble(amountStr);
 
-        // 1. Get sender's current balance
-        String balanceQuery = "SELECT balance FROM tbl_users WHERE u_username = ?";
-        try (PreparedStatement pstBalance = conn.prepareStatement(balanceQuery)) {
-            pstBalance.setString(1, senderUsername);
-            ResultSet rs = pstBalance.executeQuery();
+        // Amount validation
+        if (amount <= 0) {
+            JOptionPane.showMessageDialog(this, "Send amount must be greater than 0.", "Validation Error", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
 
-            double senderBalance = 0.0;
-            if (rs.next()) {
-                senderBalance = rs.getDouble("balance");
-            } else {
-                JOptionPane.showMessageDialog(this, "Sender not found!", "Error", JOptionPane.ERROR_MESSAGE);
-                return;
+        if (amount > 1000000) {
+            JOptionPane.showMessageDialog(this, "Send amount exceeds the maximum allowed (₱1,000,000).", "Validation Error", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        dbConnector dbc = new dbConnector();
+        try (Connection conn = dbc.getConnection()) {
+            conn.setAutoCommit(false); // Start transaction
+
+            // 🔵 Check if receiver is a normal user (not an admin)
+            String userTypeQuery = "SELECT u_type FROM tbl_users WHERE u_username = ?";
+            try (PreparedStatement pstUserType = conn.prepareStatement(userTypeQuery)) {
+                pstUserType.setString(1, receiverUsername);
+                ResultSet rsUserType = pstUserType.executeQuery();
+
+                if (rsUserType.next()) {
+                    String userType = rsUserType.getString("u_type");
+                    if ("admin".equalsIgnoreCase(userType)) {
+                        JOptionPane.showMessageDialog(this, "Cannot send money to an Admin account!", "Validation Error", JOptionPane.WARNING_MESSAGE);
+                        conn.rollback();
+                        return;
+                    }
+                } else {
+                    JOptionPane.showMessageDialog(this, "Receiver not found!", "Error", JOptionPane.ERROR_MESSAGE);
+                    conn.rollback();
+                    return;
+                }
             }
 
-            // 2. Check if sender has enough balance
-            if (senderBalance < amount) {
-                JOptionPane.showMessageDialog(this, "Insufficient balance!", "Error", JOptionPane.ERROR_MESSAGE);
-                return;
+            // 🔵 Get sender's current balance
+            String balanceQuery = "SELECT balance FROM tbl_users WHERE u_username = ?";
+            try (PreparedStatement pstBalance = conn.prepareStatement(balanceQuery)) {
+                pstBalance.setString(1, senderUsername);
+                ResultSet rs = pstBalance.executeQuery();
+
+                double senderBalance = 0.0;
+                if (rs.next()) {
+                    senderBalance = rs.getDouble("balance");
+                } else {
+                    JOptionPane.showMessageDialog(this, "Sender not found!", "Error", JOptionPane.ERROR_MESSAGE);
+                    conn.rollback();
+                    return;
+                }
+
+                // 🔵 Check if sender has enough balance
+                if (senderBalance < amount) {
+                    JOptionPane.showMessageDialog(this, "Insufficient balance!", "Error", JOptionPane.ERROR_MESSAGE);
+                    conn.rollback();
+                    return;
+                }
             }
 
-            // 3. Deduct from sender
+            // 🔵 Deduct amount from sender
             String deductSender = "UPDATE tbl_users SET balance = balance - ? WHERE u_username = ?";
             try (PreparedStatement pstDeduct = conn.prepareStatement(deductSender)) {
                 pstDeduct.setDouble(1, amount);
@@ -253,7 +276,7 @@ try {
                 pstDeduct.executeUpdate();
             }
 
-            // 4. Add to receiver
+            // 🔵 Add amount to receiver
             String addReceiver = "UPDATE tbl_users SET balance = balance + ? WHERE u_username = ?";
             try (PreparedStatement pstAdd = conn.prepareStatement(addReceiver)) {
                 pstAdd.setDouble(1, amount);
@@ -267,7 +290,7 @@ try {
                 }
             }
 
-            // 5. Insert send money transaction
+            // 🔵 Insert send money transaction record
             String sql = "INSERT INTO tbl_sendmoney (sender_id, sender_username, receiver_username, amount, description, status) VALUES (?, ?, ?, ?, ?, ?)";
             try (PreparedStatement pst = conn.prepareStatement(sql)) {
                 pst.setInt(1, senderId);
@@ -297,17 +320,14 @@ try {
                 }
             }
         } catch (Exception ex) {
-            conn.rollback();
             JOptionPane.showMessageDialog(this, "Transaction failed: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         }
 
+    } catch (NumberFormatException e) {
+        JOptionPane.showMessageDialog(this, "Please enter a valid amount.", "Error", JOptionPane.ERROR_MESSAGE);
+    } catch (Exception e) {
+        JOptionPane.showMessageDialog(this, "Error: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
     }
-
-} catch (NumberFormatException e) {
-    JOptionPane.showMessageDialog(this, "Please enter a valid amount.", "Error", JOptionPane.ERROR_MESSAGE);
-} catch (Exception e) {
-    JOptionPane.showMessageDialog(this, "Error: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-}
 
 
         // TODO add your handling code here:
