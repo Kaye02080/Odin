@@ -71,13 +71,15 @@ public class SendMoneyDashoard extends javax.swing.JFrame {
         jPanel4 = new javax.swing.JPanel();
         jPanel5 = new javax.swing.JPanel();
         Senderusername = new javax.swing.JTextField();
-        loanamount = new javax.swing.JTextField();
+        useramount = new javax.swing.JTextField();
         jLabel3 = new javax.swing.JLabel();
         cancel = new javax.swing.JButton();
         jLabel5 = new javax.swing.JLabel();
-        jLabel2 = new javax.swing.JLabel();
         Receivername = new javax.swing.JTextField();
         jButton2 = new javax.swing.JButton();
+        jLabel6 = new javax.swing.JLabel();
+        receiverId = new javax.swing.JTextField();
+        jLabel7 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
         jPanel1 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
@@ -98,11 +100,11 @@ public class SendMoneyDashoard extends javax.swing.JFrame {
             }
         });
         jPanel5.add(Senderusername, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 50, 170, 40));
-        jPanel5.add(loanamount, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 240, 170, 40));
+        jPanel5.add(useramount, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 260, 170, 40));
 
         jLabel3.setFont(new java.awt.Font("Century Gothic", 1, 18)); // NOI18N
         jLabel3.setText("Send Amount");
-        jPanel5.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 200, -1, -1));
+        jPanel5.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 220, -1, -1));
 
         cancel.setBackground(new java.awt.Color(255, 255, 255));
         cancel.setFont(new java.awt.Font("Yu Gothic UI", 1, 12)); // NOI18N
@@ -118,22 +120,18 @@ public class SendMoneyDashoard extends javax.swing.JFrame {
                 cancelActionPerformed(evt);
             }
         });
-        jPanel5.add(cancel, new org.netbeans.lib.awtextra.AbsoluteConstraints(420, 320, 70, 30));
+        jPanel5.add(cancel, new org.netbeans.lib.awtextra.AbsoluteConstraints(560, 410, 70, -1));
 
         jLabel5.setFont(new java.awt.Font("Century Gothic", 1, 18)); // NOI18N
         jLabel5.setText("Sender Username");
         jPanel5.add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 10, -1, 30));
-
-        jLabel2.setFont(new java.awt.Font("Century Gothic", 1, 18)); // NOI18N
-        jLabel2.setText("Username");
-        jPanel5.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 110, -1, 30));
 
         Receivername.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 ReceivernameActionPerformed(evt);
             }
         });
-        jPanel5.add(Receivername, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 150, 170, 40));
+        jPanel5.add(Receivername, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 150, 170, 40));
 
         jButton2.setText("Submit");
         jButton2.addActionListener(new java.awt.event.ActionListener() {
@@ -141,15 +139,24 @@ public class SendMoneyDashoard extends javax.swing.JFrame {
                 jButton2ActionPerformed(evt);
             }
         });
-        jPanel5.add(jButton2, new org.netbeans.lib.awtextra.AbsoluteConstraints(220, 300, -1, 40));
+        jPanel5.add(jButton2, new org.netbeans.lib.awtextra.AbsoluteConstraints(390, 410, 90, 30));
 
-        jPanel4.add(jPanel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 110, 590, 410));
+        jLabel6.setFont(new java.awt.Font("Century Gothic", 1, 18)); // NOI18N
+        jLabel6.setText("Receiver Username");
+        jPanel5.add(jLabel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 110, -1, 40));
+        jPanel5.add(receiverId, new org.netbeans.lib.awtextra.AbsoluteConstraints(240, 150, 180, 40));
+
+        jLabel7.setFont(new java.awt.Font("Century Gothic", 1, 18)); // NOI18N
+        jLabel7.setText("Receiver User ID");
+        jPanel5.add(jLabel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(240, 100, -1, 40));
+
+        jPanel4.add(jPanel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 100, 680, 480));
 
         jLabel4.setFont(new java.awt.Font("Century Gothic", 3, 36)); // NOI18N
         jLabel4.setText("SEND MONEY DASHBOARD");
         jPanel4.add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 40, -1, -1));
 
-        getContentPane().add(jPanel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(120, 0, 630, 560));
+        getContentPane().add(jPanel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(120, 0, 720, 610));
 
         jPanel1.setBackground(new java.awt.Color(0, 51, 102));
         jPanel1.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
@@ -164,7 +171,7 @@ public class SendMoneyDashoard extends javax.swing.JFrame {
         acc_id.setText("USER ID");
         jPanel1.add(acc_id, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 130, -1, -1));
 
-        getContentPane().add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 120, 550));
+        getContentPane().add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 120, 610));
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -190,144 +197,159 @@ public class SendMoneyDashoard extends javax.swing.JFrame {
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
  Session sess = Session.getInstance();
-    int senderId = sess.getUid(); // Get sender's user ID
+int senderId = sess.getUid(); // Get sender's user ID
 
-    if (senderId <= 0) {
-        JOptionPane.showMessageDialog(this, "User not logged in!", "Error", JOptionPane.ERROR_MESSAGE);
+if (senderId <= 0) {
+    JOptionPane.showMessageDialog(this, "User not logged in!", "Error", JOptionPane.ERROR_MESSAGE);
+    return;
+}
+
+// Get input values
+String senderUsername = Senderusername.getText().trim();
+String receiverUsername = Receivername.getText().trim();
+String receiverUserIdStr = receiverId.getText().trim();  // Assuming receiver's user ID input is in a field named receiverId
+String amountStr = useramount.getText().trim(); // Assuming your amount textfield is useramount
+
+if (senderUsername.isEmpty() || receiverUsername.isEmpty() || receiverUserIdStr.isEmpty() || amountStr.isEmpty()) {
+    JOptionPane.showMessageDialog(this, "All fields are required!", "Error", JOptionPane.ERROR_MESSAGE);
+    return;
+}
+
+try {
+    double amount = Double.parseDouble(amountStr);
+
+    // Amount validation
+    if (amount <= 0) {
+        JOptionPane.showMessageDialog(this, "Send amount must be greater than 0.", "Validation Error", JOptionPane.WARNING_MESSAGE);
         return;
     }
 
-    // Get input values
-    String senderUsername = Senderusername.getText().trim();
-    String receiverUsername = Receivername.getText().trim();
-    String amountStr = loanamount.getText().trim(); // Assuming your amount textfield is loanamount
-
-    if (senderUsername.isEmpty() || receiverUsername.isEmpty() || amountStr.isEmpty()) {
-        JOptionPane.showMessageDialog(this, "All fields are required!", "Error", JOptionPane.ERROR_MESSAGE);
+    if (amount > 1000000) {
+        JOptionPane.showMessageDialog(this, "Send amount exceeds the maximum allowed (₱1,000,000).", "Validation Error", JOptionPane.WARNING_MESSAGE);
         return;
     }
 
-    try {
-        double amount = Double.parseDouble(amountStr);
+    int receiverUserId = Integer.parseInt(receiverUserIdStr);  // Convert receiver user ID to integer
 
-        // Amount validation
-        if (amount <= 0) {
-            JOptionPane.showMessageDialog(this, "Send amount must be greater than 0.", "Validation Error", JOptionPane.WARNING_MESSAGE);
-            return;
+    dbConnector dbc = new dbConnector();
+    try (Connection conn = dbc.getConnection()) {
+        conn.setAutoCommit(false); // Start transaction
+
+        // 🔵 Check if receiver exists and get their user type and ID
+        String userTypeQuery = "SELECT u_type, u_id FROM tbl_users WHERE u_username = ?";
+        try (PreparedStatement pstUserType = conn.prepareStatement(userTypeQuery)) {
+            pstUserType.setString(1, receiverUsername);
+            ResultSet rsUserType = pstUserType.executeQuery();
+
+            if (rsUserType.next()) {
+                String userType = rsUserType.getString("u_type");
+                int dbReceiverUserId = rsUserType.getInt("u_id");  // Fetch receiver's user ID from the database
+
+                if (receiverUserId != dbReceiverUserId) {
+                    JOptionPane.showMessageDialog(this, "Receiver User ID does not match the username!", "Validation Error", JOptionPane.WARNING_MESSAGE);
+                    conn.rollback();
+                    return;
+                }
+
+                // Check if the receiver is admin or teller
+                if ("admin".equalsIgnoreCase(userType) || "teller".equalsIgnoreCase(userType)) {
+                    JOptionPane.showMessageDialog(this, "Cannot send money to an Admin or Teller account!", "Validation Error", JOptionPane.WARNING_MESSAGE);
+                    conn.rollback();
+                    return;
+                }
+
+            } else {
+                JOptionPane.showMessageDialog(this, "Receiver not found!", "Error", JOptionPane.ERROR_MESSAGE);
+                conn.rollback();
+                return;
+            }
         }
 
-        if (amount > 1000000) {
-            JOptionPane.showMessageDialog(this, "Send amount exceeds the maximum allowed (₱1,000,000).", "Validation Error", JOptionPane.WARNING_MESSAGE);
-            return;
+        // 🔵 Get sender's current balance
+        String balanceQuery = "SELECT balance FROM tbl_users WHERE u_username = ?";
+        try (PreparedStatement pstBalance = conn.prepareStatement(balanceQuery)) {
+            pstBalance.setString(1, senderUsername);
+            ResultSet rs = pstBalance.executeQuery();
+
+            double senderBalance = 0.0;
+            if (rs.next()) {
+                senderBalance = rs.getDouble("balance");
+            } else {
+                JOptionPane.showMessageDialog(this, "Sender not found!", "Error", JOptionPane.ERROR_MESSAGE);
+                conn.rollback();
+                return;
+            }
+
+            // 🔵 Check if sender has enough balance
+            if (senderBalance < amount) {
+                JOptionPane.showMessageDialog(this, "Insufficient balance!", "Error", JOptionPane.ERROR_MESSAGE);
+                conn.rollback();
+                return;
+            }
         }
 
-        dbConnector dbc = new dbConnector();
-        try (Connection conn = dbc.getConnection()) {
-            conn.setAutoCommit(false); // Start transaction
-
-            // 🔵 Check if receiver is a normal user (not an admin)
-            String userTypeQuery = "SELECT u_type FROM tbl_users WHERE u_username = ?";
-            try (PreparedStatement pstUserType = conn.prepareStatement(userTypeQuery)) {
-                pstUserType.setString(1, receiverUsername);
-                ResultSet rsUserType = pstUserType.executeQuery();
-
-                if (rsUserType.next()) {
-                    String userType = rsUserType.getString("u_type");
-                    if ("admin".equalsIgnoreCase(userType)) {
-                        JOptionPane.showMessageDialog(this, "Cannot send money to an Admin account!", "Validation Error", JOptionPane.WARNING_MESSAGE);
-                        conn.rollback();
-                        return;
-                    }
-                } else {
-                    JOptionPane.showMessageDialog(this, "Receiver not found!", "Error", JOptionPane.ERROR_MESSAGE);
-                    conn.rollback();
-                    return;
-                }
-            }
-
-            // 🔵 Get sender's current balance
-            String balanceQuery = "SELECT balance FROM tbl_users WHERE u_username = ?";
-            try (PreparedStatement pstBalance = conn.prepareStatement(balanceQuery)) {
-                pstBalance.setString(1, senderUsername);
-                ResultSet rs = pstBalance.executeQuery();
-
-                double senderBalance = 0.0;
-                if (rs.next()) {
-                    senderBalance = rs.getDouble("balance");
-                } else {
-                    JOptionPane.showMessageDialog(this, "Sender not found!", "Error", JOptionPane.ERROR_MESSAGE);
-                    conn.rollback();
-                    return;
-                }
-
-                // 🔵 Check if sender has enough balance
-                if (senderBalance < amount) {
-                    JOptionPane.showMessageDialog(this, "Insufficient balance!", "Error", JOptionPane.ERROR_MESSAGE);
-                    conn.rollback();
-                    return;
-                }
-            }
-
-            // 🔵 Deduct amount from sender
-            String deductSender = "UPDATE tbl_users SET balance = balance - ? WHERE u_username = ?";
-            try (PreparedStatement pstDeduct = conn.prepareStatement(deductSender)) {
-                pstDeduct.setDouble(1, amount);
-                pstDeduct.setString(2, senderUsername);
-                pstDeduct.executeUpdate();
-            }
-
-            // 🔵 Add amount to receiver
-            String addReceiver = "UPDATE tbl_users SET balance = balance + ? WHERE u_username = ?";
-            try (PreparedStatement pstAdd = conn.prepareStatement(addReceiver)) {
-                pstAdd.setDouble(1, amount);
-                pstAdd.setString(2, receiverUsername);
-                int receiverUpdateResult = pstAdd.executeUpdate();
-
-                if (receiverUpdateResult == 0) {
-                    conn.rollback();
-                    JOptionPane.showMessageDialog(this, "Receiver not found!", "Error", JOptionPane.ERROR_MESSAGE);
-                    return;
-                }
-            }
-
-            // 🔵 Insert send money transaction record
-            String sql = "INSERT INTO tbl_sendmoney (sender_id, sender_username, receiver_username, amount, description, status) VALUES (?, ?, ?, ?, ?, ?)";
-            try (PreparedStatement pst = conn.prepareStatement(sql)) {
-                pst.setInt(1, senderId);
-                pst.setString(2, senderUsername);
-                pst.setString(3, receiverUsername);
-                pst.setDouble(4, amount);
-                pst.setString(5, "Money Sent");
-                pst.setString(6, "COMPLETED");
-
-                int result = pst.executeUpdate();
-
-                if (result > 0) {
-                    conn.commit(); // Commit transaction
-
-                    JOptionPane.showMessageDialog(this, "Money sent successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);
-
-                    // Log the event
-                    logEvent(senderId, senderUsername, "User Sent Money to " + receiverUsername);
-
-                    // Clear input fields
-                    Senderusername.setText("");
-                    Receivername.setText("");
-                    loanamount.setText("");
-                } else {
-                    conn.rollback();
-                    JOptionPane.showMessageDialog(this, "Failed to send money.", "Error", JOptionPane.ERROR_MESSAGE);
-                }
-            }
-        } catch (Exception ex) {
-            JOptionPane.showMessageDialog(this, "Transaction failed: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        // 🔵 Deduct amount from sender
+        String deductSender = "UPDATE tbl_users SET balance = balance - ? WHERE u_username = ?";
+        try (PreparedStatement pstDeduct = conn.prepareStatement(deductSender)) {
+            pstDeduct.setDouble(1, amount);
+            pstDeduct.setString(2, senderUsername);
+            pstDeduct.executeUpdate();
         }
 
-    } catch (NumberFormatException e) {
-        JOptionPane.showMessageDialog(this, "Please enter a valid amount.", "Error", JOptionPane.ERROR_MESSAGE);
-    } catch (Exception e) {
-        JOptionPane.showMessageDialog(this, "Error: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        // 🔵 Add amount to receiver
+        String addReceiver = "UPDATE tbl_users SET balance = balance + ? WHERE u_username = ?";
+        try (PreparedStatement pstAdd = conn.prepareStatement(addReceiver)) {
+            pstAdd.setDouble(1, amount);
+            pstAdd.setString(2, receiverUsername);
+            int receiverUpdateResult = pstAdd.executeUpdate();
+
+            if (receiverUpdateResult == 0) {
+                conn.rollback();
+                JOptionPane.showMessageDialog(this, "Receiver not found!", "Error", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+        }
+
+        // 🔵 Insert send money transaction record
+        String sql = "INSERT INTO tbl_sendmoney (sender_id, sender_username, receiver_username, amount, transaction_description, status) VALUES (?, ?, ?, ?, ?, ?)";
+        try (PreparedStatement pst = conn.prepareStatement(sql)) {
+            pst.setInt(1, senderId);
+            pst.setString(2, senderUsername);
+            pst.setString(3, receiverUsername);
+            pst.setDouble(4, amount);
+            pst.setString(5, "Money Sent");
+            pst.setString(6, "COMPLETED");
+
+            int result = pst.executeUpdate();
+
+            if (result > 0) {
+                conn.commit(); // Commit transaction
+
+                JOptionPane.showMessageDialog(this, "Money sent successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);
+
+                // Log the event
+                logEvent(senderId, senderUsername, "User Sent Money to " + receiverUsername);
+
+                // Clear input fields
+                Senderusername.setText("");
+                Receivername.setText("");
+                receiverId.setText("");  // Clear receiver's user ID field
+                useramount.setText("");
+            } else {
+                conn.rollback();
+                JOptionPane.showMessageDialog(this, "Failed to send money.", "Error", JOptionPane.ERROR_MESSAGE);
+            }
+        }
+    } catch (Exception ex) {
+        JOptionPane.showMessageDialog(this, "Transaction failed: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
     }
+
+} catch (NumberFormatException e) {
+    JOptionPane.showMessageDialog(this, "Please enter a valid amount.", "Error", JOptionPane.ERROR_MESSAGE);
+} catch (Exception e) {
+    JOptionPane.showMessageDialog(this, "Error: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+}
+
 
 
         // TODO add your handling code here:
@@ -376,13 +398,15 @@ public class SendMoneyDashoard extends javax.swing.JFrame {
     public javax.swing.JButton cancel;
     private javax.swing.JButton jButton2;
     private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel jLabel7;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel4;
     private javax.swing.JPanel jPanel5;
-    private javax.swing.JTextField loanamount;
+    private javax.swing.JTextField receiverId;
+    private javax.swing.JTextField useramount;
     // End of variables declaration//GEN-END:variables
 }

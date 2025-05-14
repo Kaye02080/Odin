@@ -129,7 +129,7 @@ public class BarrowM extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jLabel7MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel7MouseClicked
-        LoanMoney ds = new LoanMoney();
+        DepositMoney ds = new DepositMoney();
         ds.setVisible(true);
         this.dispose();           // TODO add your handling code here:
     }//GEN-LAST:event_jLabel7MouseClicked

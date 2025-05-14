@@ -242,7 +242,7 @@ public class UserDashboard extends javax.swing.JFrame {
         acc_balance.setBackground(new java.awt.Color(255, 255, 255));
         acc_balance.setForeground(new java.awt.Color(255, 255, 255));
         acc_balance.setText("Balance :");
-        jPanel1.add(acc_balance, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 200, -1, 20));
+        jPanel1.add(acc_balance, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 200, -1, 20));
 
         jPanel8.setBackground(new java.awt.Color(255, 255, 255));
         jPanel8.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0), 2));
@@ -292,7 +292,7 @@ public class UserDashboard extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void jPanel4MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jPanel4MouseClicked
-        LoanMoney ads = new LoanMoney();
+        DepositMoney ads = new DepositMoney();
         ads.setVisible(true);
         this.dispose();
     }//GEN-LAST:event_jPanel4MouseClicked

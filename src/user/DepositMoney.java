@@ -19,13 +19,13 @@ import testappnew.loginF;
  *
  * @author milan
  */
-public class LoanMoney extends javax.swing.JFrame {
+public class DepositMoney extends javax.swing.JFrame {
 
      
     /**
      * Creates new form LoanMoney
      */
-    public LoanMoney() {
+    public DepositMoney() {
         initComponents();
         
        
@@ -79,10 +79,12 @@ public class LoanMoney extends javax.swing.JFrame {
         jPanel5 = new javax.swing.JPanel();
         username = new javax.swing.JTextField();
         jLabel2 = new javax.swing.JLabel();
-        loanamount = new javax.swing.JTextField();
+        depositamount = new javax.swing.JTextField();
         jLabel3 = new javax.swing.JLabel();
         jButton1 = new javax.swing.JButton();
         cancel = new javax.swing.JButton();
+        jTextField1 = new javax.swing.JTextField();
+        jLabel5 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -121,15 +123,15 @@ public class LoanMoney extends javax.swing.JFrame {
         jPanel5.add(username, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 50, 170, 40));
 
         jLabel2.setFont(new java.awt.Font("Century Gothic", 1, 18)); // NOI18N
-        jLabel2.setText("Username");
-        jPanel5.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 10, -1, 30));
-        jPanel5.add(loanamount, new org.netbeans.lib.awtextra.AbsoluteConstraints(220, 50, 170, 40));
+        jLabel2.setText("Account User ID");
+        jPanel5.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(250, 10, -1, 40));
+        jPanel5.add(depositamount, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 170, 170, 40));
 
         jLabel3.setFont(new java.awt.Font("Century Gothic", 1, 18)); // NOI18N
-        jLabel3.setText("Loan Amount");
-        jPanel5.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(220, 10, -1, -1));
+        jLabel3.setText("Deposit Amount");
+        jPanel5.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 130, -1, 40));
 
-        jButton1.setText("Submit");
+        jButton1.setText("Confirm");
         jButton1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton1ActionPerformed(evt);
@@ -152,11 +154,16 @@ public class LoanMoney extends javax.swing.JFrame {
             }
         });
         jPanel5.add(cancel, new org.netbeans.lib.awtextra.AbsoluteConstraints(420, 320, 70, 30));
+        jPanel5.add(jTextField1, new org.netbeans.lib.awtextra.AbsoluteConstraints(250, 50, 200, 40));
 
-        jPanel4.add(jPanel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 110, 590, 410));
+        jLabel5.setFont(new java.awt.Font("Century Gothic", 1, 18)); // NOI18N
+        jLabel5.setText("Account Username");
+        jPanel5.add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 10, -1, 40));
+
+        jPanel4.add(jPanel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 120, 590, 410));
 
         jLabel4.setFont(new java.awt.Font("Century Gothic", 3, 36)); // NOI18N
-        jLabel4.setText("LOAN DASHBOARD");
+        jLabel4.setText("DEPOSIT DASBOARD");
         jPanel4.add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 30, -1, -1));
 
         getContentPane().add(jPanel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 0, 630, 550));
@@ -176,16 +183,16 @@ public class LoanMoney extends javax.swing.JFrame {
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
  Session sess = Session.getInstance();
-int userId = sess.getUid(); // Get user ID
+int userId = sess.getUid(); // Get user ID from session
 
 if (userId <= 0) {
     JOptionPane.showMessageDialog(this, "User not logged in!", "Error", JOptionPane.ERROR_MESSAGE);
     return;
 }
 
-String user = username.getText().trim();
-String amountStr = loanamount.getText().trim();
-String uname2 = user; // Set the username for the log
+String user = username.getText().trim(); // Gets current user’s username
+String amountStr = depositamount.getText().trim(); // Reusing the same input field
+String uname2 = user; // For logging
 
 // Check if the input fields are empty
 if (user.isEmpty() || amountStr.isEmpty()) {
@@ -194,56 +201,53 @@ if (user.isEmpty() || amountStr.isEmpty()) {
 }
 
 try {
-    // Parse the loan amount from the input string
+    // Parse deposit amount from the input
     double amount = Double.parseDouble(amountStr);
 
-    // Custom validation for loan amount
+    // Validate amount
     if (amount <= 0) {
-        JOptionPane.showMessageDialog(this, "Loan amount must be greater than 0.", "Validation Error", JOptionPane.WARNING_MESSAGE);
+        JOptionPane.showMessageDialog(this, "Deposit amount must be greater than 0.", "Validation Error", JOptionPane.WARNING_MESSAGE);
         return;
     }
 
-    // Max loan amount validation
     if (amount > 1000000) {
-        JOptionPane.showMessageDialog(this, "Loan amount exceeds the maximum allowed (₱1,000,000).", "Validation Error", JOptionPane.WARNING_MESSAGE);
+        JOptionPane.showMessageDialog(this, "Deposit amount exceeds the maximum allowed (₱1,000,000).", "Validation Error", JOptionPane.WARNING_MESSAGE);
         return;
     }
 
     dbConnector dbc = new dbConnector();
-    String sql = "INSERT INTO tbl_loans (u_id, u_username, loan_amount, loan_description, loan_status) VALUES (?, ?, ?, ?, ?)";
+    String sql = "INSERT INTO tbl_deposits (u_id, u_username, amount, transaction_description, status) VALUES (?, ?, ?, ?, ?)";
 
     try (Connection conn = dbc.getConnection();
          PreparedStatement pst = conn.prepareStatement(sql)) {
 
-        // Set parameters for the prepared statement
-        pst.setInt(1, userId); // u_id from session
-        pst.setString(2, user); // username
-        pst.setDouble(3, amount); // loan amount
-        pst.setString(4, "Loan request submitted"); // loan description
-        pst.setString(5, "PENDING"); // loan status (now varchar)
+        // Insert deposit request
+        pst.setInt(1, userId); // User ID
+        pst.setString(2, user); // Username
+        pst.setDouble(3, amount); // Deposit amount
+        pst.setString(4, "Deposit request submitted by user"); // Description
+        pst.setString(5, "PENDING"); // Status (for approval)
 
         int result = pst.executeUpdate();
 
         if (result > 0) {
-            JOptionPane.showMessageDialog(this, "Loan request submitted successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Deposit request submitted! Awaiting approval.", "Success", JOptionPane.INFORMATION_MESSAGE);
 
-            // Log the event with the username
-            logEvent(userId, uname2, "User Loan a Money");
+            // Log the event
+            logEvent(userId, uname2, "User submitted deposit request");
 
             username.setText("");
-            loanamount.setText("");
+            depositamount.setText("");
         } else {
             JOptionPane.showMessageDialog(this, "Submission failed.", "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
 
 } catch (NumberFormatException e) {
-    JOptionPane.showMessageDialog(this, "Please enter a valid loan amount.", "Error", JOptionPane.ERROR_MESSAGE);
+    JOptionPane.showMessageDialog(this, "Please enter a valid deposit amount.", "Error", JOptionPane.ERROR_MESSAGE);
 } catch (Exception e) {
     JOptionPane.showMessageDialog(this, "Error: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
 }
-
-
 
     }//GEN-LAST:event_jButton1ActionPerformed
 
@@ -275,20 +279,21 @@ try {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(LoanMoney.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(DepositMoney.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(LoanMoney.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(DepositMoney.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(LoanMoney.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(DepositMoney.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(LoanMoney.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(DepositMoney.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
+        //</editor-fold>
         //</editor-fold>
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new LoanMoney().setVisible(true);
+                new DepositMoney().setVisible(true);
             }
         });
     }
@@ -297,15 +302,17 @@ try {
     private javax.swing.JLabel acc_fname;
     private javax.swing.JLabel acc_id;
     public javax.swing.JButton cancel;
+    private javax.swing.JTextField depositamount;
     private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel4;
     private javax.swing.JPanel jPanel5;
-    private javax.swing.JTextField loanamount;
+    private javax.swing.JTextField jTextField1;
     private javax.swing.JTextField username;
     // End of variables declaration//GEN-END:variables
 }

@@ -7,7 +7,10 @@ package admin;
 
 import config.dbConnector;
 import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.Statement;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
@@ -23,41 +26,120 @@ public class ViewTransaction extends javax.swing.JFrame {
      */
     public ViewTransaction() {
         initComponents();
-         displayTransactions();
+       
+         
+         loadTransactionData();
     }         
    
-  public void displayTransactions() {
+public void displayTransactions() {
     try {
-        dbConnector connector = new dbConnector(); // Create an object first
-        Connection conn = connector.getConnection(); // Get the connection using the object
+        dbConnector connector = new dbConnector(); // Create connector instance
+        Connection conn = connector.getConnection(); // Establish DB connection
         Statement stmt = conn.createStatement();
-        
-        String sql = "SELECT loan_id, u_username, loan_amount, loan_description, loan_date, loan_status FROM tbl_loans";
-        ResultSet rs = stmt.executeQuery(sql);
 
+        // Query for SendMoney transactions
+        String sendMoneySql = "SELECT transaction_id AS transaction_id, sender_username, receiver_username, amount, transaction_description AS transaction_description, status, transaction_date AS transaction_date " +
+                              "FROM tbl_sendmoney ORDER BY transaction_date DESC";
+        ResultSet sendMoneyRs = stmt.executeQuery(sendMoneySql);
+
+        // DefaultTableModel to display data
         DefaultTableModel model = (DefaultTableModel) tbltransaction.getModel();
-        model.setRowCount(0); // Clear existing data
+        model.setRowCount(0); // Clear existing rows
 
-        while (rs.next()) {
+        // Add SendMoney transactions to the table
+        while (sendMoneyRs.next()) {
             Object[] row = {
-                rs.getInt("loan_id"),
-                rs.getString("u_username"),
-                rs.getDouble("loan_amount"),
-                rs.getString("loan_description"),
-                rs.getDate("loan_date"),
-                rs.getString("loan_status")
+                "Send Money",  // Transaction type
+                sendMoneyRs.getInt("transaction_id"),
+                sendMoneyRs.getString("sender_username"),
+                sendMoneyRs.getString("receiver_username"),
+                sendMoneyRs.getDouble("amount"),
+                sendMoneyRs.getString("transaction_description"),
+                sendMoneyRs.getString("status"),
+                sendMoneyRs.getTimestamp("transaction_date")
             };
             model.addRow(row);
         }
 
-        conn.close();
+        // Query for Deposit transactions
+        String depositSql = "SELECT transaction_id AS transaction_id, u_username AS sender_username, NULL AS receiver_username, amount AS amount, transaction_description AS transaction_description, status AS status, transaction_date AS transaction_date " +
+                            "FROM tbl_deposits ORDER BY transaction_date DESC";
+        ResultSet depositRs = stmt.executeQuery(depositSql);
+
+        // Add Deposit transactions to the table
+        while (depositRs.next()) {
+            Object[] row = {
+                "Deposit",  // Transaction type
+                depositRs.getInt("transaction_id"),
+                depositRs.getString("sender_username"),
+                depositRs.getString("receiver_username"),  // NULL for Deposit transactions
+                depositRs.getDouble("amount"),
+                depositRs.getString("transaction_description"),
+                depositRs.getString("status"),
+                depositRs.getTimestamp("transaction_date")
+            };
+            model.addRow(row);
+        }
+
+        conn.close(); // Close the connection
+
     } catch (Exception e) {
         JOptionPane.showMessageDialog(null, "Error loading transactions: " + e.getMessage());
     }
 }
 
-    
-    
+
+
+
+private void loadTransactionData() {
+    DefaultTableModel model = (DefaultTableModel) tbltransaction.getModel();
+    model.setRowCount(0); // Clear table
+
+    String sendMoneySql = "SELECT transaction_id, sender_username, receiver_username, amount, transaction_description, status, transaction_date FROM tbl_sendmoney";
+    String depositSql = "SELECT transaction_id, u_username AS sender_username, NULL AS receiver_username, amount, transaction_description, status, transaction_date FROM tbl_deposits";
+
+    try (Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/money_remittance", "root", "")) {
+
+        // Send Money
+        try (PreparedStatement pst = con.prepareStatement(sendMoneySql); ResultSet rs = pst.executeQuery()) {
+            while (rs.next()) {
+                model.addRow(new Object[] {
+                    "Send Money",
+                    rs.getInt("transaction_id"),
+                    rs.getString("sender_username"),
+                    rs.getString("receiver_username"),
+                    rs.getDouble("amount"),
+                    rs.getString("transaction_description"),
+                    rs.getString("status"),
+                    rs.getTimestamp("transaction_date")
+                });
+            }
+        }
+
+        // Deposit
+        try (PreparedStatement pst = con.prepareStatement(depositSql); ResultSet rs = pst.executeQuery()) {
+            while (rs.next()) {
+                model.addRow(new Object[] {
+                    "Deposit",
+                    rs.getInt("transaction_id"),
+                    rs.getString("sender_username"),
+                    rs.getString("receiver_username"), // will show as "null"
+                    rs.getDouble("amount"),
+                    rs.getString("transaction_description"),
+                    rs.getString("status"),
+                    rs.getTimestamp("transaction_date")
+                });
+            }
+        }
+
+        tbltransaction.revalidate();
+        tbltransaction.repaint();
+
+    } catch (SQLException ex) {
+        JOptionPane.showMessageDialog(this, "Error loading transaction data: " + ex.getMessage(), "Database Error", JOptionPane.ERROR_MESSAGE);
+    }
+}
+
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -74,6 +156,7 @@ public class ViewTransaction extends javax.swing.JFrame {
         jScrollPane6 = new javax.swing.JScrollPane();
         tbltransaction = new javax.swing.JTable();
         cancel1 = new javax.swing.JButton();
+        jButton1 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setResizable(false);
@@ -86,25 +169,25 @@ public class ViewTransaction extends javax.swing.JFrame {
         jLabel1.setText("VIEW TRANSACTION");
         jPanel1.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(220, 30, -1, -1));
 
-        getContentPane().add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(-10, 0, 670, 100));
+        getContentPane().add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(-10, 0, 880, 100));
 
         jPanel4.setBackground(new java.awt.Color(255, 255, 255));
         jPanel4.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         tbltransaction.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null}
+                {null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null}
             },
             new String [] {
-                "Loan ID", "Username", "Loan_Amount", "Description", "Date", "Status"
+                "Transaction Type", "Transaction ID", "Sender Username", "Receiver Usernamet", "Amount", "Date", "Status", "Transaction Description"
             }
         ));
         jScrollPane6.setViewportView(tbltransaction);
 
-        jPanel4.add(jScrollPane6, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 71, 640, 400));
+        jPanel4.add(jScrollPane6, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 71, 850, 400));
 
         cancel1.setBackground(new java.awt.Color(255, 255, 255));
         cancel1.setFont(new java.awt.Font("Yu Gothic UI", 1, 12)); // NOI18N
@@ -120,11 +203,21 @@ public class ViewTransaction extends javax.swing.JFrame {
                 cancel1ActionPerformed(evt);
             }
         });
-        jPanel4.add(cancel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(510, 30, 130, -1));
+        jPanel4.add(cancel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(730, 20, 130, 40));
 
-        getContentPane().add(jPanel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 100, 660, 490));
+        jButton1.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
+        jButton1.setText("REFRESH");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
+        jPanel4.add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(590, 20, 130, 40));
+
+        getContentPane().add(jPanel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 90, 870, 500));
 
         pack();
+        setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
     private void cancel1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_cancel1MouseClicked
@@ -137,6 +230,10 @@ public class ViewTransaction extends javax.swing.JFrame {
         ru.setVisible(true);
         this.dispose();
     }//GEN-LAST:event_cancel1ActionPerformed
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        loadTransactionData(); // TODO add your handling code here:
+    }//GEN-LAST:event_jButton1ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -175,6 +272,7 @@ public class ViewTransaction extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     public javax.swing.JButton cancel1;
+    private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel4;
