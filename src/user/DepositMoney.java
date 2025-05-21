@@ -75,6 +75,7 @@ public class DepositMoney extends javax.swing.JFrame {
         jLabel1 = new javax.swing.JLabel();
         acc_fname = new javax.swing.JLabel();
         acc_id = new javax.swing.JLabel();
+        cancel = new javax.swing.JButton();
         jPanel4 = new javax.swing.JPanel();
         jPanel5 = new javax.swing.JPanel();
         username = new javax.swing.JTextField();
@@ -82,9 +83,12 @@ public class DepositMoney extends javax.swing.JFrame {
         depositamount = new javax.swing.JTextField();
         jLabel3 = new javax.swing.JLabel();
         jButton1 = new javax.swing.JButton();
-        cancel = new javax.swing.JButton();
         jTextField1 = new javax.swing.JTextField();
         jLabel5 = new javax.swing.JLabel();
+        jLabel6 = new javax.swing.JLabel();
+        fn = new javax.swing.JTextField();
+        jLabel7 = new javax.swing.JLabel();
+        ln = new javax.swing.JTextField();
         jLabel4 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -103,41 +107,10 @@ public class DepositMoney extends javax.swing.JFrame {
 
         acc_fname.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         acc_fname.setText("USER");
-        jPanel1.add(acc_fname, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 110, 40, -1));
+        jPanel1.add(acc_fname, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 100, 40, -1));
 
         acc_id.setText("USER ID");
-        jPanel1.add(acc_id, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 130, -1, -1));
-
-        getContentPane().add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 150, 550));
-
-        jPanel4.setBackground(new java.awt.Color(255, 255, 255));
-        jPanel4.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
-
-        jPanel5.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
-
-        username.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                usernameActionPerformed(evt);
-            }
-        });
-        jPanel5.add(username, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 50, 170, 40));
-
-        jLabel2.setFont(new java.awt.Font("Century Gothic", 1, 18)); // NOI18N
-        jLabel2.setText("Account User ID");
-        jPanel5.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(250, 10, -1, 40));
-        jPanel5.add(depositamount, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 170, 170, 40));
-
-        jLabel3.setFont(new java.awt.Font("Century Gothic", 1, 18)); // NOI18N
-        jLabel3.setText("Deposit Amount");
-        jPanel5.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 130, -1, 40));
-
-        jButton1.setText("Confirm");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
-            }
-        });
-        jPanel5.add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 320, 90, 30));
+        jPanel1.add(acc_id, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 120, -1, -1));
 
         cancel.setBackground(new java.awt.Color(255, 255, 255));
         cancel.setFont(new java.awt.Font("Yu Gothic UI", 1, 12)); // NOI18N
@@ -153,28 +126,80 @@ public class DepositMoney extends javax.swing.JFrame {
                 cancelActionPerformed(evt);
             }
         });
-        jPanel5.add(cancel, new org.netbeans.lib.awtextra.AbsoluteConstraints(420, 320, 70, 30));
-        jPanel5.add(jTextField1, new org.netbeans.lib.awtextra.AbsoluteConstraints(250, 50, 200, 40));
+        jPanel1.add(cancel, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 400, 70, 30));
+
+        getContentPane().add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 140, 500));
+
+        jPanel4.setBackground(new java.awt.Color(255, 255, 255));
+        jPanel4.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        jPanel5.setBackground(new java.awt.Color(153, 153, 153));
+        jPanel5.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+        jPanel5.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        username.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                usernameActionPerformed(evt);
+            }
+        });
+        jPanel5.add(username, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 140, 200, 40));
+
+        jLabel2.setFont(new java.awt.Font("Century Gothic", 1, 18)); // NOI18N
+        jLabel2.setText("Account User ID");
+        jPanel5.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(260, 100, -1, 40));
+        jPanel5.add(depositamount, new org.netbeans.lib.awtextra.AbsoluteConstraints(270, 230, 200, 40));
+
+        jLabel3.setFont(new java.awt.Font("Century Gothic", 1, 18)); // NOI18N
+        jLabel3.setText("Deposit Amount");
+        jPanel5.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(270, 190, -1, 40));
+
+        jButton1.setText("Confirm");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
+        jPanel5.add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(360, 330, 90, 30));
+        jPanel5.add(jTextField1, new org.netbeans.lib.awtextra.AbsoluteConstraints(260, 140, 200, 40));
 
         jLabel5.setFont(new java.awt.Font("Century Gothic", 1, 18)); // NOI18N
-        jLabel5.setText("Account Username");
-        jPanel5.add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 10, -1, 40));
+        jLabel5.setText("LAST NAME");
+        jPanel5.add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(260, 10, -1, 40));
 
-        jPanel4.add(jPanel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 120, 590, 410));
+        jLabel6.setFont(new java.awt.Font("Century Gothic", 1, 18)); // NOI18N
+        jLabel6.setText("Account Username");
+        jPanel5.add(jLabel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 100, -1, 40));
+        jPanel5.add(fn, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 50, 200, 40));
 
-        jLabel4.setFont(new java.awt.Font("Century Gothic", 3, 36)); // NOI18N
+        jLabel7.setFont(new java.awt.Font("Century Gothic", 1, 18)); // NOI18N
+        jLabel7.setText("FIRST NAME");
+        jPanel5.add(jLabel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 10, -1, 40));
+        jPanel5.add(ln, new org.netbeans.lib.awtextra.AbsoluteConstraints(260, 50, 200, 40));
+
+        jPanel4.add(jPanel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 100, 490, 380));
+
+        jLabel4.setFont(new java.awt.Font("Yu Gothic Light", 1, 36)); // NOI18N
         jLabel4.setText("DEPOSIT DASBOARD");
-        jPanel4.add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 30, -1, -1));
+        jPanel4.add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 30, -1, -1));
 
-        getContentPane().add(jPanel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 0, 630, 550));
+        getContentPane().add(jPanel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 0, 550, 500));
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
     private void formWindowActivated(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowActivated
          Session sess = Session.getInstance();
-        acc_id.setText(""+sess.getUid());
-        acc_fname.setText(""+sess.getFname());
+        if (sess.getUid() == 0) {
+
+            loginF l = new loginF();
+            l.setVisible(true);
+            this.dispose();
+            JOptionPane.showMessageDialog(null, "No Account, Login FIrst");
+        } else {
+        
+            acc_fname.setText("Username: " + sess.getFname());
+            acc_id.setText("User ID: " + sess.getUid());
+        }
     }//GEN-LAST:event_formWindowActivated
 
     private void usernameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_usernameActionPerformed
@@ -183,28 +208,28 @@ public class DepositMoney extends javax.swing.JFrame {
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
  Session sess = Session.getInstance();
-int userId = sess.getUid(); // Get user ID from session
+int userId = sess.getUid();
 
 if (userId <= 0) {
     JOptionPane.showMessageDialog(this, "User not logged in!", "Error", JOptionPane.ERROR_MESSAGE);
     return;
 }
 
-String user = username.getText().trim(); // Gets current user’s username
-String amountStr = depositamount.getText().trim(); // Reusing the same input field
-String uname2 = user; // For logging
+// Get inputs
+String usernameStr = username.getText().trim();
+String amountStr = depositamount.getText().trim();
+String firstName = fn.getText().trim();
+String lastName = ln.getText().trim();
 
-// Check if the input fields are empty
-if (user.isEmpty() || amountStr.isEmpty()) {
+// Validate inputs
+if (usernameStr.isEmpty() || amountStr.isEmpty() || firstName.isEmpty() || lastName.isEmpty()) {
     JOptionPane.showMessageDialog(this, "All fields are required!", "Error", JOptionPane.ERROR_MESSAGE);
     return;
 }
 
 try {
-    // Parse deposit amount from the input
     double amount = Double.parseDouble(amountStr);
 
-    // Validate amount
     if (amount <= 0) {
         JOptionPane.showMessageDialog(this, "Deposit amount must be greater than 0.", "Validation Error", JOptionPane.WARNING_MESSAGE);
         return;
@@ -216,28 +241,33 @@ try {
     }
 
     dbConnector dbc = new dbConnector();
-    String sql = "INSERT INTO tbl_deposits (u_id, u_username, amount, transaction_description, status) VALUES (?, ?, ?, ?, ?)";
+    String sql = "INSERT INTO tbl_deposits (u_id, u_username, u_fname, u_lname, amount, transaction_description, status) VALUES (?, ?, ?, ?, ?, ?, ?)";
 
     try (Connection conn = dbc.getConnection();
          PreparedStatement pst = conn.prepareStatement(sql)) {
 
-        // Insert deposit request
-        pst.setInt(1, userId); // User ID
-        pst.setString(2, user); // Username
-        pst.setDouble(3, amount); // Deposit amount
-        pst.setString(4, "Deposit request submitted by user"); // Description
-        pst.setString(5, "PENDING"); // Status (for approval)
+        String fullName = firstName + " " + lastName;
+        String description = "Deposit request submitted by: " + fullName;
+
+        pst.setInt(1, userId);              // u_id
+        pst.setString(2, usernameStr);      // u_username
+        pst.setString(3, firstName);        // u_fname
+        pst.setString(4, lastName);         // u_lname
+        pst.setDouble(5, amount);           // amount
+        pst.setString(6, description);      // transaction_description
+        pst.setString(7, "PENDING");        // status
 
         int result = pst.executeUpdate();
 
         if (result > 0) {
             JOptionPane.showMessageDialog(this, "Deposit request submitted! Awaiting approval.", "Success", JOptionPane.INFORMATION_MESSAGE);
+            logEvent(userId, usernameStr, "User submitted deposit request");
 
-            // Log the event
-            logEvent(userId, uname2, "User submitted deposit request");
-
+            // Clear input fields
             username.setText("");
             depositamount.setText("");
+            fn.setText("");
+            ln.setText("");
         } else {
             JOptionPane.showMessageDialog(this, "Submission failed.", "Error", JOptionPane.ERROR_MESSAGE);
         }
@@ -248,6 +278,7 @@ try {
 } catch (Exception e) {
     JOptionPane.showMessageDialog(this, "Error: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
 }
+
 
     }//GEN-LAST:event_jButton1ActionPerformed
 
@@ -303,16 +334,20 @@ try {
     private javax.swing.JLabel acc_id;
     public javax.swing.JButton cancel;
     private javax.swing.JTextField depositamount;
+    private javax.swing.JTextField fn;
     private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel jLabel7;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel4;
     private javax.swing.JPanel jPanel5;
     private javax.swing.JTextField jTextField1;
+    private javax.swing.JTextField ln;
     private javax.swing.JTextField username;
     // End of variables declaration//GEN-END:variables
 }

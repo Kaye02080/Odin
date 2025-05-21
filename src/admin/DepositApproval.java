@@ -45,7 +45,7 @@ public class DepositApproval extends javax.swing.JFrame {
 
             while (rs.next()) {
                 model.addRow(new Object[]{
-                    rs.getInt("transaction_id"),
+                    rs.getInt("deposit_id"),
                     rs.getString("u_username"),
                     rs.getDouble("amount"),
                     rs.getString("transaction_description"),
@@ -104,7 +104,6 @@ public class DepositApproval extends javax.swing.JFrame {
         jTable1 = new javax.swing.JTable();
         jPanel1 = new javax.swing.JPanel();
         jPanel2 = new javax.swing.JPanel();
-        cancel1 = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
         deposittbl = new javax.swing.JTable();
@@ -114,6 +113,7 @@ public class DepositApproval extends javax.swing.JFrame {
         area = new javax.swing.JTextArea();
         jButton4 = new javax.swing.JButton();
         jButton5 = new javax.swing.JButton();
+        cancel1 = new javax.swing.JButton();
 
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -136,43 +136,22 @@ public class DepositApproval extends javax.swing.JFrame {
 
         jPanel2.setBackground(new java.awt.Color(0, 51, 102));
 
-        cancel1.setBackground(new java.awt.Color(255, 255, 255));
-        cancel1.setFont(new java.awt.Font("Yu Gothic UI", 1, 12)); // NOI18N
-        cancel1.setForeground(new java.awt.Color(27, 57, 77));
-        cancel1.setText("Cancel");
-        cancel1.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                cancel1MouseClicked(evt);
-            }
-        });
-        cancel1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                cancel1ActionPerformed(evt);
-            }
-        });
-
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel2Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(cancel1, javax.swing.GroupLayout.PREFERRED_SIZE, 170, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addGap(0, 40, Short.MAX_VALUE)
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
-                .addContainerGap(531, Short.MAX_VALUE)
-                .addComponent(cancel1, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(29, 29, 29))
+            .addGap(0, 590, Short.MAX_VALUE)
         );
 
-        jPanel1.add(jPanel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 190, 590));
+        jPanel1.add(jPanel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 40, 590));
 
-        jLabel1.setFont(new java.awt.Font("Century Gothic", 3, 36)); // NOI18N
+        jLabel1.setFont(new java.awt.Font("Yu Gothic Light", 1, 36)); // NOI18N
         jLabel1.setText("DEPOSIT APPROVAL");
-        jPanel1.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(290, 60, -1, -1));
+        jPanel1.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 20, -1, -1));
 
         deposittbl.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -187,7 +166,7 @@ public class DepositApproval extends javax.swing.JFrame {
         ));
         jScrollPane1.setViewportView(deposittbl);
 
-        jPanel1.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(200, 160, 640, 410));
+        jPanel1.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 160, 640, 410));
 
         jButton1.setText("Approve");
         jButton1.addActionListener(new java.awt.event.ActionListener() {
@@ -195,7 +174,7 @@ public class DepositApproval extends javax.swing.JFrame {
                 jButton1ActionPerformed(evt);
             }
         });
-        jPanel1.add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(220, 120, -1, -1));
+        jPanel1.add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 120, -1, -1));
 
         jButton2.setText("Reject");
         jButton2.addActionListener(new java.awt.event.ActionListener() {
@@ -203,14 +182,14 @@ public class DepositApproval extends javax.swing.JFrame {
                 jButton2ActionPerformed(evt);
             }
         });
-        jPanel1.add(jButton2, new org.netbeans.lib.awtextra.AbsoluteConstraints(340, 120, 80, -1));
+        jPanel1.add(jButton2, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 120, 80, -1));
 
         area.setColumns(20);
         area.setFont(new java.awt.Font("Monospaced", 1, 13)); // NOI18N
         area.setRows(5);
         jScrollPane2.setViewportView(area);
 
-        jPanel1.add(jScrollPane2, new org.netbeans.lib.awtextra.AbsoluteConstraints(850, 250, 240, 230));
+        jPanel1.add(jScrollPane2, new org.netbeans.lib.awtextra.AbsoluteConstraints(730, 220, 240, 230));
 
         jButton4.setBackground(new java.awt.Color(255, 255, 255));
         jButton4.setText("Reset");
@@ -220,7 +199,7 @@ public class DepositApproval extends javax.swing.JFrame {
                 jButton4ActionPerformed(evt);
             }
         });
-        jPanel1.add(jButton4, new org.netbeans.lib.awtextra.AbsoluteConstraints(860, 510, 80, 40));
+        jPanel1.add(jButton4, new org.netbeans.lib.awtextra.AbsoluteConstraints(740, 460, 80, 40));
 
         jButton5.setBackground(new java.awt.Color(255, 255, 255));
         jButton5.setText("Print Receipt");
@@ -230,9 +209,25 @@ public class DepositApproval extends javax.swing.JFrame {
                 jButton5ActionPerformed(evt);
             }
         });
-        jPanel1.add(jButton5, new org.netbeans.lib.awtextra.AbsoluteConstraints(1000, 510, 70, 40));
+        jPanel1.add(jButton5, new org.netbeans.lib.awtextra.AbsoluteConstraints(850, 460, 110, 40));
 
-        getContentPane().add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 1110, 590));
+        cancel1.setBackground(new java.awt.Color(255, 0, 0));
+        cancel1.setFont(new java.awt.Font("Yu Gothic UI", 1, 12)); // NOI18N
+        cancel1.setForeground(new java.awt.Color(27, 57, 77));
+        cancel1.setText("Cancel");
+        cancel1.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                cancel1MouseClicked(evt);
+            }
+        });
+        cancel1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cancel1ActionPerformed(evt);
+            }
+        });
+        jPanel1.add(cancel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(830, 20, 170, 30));
+
+        getContentPane().add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 1020, 590));
 
         pack();
         setLocationRelativeTo(null);
@@ -275,7 +270,7 @@ int selectedRow = deposittbl.getSelectedRow();
         conn.setAutoCommit(false); // Begin transaction
 
         // 1. Approve deposit
-        String sqlDepositUpdate = "UPDATE tbl_deposits SET status = 'APPROVED', approved_by = ?, approved_at = CURRENT_TIMESTAMP WHERE transaction_id = ? AND status = 'PENDING'";
+        String sqlDepositUpdate = "UPDATE tbl_deposits SET status = 'APPROVED', approved_by = ?, approved_at = CURRENT_TIMESTAMP WHERE deposit_id = ? AND status = 'PENDING'";
         pstDepositUpdate = conn.prepareStatement(sqlDepositUpdate);
         pstDepositUpdate.setInt(1, tellerId);
         pstDepositUpdate.setInt(2, depositId);

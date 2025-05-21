@@ -1,4 +1,4 @@
-/*
+    /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
@@ -32,59 +32,71 @@ public class ViewTransaction extends javax.swing.JFrame {
     }         
    
 public void displayTransactions() {
-    try {
-        dbConnector connector = new dbConnector(); // Create connector instance
-        Connection conn = connector.getConnection(); // Establish DB connection
-        Statement stmt = conn.createStatement();
+    try (Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/money_remittance", "root", "");
+         Statement stmt = conn.createStatement()) {
 
-        // Query for SendMoney transactions
-        String sendMoneySql = "SELECT transaction_id AS transaction_id, sender_username, receiver_username, amount, transaction_description AS transaction_description, status, transaction_date AS transaction_date " +
-                              "FROM tbl_sendmoney ORDER BY transaction_date DESC";
-        ResultSet sendMoneyRs = stmt.executeQuery(sendMoneySql);
-
-        // DefaultTableModel to display data
         DefaultTableModel model = (DefaultTableModel) tbltransaction.getModel();
-        model.setRowCount(0); // Clear existing rows
+        model.setRowCount(0); // Clear table
 
-        // Add SendMoney transactions to the table
+        // 🔵 Send Money Transactions
+        String sendMoneySql = 
+            "SELECT " +
+            "transaction_id, " +
+            "CONCAT(sender_fname, ' ', sender_lname) AS sender_fullname, " +
+            "CONCAT(receiver_fname, ' ', receiver_lname) AS receiver_fullname, " +
+            "amount, " +
+            "transaction_description, " +
+            "status, " +
+            "transaction_date " +
+            "FROM tbl_sendmoney " +
+            "ORDER BY transaction_date DESC";
+
+        ResultSet sendMoneyRs = stmt.executeQuery(sendMoneySql);
         while (sendMoneyRs.next()) {
-            Object[] row = {
-                "Send Money",  // Transaction type
+            model.addRow(new Object[] {
+                "Send Money",
                 sendMoneyRs.getInt("transaction_id"),
-                sendMoneyRs.getString("sender_username"),
-                sendMoneyRs.getString("receiver_username"),
+                sendMoneyRs.getString("sender_fullname"),
+                sendMoneyRs.getString("receiver_fullname"),
                 sendMoneyRs.getDouble("amount"),
                 sendMoneyRs.getString("transaction_description"),
                 sendMoneyRs.getString("status"),
                 sendMoneyRs.getTimestamp("transaction_date")
-            };
-            model.addRow(row);
+            });
         }
 
-        // Query for Deposit transactions
-        String depositSql = "SELECT transaction_id AS transaction_id, u_username AS sender_username, NULL AS receiver_username, amount AS amount, transaction_description AS transaction_description, status AS status, transaction_date AS transaction_date " +
-                            "FROM tbl_deposits ORDER BY transaction_date DESC";
-        ResultSet depositRs = stmt.executeQuery(depositSql);
+        // 🔵 Deposit Transactions
+        String depositSql = 
+            "SELECT " +
+            "deposit_id AS transaction_id, " +
+            "CONCAT(u_fname, ' ', u_lname) AS sender_fullname, " +
+            "NULL AS receiver_fullname, " +
+            "amount, " +
+            "transaction_description, " +
+            "status, " +
+            "transaction_date " +
+            "FROM tbl_deposits " +
+            "ORDER BY transaction_date DESC";
 
-        // Add Deposit transactions to the table
+        ResultSet depositRs = stmt.executeQuery(depositSql);
         while (depositRs.next()) {
-            Object[] row = {
-                "Deposit",  // Transaction type
+            model.addRow(new Object[] {
+                "Deposit",
                 depositRs.getInt("transaction_id"),
-                depositRs.getString("sender_username"),
-                depositRs.getString("receiver_username"),  // NULL for Deposit transactions
+                depositRs.getString("sender_fullname"),
+                "N/A", // No receiver for deposits
                 depositRs.getDouble("amount"),
                 depositRs.getString("transaction_description"),
                 depositRs.getString("status"),
                 depositRs.getTimestamp("transaction_date")
-            };
-            model.addRow(row);
+            });
         }
 
-        conn.close(); // Close the connection
+        tbltransaction.revalidate();
+        tbltransaction.repaint();
 
-    } catch (Exception e) {
-        JOptionPane.showMessageDialog(null, "Error loading transactions: " + e.getMessage());
+    } catch (SQLException e) {
+        JOptionPane.showMessageDialog(null, "Error loading transactions: " + e.getMessage(), "Database Error", JOptionPane.ERROR_MESSAGE);
     }
 }
 
@@ -93,21 +105,32 @@ public void displayTransactions() {
 
 private void loadTransactionData() {
     DefaultTableModel model = (DefaultTableModel) tbltransaction.getModel();
-    model.setRowCount(0); // Clear table
+    model.setRowCount(0); // Clear the table
 
-    String sendMoneySql = "SELECT transaction_id, sender_username, receiver_username, amount, transaction_description, status, transaction_date FROM tbl_sendmoney";
-    String depositSql = "SELECT transaction_id, u_username AS sender_username, NULL AS receiver_username, amount, transaction_description, status, transaction_date FROM tbl_deposits";
+    String sendMoneySql = "SELECT id, " +
+                          "CONCAT(sender_fname, ' ', sender_lname) AS sender_name, " +
+                          "CONCAT(receiver_fname, ' ', receiver_lname) AS receiver_name, " +
+                          "amount, transaction_description, status, transaction_date " +
+                          "FROM tbl_sendmoney";
+
+    String depositSql = "SELECT deposit_id, " +
+                        "CONCAT(u_fname, ' ', u_lname) AS sender_name, " +
+                        "NULL AS receiver_name, " +
+                        "amount, transaction_description, status, transaction_date " +
+                        "FROM tbl_deposits";
 
     try (Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/money_remittance", "root", "")) {
 
-        // Send Money
-        try (PreparedStatement pst = con.prepareStatement(sendMoneySql); ResultSet rs = pst.executeQuery()) {
+        // 🔹 Send Money Transactions
+        try (PreparedStatement pst = con.prepareStatement(sendMoneySql);
+             ResultSet rs = pst.executeQuery()) {
+
             while (rs.next()) {
-                model.addRow(new Object[] {
+                model.addRow(new Object[]{
                     "Send Money",
-                    rs.getInt("transaction_id"),
-                    rs.getString("sender_username"),
-                    rs.getString("receiver_username"),
+                    rs.getInt("id"),
+                    rs.getString("sender_name"),
+                    rs.getString("receiver_name"),
                     rs.getDouble("amount"),
                     rs.getString("transaction_description"),
                     rs.getString("status"),
@@ -116,14 +139,16 @@ private void loadTransactionData() {
             }
         }
 
-        // Deposit
-        try (PreparedStatement pst = con.prepareStatement(depositSql); ResultSet rs = pst.executeQuery()) {
+        // 🔹 Deposit Transactions
+        try (PreparedStatement pst = con.prepareStatement(depositSql);
+             ResultSet rs = pst.executeQuery()) {
+
             while (rs.next()) {
-                model.addRow(new Object[] {
+                model.addRow(new Object[]{
                     "Deposit",
-                    rs.getInt("transaction_id"),
-                    rs.getString("sender_username"),
-                    rs.getString("receiver_username"), // will show as "null"
+                    rs.getInt("deposit_id"),
+                    rs.getString("sender_name"),
+                    "N/A",  // No receiver for deposits
                     rs.getDouble("amount"),
                     rs.getString("transaction_description"),
                     rs.getString("status"),
@@ -141,6 +166,7 @@ private void loadTransactionData() {
 }
 
 
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -150,26 +176,16 @@ private void loadTransactionData() {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jPanel1 = new javax.swing.JPanel();
-        jLabel1 = new javax.swing.JLabel();
         jPanel4 = new javax.swing.JPanel();
         jScrollPane6 = new javax.swing.JScrollPane();
         tbltransaction = new javax.swing.JTable();
         cancel1 = new javax.swing.JButton();
         jButton1 = new javax.swing.JButton();
+        jLabel1 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setResizable(false);
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
-
-        jPanel1.setBackground(new java.awt.Color(204, 255, 255));
-        jPanel1.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
-
-        jLabel1.setFont(new java.awt.Font("Century Gothic", 3, 24)); // NOI18N
-        jLabel1.setText("VIEW TRANSACTION");
-        jPanel1.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(220, 30, -1, -1));
-
-        getContentPane().add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(-10, 0, 880, 100));
 
         jPanel4.setBackground(new java.awt.Color(255, 255, 255));
         jPanel4.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
@@ -182,14 +198,14 @@ private void loadTransactionData() {
                 {null, null, null, null, null, null, null, null}
             },
             new String [] {
-                "Transaction Type", "Transaction ID", "Sender Username", "Receiver Usernamet", "Amount", "Date", "Status", "Transaction Description"
+                "Transaction Type", "Transaction ID", "Sender", "Receiver", "Amount", "Description", "Status", "Date"
             }
         ));
         jScrollPane6.setViewportView(tbltransaction);
 
-        jPanel4.add(jScrollPane6, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 71, 850, 400));
+        jPanel4.add(jScrollPane6, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 160, 850, 400));
 
-        cancel1.setBackground(new java.awt.Color(255, 255, 255));
+        cancel1.setBackground(new java.awt.Color(255, 0, 0));
         cancel1.setFont(new java.awt.Font("Yu Gothic UI", 1, 12)); // NOI18N
         cancel1.setForeground(new java.awt.Color(27, 57, 77));
         cancel1.setText("Cancel");
@@ -203,7 +219,7 @@ private void loadTransactionData() {
                 cancel1ActionPerformed(evt);
             }
         });
-        jPanel4.add(cancel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(730, 20, 130, 40));
+        jPanel4.add(cancel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(710, 30, 130, 40));
 
         jButton1.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
         jButton1.setText("REFRESH");
@@ -212,9 +228,13 @@ private void loadTransactionData() {
                 jButton1ActionPerformed(evt);
             }
         });
-        jPanel4.add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(590, 20, 130, 40));
+        jPanel4.add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 110, 130, 40));
 
-        getContentPane().add(jPanel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 90, 870, 500));
+        jLabel1.setFont(new java.awt.Font("Yu Gothic Light", 1, 48)); // NOI18N
+        jLabel1.setText("VIEW TRANSACTION");
+        jPanel4.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 10, -1, -1));
+
+        getContentPane().add(jPanel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 870, 590));
 
         pack();
         setLocationRelativeTo(null);
@@ -274,7 +294,6 @@ private void loadTransactionData() {
     public javax.swing.JButton cancel1;
     private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
-    private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel4;
     private javax.swing.JScrollPane jScrollPane6;
     private javax.swing.JTable tbltransaction;

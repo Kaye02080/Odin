@@ -14,6 +14,7 @@ import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.Date;
 import javax.swing.JOptionPane;
+import testappnew.loginF;
 
 /**
  *
@@ -73,25 +74,41 @@ public class SendMoneyDashoard extends javax.swing.JFrame {
         Senderusername = new javax.swing.JTextField();
         useramount = new javax.swing.JTextField();
         jLabel3 = new javax.swing.JLabel();
-        cancel = new javax.swing.JButton();
         jLabel5 = new javax.swing.JLabel();
         Receivername = new javax.swing.JTextField();
         jButton2 = new javax.swing.JButton();
         jLabel6 = new javax.swing.JLabel();
         receiverId = new javax.swing.JTextField();
         jLabel7 = new javax.swing.JLabel();
+        jLabel8 = new javax.swing.JLabel();
+        jTextField1 = new javax.swing.JTextField();
+        jLabel9 = new javax.swing.JLabel();
+        jTextField2 = new javax.swing.JTextField();
+        jLabel10 = new javax.swing.JLabel();
+        jTextField3 = new javax.swing.JTextField();
+        jLabel11 = new javax.swing.JLabel();
+        jTextField4 = new javax.swing.JTextField();
+        jLabel12 = new javax.swing.JLabel();
+        jTextField5 = new javax.swing.JTextField();
         jLabel4 = new javax.swing.JLabel();
         jPanel1 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         acc_fname = new javax.swing.JLabel();
         acc_id = new javax.swing.JLabel();
+        cancel = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowActivated(java.awt.event.WindowEvent evt) {
+                formWindowActivated(evt);
+            }
+        });
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         jPanel4.setBackground(new java.awt.Color(255, 255, 255));
         jPanel4.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
+        jPanel5.setBackground(new java.awt.Color(153, 153, 153));
         jPanel5.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         Senderusername.addActionListener(new java.awt.event.ActionListener() {
@@ -100,11 +117,85 @@ public class SendMoneyDashoard extends javax.swing.JFrame {
             }
         });
         jPanel5.add(Senderusername, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 50, 170, 40));
-        jPanel5.add(useramount, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 260, 170, 40));
+        jPanel5.add(useramount, new org.netbeans.lib.awtextra.AbsoluteConstraints(290, 350, 170, 40));
 
         jLabel3.setFont(new java.awt.Font("Century Gothic", 1, 18)); // NOI18N
         jLabel3.setText("Send Amount");
-        jPanel5.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 220, -1, -1));
+        jPanel5.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(290, 310, -1, 40));
+
+        jLabel5.setFont(new java.awt.Font("Century Gothic", 1, 18)); // NOI18N
+        jLabel5.setText("Sender Last Name");
+        jPanel5.add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(420, 10, -1, 40));
+
+        Receivername.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                ReceivernameActionPerformed(evt);
+            }
+        });
+        jPanel5.add(Receivername, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 220, 170, 40));
+
+        jButton2.setText("Submit");
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
+        jPanel5.add(jButton2, new org.netbeans.lib.awtextra.AbsoluteConstraints(510, 370, 90, 30));
+
+        jLabel6.setFont(new java.awt.Font("Century Gothic", 1, 18)); // NOI18N
+        jLabel6.setText("Receiver Last Name");
+        jPanel5.add(jLabel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 270, -1, 40));
+        jPanel5.add(receiverId, new org.netbeans.lib.awtextra.AbsoluteConstraints(210, 220, 180, 40));
+
+        jLabel7.setFont(new java.awt.Font("Century Gothic", 1, 18)); // NOI18N
+        jLabel7.setText("Receiver User ID");
+        jPanel5.add(jLabel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(210, 180, -1, 40));
+
+        jLabel8.setFont(new java.awt.Font("Century Gothic", 1, 18)); // NOI18N
+        jLabel8.setText("Sender User ID");
+        jPanel5.add(jLabel8, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 90, -1, 40));
+        jPanel5.add(jTextField1, new org.netbeans.lib.awtextra.AbsoluteConstraints(210, 50, 200, 40));
+
+        jLabel9.setFont(new java.awt.Font("Century Gothic", 1, 18)); // NOI18N
+        jLabel9.setText("Sender First Name");
+        jPanel5.add(jLabel9, new org.netbeans.lib.awtextra.AbsoluteConstraints(210, 10, -1, 40));
+        jPanel5.add(jTextField2, new org.netbeans.lib.awtextra.AbsoluteConstraints(420, 50, 190, 40));
+
+        jLabel10.setFont(new java.awt.Font("Century Gothic", 1, 18)); // NOI18N
+        jLabel10.setText("Sender Username");
+        jPanel5.add(jLabel10, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 10, -1, 40));
+        jPanel5.add(jTextField3, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 130, 170, 40));
+
+        jLabel11.setFont(new java.awt.Font("Century Gothic", 1, 18)); // NOI18N
+        jLabel11.setText("Receiver Username");
+        jPanel5.add(jLabel11, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 180, -1, 40));
+        jPanel5.add(jTextField4, new org.netbeans.lib.awtextra.AbsoluteConstraints(410, 220, 190, 40));
+
+        jLabel12.setFont(new java.awt.Font("Century Gothic", 1, 18)); // NOI18N
+        jLabel12.setText("Receiver First Name");
+        jPanel5.add(jLabel12, new org.netbeans.lib.awtextra.AbsoluteConstraints(410, 180, -1, 40));
+        jPanel5.add(jTextField5, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 310, 190, 40));
+
+        jPanel4.add(jPanel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 60, 630, 420));
+
+        jLabel4.setFont(new java.awt.Font("Yu Gothic Light", 1, 36)); // NOI18N
+        jLabel4.setText("SEND MONEY DASHBOARD");
+        jPanel4.add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 10, -1, -1));
+
+        getContentPane().add(jPanel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 0, 680, 510));
+
+        jPanel1.setBackground(new java.awt.Color(0, 51, 102));
+        jPanel1.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/user/VVT.png"))); // NOI18N
+        jPanel1.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 30, 60, 70));
+
+        acc_fname.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        acc_fname.setText("USER");
+        jPanel1.add(acc_fname, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 110, 40, -1));
+
+        acc_id.setText("USER ID");
+        jPanel1.add(acc_id, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 130, -1, -1));
 
         cancel.setBackground(new java.awt.Color(255, 255, 255));
         cancel.setFont(new java.awt.Font("Yu Gothic UI", 1, 12)); // NOI18N
@@ -120,58 +211,9 @@ public class SendMoneyDashoard extends javax.swing.JFrame {
                 cancelActionPerformed(evt);
             }
         });
-        jPanel5.add(cancel, new org.netbeans.lib.awtextra.AbsoluteConstraints(560, 410, 70, -1));
+        jPanel1.add(cancel, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 460, 70, -1));
 
-        jLabel5.setFont(new java.awt.Font("Century Gothic", 1, 18)); // NOI18N
-        jLabel5.setText("Sender Username");
-        jPanel5.add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 10, -1, 30));
-
-        Receivername.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                ReceivernameActionPerformed(evt);
-            }
-        });
-        jPanel5.add(Receivername, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 150, 170, 40));
-
-        jButton2.setText("Submit");
-        jButton2.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton2ActionPerformed(evt);
-            }
-        });
-        jPanel5.add(jButton2, new org.netbeans.lib.awtextra.AbsoluteConstraints(390, 410, 90, 30));
-
-        jLabel6.setFont(new java.awt.Font("Century Gothic", 1, 18)); // NOI18N
-        jLabel6.setText("Receiver Username");
-        jPanel5.add(jLabel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 110, -1, 40));
-        jPanel5.add(receiverId, new org.netbeans.lib.awtextra.AbsoluteConstraints(240, 150, 180, 40));
-
-        jLabel7.setFont(new java.awt.Font("Century Gothic", 1, 18)); // NOI18N
-        jLabel7.setText("Receiver User ID");
-        jPanel5.add(jLabel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(240, 100, -1, 40));
-
-        jPanel4.add(jPanel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 100, 680, 480));
-
-        jLabel4.setFont(new java.awt.Font("Century Gothic", 3, 36)); // NOI18N
-        jLabel4.setText("SEND MONEY DASHBOARD");
-        jPanel4.add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 40, -1, -1));
-
-        getContentPane().add(jPanel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(120, 0, 720, 610));
-
-        jPanel1.setBackground(new java.awt.Color(0, 51, 102));
-        jPanel1.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
-
-        jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/user/VVT.png"))); // NOI18N
-        jPanel1.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 30, 60, 70));
-
-        acc_fname.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
-        acc_fname.setText("USER");
-        jPanel1.add(acc_fname, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 110, 40, -1));
-
-        acc_id.setText("USER ID");
-        jPanel1.add(acc_id, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 130, -1, -1));
-
-        getContentPane().add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 120, 610));
+        getContentPane().add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 110, 510));
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -207,8 +249,8 @@ if (senderId <= 0) {
 // Get input values
 String senderUsername = Senderusername.getText().trim();
 String receiverUsername = Receivername.getText().trim();
-String receiverUserIdStr = receiverId.getText().trim();  // Assuming receiver's user ID input is in a field named receiverId
-String amountStr = useramount.getText().trim(); // Assuming your amount textfield is useramount
+String receiverUserIdStr = receiverId.getText().trim();
+String amountStr = useramount.getText().trim();
 
 if (senderUsername.isEmpty() || receiverUsername.isEmpty() || receiverUserIdStr.isEmpty() || amountStr.isEmpty()) {
     JOptionPane.showMessageDialog(this, "All fields are required!", "Error", JOptionPane.ERROR_MESSAGE);
@@ -218,7 +260,6 @@ if (senderUsername.isEmpty() || receiverUsername.isEmpty() || receiverUserIdStr.
 try {
     double amount = Double.parseDouble(amountStr);
 
-    // Amount validation
     if (amount <= 0) {
         JOptionPane.showMessageDialog(this, "Send amount must be greater than 0.", "Validation Error", JOptionPane.WARNING_MESSAGE);
         return;
@@ -229,21 +270,21 @@ try {
         return;
     }
 
-    int receiverUserId = Integer.parseInt(receiverUserIdStr);  // Convert receiver user ID to integer
+    int receiverUserId = Integer.parseInt(receiverUserIdStr);
 
     dbConnector dbc = new dbConnector();
     try (Connection conn = dbc.getConnection()) {
         conn.setAutoCommit(false); // Start transaction
 
-        // 🔵 Check if receiver exists and get their user type and ID
+        // 🔵 Check receiver user type and get user ID
         String userTypeQuery = "SELECT u_type, u_id FROM tbl_users WHERE u_username = ?";
+        int dbReceiverUserId = -1;
         try (PreparedStatement pstUserType = conn.prepareStatement(userTypeQuery)) {
             pstUserType.setString(1, receiverUsername);
             ResultSet rsUserType = pstUserType.executeQuery();
-
             if (rsUserType.next()) {
                 String userType = rsUserType.getString("u_type");
-                int dbReceiverUserId = rsUserType.getInt("u_id");  // Fetch receiver's user ID from the database
+                dbReceiverUserId = rsUserType.getInt("u_id");
 
                 if (receiverUserId != dbReceiverUserId) {
                     JOptionPane.showMessageDialog(this, "Receiver User ID does not match the username!", "Validation Error", JOptionPane.WARNING_MESSAGE);
@@ -251,13 +292,11 @@ try {
                     return;
                 }
 
-                // Check if the receiver is admin or teller
                 if ("admin".equalsIgnoreCase(userType) || "teller".equalsIgnoreCase(userType)) {
                     JOptionPane.showMessageDialog(this, "Cannot send money to an Admin or Teller account!", "Validation Error", JOptionPane.WARNING_MESSAGE);
                     conn.rollback();
                     return;
                 }
-
             } else {
                 JOptionPane.showMessageDialog(this, "Receiver not found!", "Error", JOptionPane.ERROR_MESSAGE);
                 conn.rollback();
@@ -266,12 +305,11 @@ try {
         }
 
         // 🔵 Get sender's current balance
+        double senderBalance = 0.0;
         String balanceQuery = "SELECT balance FROM tbl_users WHERE u_username = ?";
         try (PreparedStatement pstBalance = conn.prepareStatement(balanceQuery)) {
             pstBalance.setString(1, senderUsername);
             ResultSet rs = pstBalance.executeQuery();
-
-            double senderBalance = 0.0;
             if (rs.next()) {
                 senderBalance = rs.getDouble("balance");
             } else {
@@ -280,7 +318,6 @@ try {
                 return;
             }
 
-            // 🔵 Check if sender has enough balance
             if (senderBalance < amount) {
                 JOptionPane.showMessageDialog(this, "Insufficient balance!", "Error", JOptionPane.ERROR_MESSAGE);
                 conn.rollback();
@@ -288,7 +325,7 @@ try {
             }
         }
 
-        // 🔵 Deduct amount from sender
+        // 🔵 Deduct from sender
         String deductSender = "UPDATE tbl_users SET balance = balance - ? WHERE u_username = ?";
         try (PreparedStatement pstDeduct = conn.prepareStatement(deductSender)) {
             pstDeduct.setDouble(1, amount);
@@ -296,13 +333,12 @@ try {
             pstDeduct.executeUpdate();
         }
 
-        // 🔵 Add amount to receiver
+        // 🔵 Add to receiver
         String addReceiver = "UPDATE tbl_users SET balance = balance + ? WHERE u_username = ?";
         try (PreparedStatement pstAdd = conn.prepareStatement(addReceiver)) {
             pstAdd.setDouble(1, amount);
             pstAdd.setString(2, receiverUsername);
             int receiverUpdateResult = pstAdd.executeUpdate();
-
             if (receiverUpdateResult == 0) {
                 conn.rollback();
                 JOptionPane.showMessageDialog(this, "Receiver not found!", "Error", JOptionPane.ERROR_MESSAGE);
@@ -310,36 +346,60 @@ try {
             }
         }
 
-        // 🔵 Insert send money transaction record
-        String sql = "INSERT INTO tbl_sendmoney (sender_id, sender_username, receiver_username, amount, transaction_description, status) VALUES (?, ?, ?, ?, ?, ?)";
+        // 🔵 Get sender's full name
+        String senderFname = "", senderLname = "";
+        String senderQuery = "SELECT u_fname, u_lname FROM tbl_users WHERE u_id = ?";
+        try (PreparedStatement pstSender = conn.prepareStatement(senderQuery)) {
+            pstSender.setInt(1, senderId);
+            ResultSet rsSender = pstSender.executeQuery();
+            if (rsSender.next()) {
+                senderFname = rsSender.getString("u_fname");
+                senderLname = rsSender.getString("u_lname");
+            }
+        }
+
+        // 🔵 Get receiver's full name
+        String receiverFname = "", receiverLname = "";
+        String receiverQuery = "SELECT u_fname, u_lname FROM tbl_users WHERE u_id = ?";
+        try (PreparedStatement pstReceiver = conn.prepareStatement(receiverQuery)) {
+            pstReceiver.setInt(1, receiverUserId);
+            ResultSet rsReceiver = pstReceiver.executeQuery();
+            if (rsReceiver.next()) {
+                receiverFname = rsReceiver.getString("u_fname");
+                receiverLname = rsReceiver.getString("u_lname");
+            }
+        }
+
+        // 🔵 Insert transaction into tbl_sendmoney
+        String sql = "INSERT INTO tbl_sendmoney (sender_id, sender_username, sender_fname, sender_lname, receiver_username, receiver_fname, receiver_lname, amount, transaction_description, status) " +
+                     "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         try (PreparedStatement pst = conn.prepareStatement(sql)) {
             pst.setInt(1, senderId);
             pst.setString(2, senderUsername);
-            pst.setString(3, receiverUsername);
-            pst.setDouble(4, amount);
-            pst.setString(5, "Money Sent");
-            pst.setString(6, "COMPLETED");
+            pst.setString(3, senderFname);
+            pst.setString(4, senderLname);
+            pst.setString(5, receiverUsername);
+            pst.setString(6, receiverFname);
+            pst.setString(7, receiverLname);
+            pst.setDouble(8, amount);
+            pst.setString(9, "Money Sent");
+            pst.setString(10, "COMPLETED");
 
             int result = pst.executeUpdate();
-
             if (result > 0) {
-                conn.commit(); // Commit transaction
-
+                conn.commit();
                 JOptionPane.showMessageDialog(this, "Money sent successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);
-
-                // Log the event
                 logEvent(senderId, senderUsername, "User Sent Money to " + receiverUsername);
-
-                // Clear input fields
                 Senderusername.setText("");
                 Receivername.setText("");
-                receiverId.setText("");  // Clear receiver's user ID field
+                receiverId.setText("");
                 useramount.setText("");
             } else {
                 conn.rollback();
                 JOptionPane.showMessageDialog(this, "Failed to send money.", "Error", JOptionPane.ERROR_MESSAGE);
             }
         }
+
     } catch (Exception ex) {
         JOptionPane.showMessageDialog(this, "Transaction failed: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
     }
@@ -352,8 +412,24 @@ try {
 
 
 
+
         // TODO add your handling code here:
     }//GEN-LAST:event_jButton2ActionPerformed
+
+    private void formWindowActivated(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowActivated
+         Session sess = Session.getInstance();
+        if (sess.getUid() == 0) {
+
+            loginF l = new loginF();
+            l.setVisible(true);
+            this.dispose();
+            JOptionPane.showMessageDialog(null, "No Account, Login FIrst");
+        } else {
+        
+            acc_fname.setText("Username: " + sess.getFname());
+            acc_id.setText("User ID: " + sess.getUid());
+        }        // TODO add your handling code here:
+    }//GEN-LAST:event_formWindowActivated
 
     /**
      * @param args the command line arguments
@@ -398,14 +474,24 @@ try {
     public javax.swing.JButton cancel;
     private javax.swing.JButton jButton2;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel10;
+    private javax.swing.JLabel jLabel11;
+    private javax.swing.JLabel jLabel12;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
+    private javax.swing.JLabel jLabel8;
+    private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel4;
     private javax.swing.JPanel jPanel5;
+    private javax.swing.JTextField jTextField1;
+    private javax.swing.JTextField jTextField2;
+    private javax.swing.JTextField jTextField3;
+    private javax.swing.JTextField jTextField4;
+    private javax.swing.JTextField jTextField5;
     private javax.swing.JTextField receiverId;
     private javax.swing.JTextField useramount;
     // End of variables declaration//GEN-END:variables

@@ -296,18 +296,18 @@ public class CreateUsersF extends javax.swing.JFrame {
 
         jLabel11.setFont(new java.awt.Font("Tahoma", 1, 24)); // NOI18N
         jLabel11.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel11.setText("USER");
-        jPanel1.add(jLabel11, new org.netbeans.lib.awtextra.AbsoluteConstraints(320, 30, 270, 34));
+        jLabel11.setText("USER FORM");
+        jPanel1.add(jLabel11, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 30, 210, 34));
 
         jLabel14.setIcon(new javax.swing.ImageIcon(getClass().getResource("/register/YU.png"))); // NOI18N
         jPanel1.add(jLabel14, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 0, -1, 90));
 
-        getContentPane().add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 910, 90));
+        getContentPane().add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 820, 90));
 
         jPanel10.setBackground(new java.awt.Color(255, 255, 255));
         jPanel10.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        jPanel7.setBackground(new java.awt.Color(51, 255, 153));
+        jPanel7.setBackground(new java.awt.Color(153, 153, 153));
         jPanel7.setLayout(null);
 
         jLabel13.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
@@ -323,9 +323,9 @@ public class CreateUsersF extends javax.swing.JFrame {
         jPanel7.add(pw);
         pw.setBounds(220, 0, 190, 30);
 
-        jPanel10.add(jPanel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 280, 420, 30));
+        jPanel10.add(jPanel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 210, 420, 30));
 
-        jPanel6.setBackground(new java.awt.Color(51, 255, 153));
+        jPanel6.setBackground(new java.awt.Color(153, 153, 153));
         jPanel6.setLayout(null);
 
         jLabel5.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
@@ -349,9 +349,9 @@ public class CreateUsersF extends javax.swing.JFrame {
         jPanel6.add(us);
         us.setBounds(220, 0, 190, 30);
 
-        jPanel10.add(jPanel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 240, 420, 30));
+        jPanel10.add(jPanel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 180, 420, 30));
 
-        jPanel5.setBackground(new java.awt.Color(51, 255, 153));
+        jPanel5.setBackground(new java.awt.Color(153, 153, 153));
         jPanel5.setLayout(null);
 
         jLabel4.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
@@ -375,9 +375,9 @@ public class CreateUsersF extends javax.swing.JFrame {
         jPanel5.add(mail);
         mail.setBounds(220, 0, 190, 30);
 
-        jPanel10.add(jPanel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 200, 420, 30));
+        jPanel10.add(jPanel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 150, 420, 30));
 
-        jPanel4.setBackground(new java.awt.Color(51, 255, 153));
+        jPanel4.setBackground(new java.awt.Color(153, 153, 153));
         jPanel4.setLayout(null);
 
         jLabel3.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
@@ -400,9 +400,9 @@ public class CreateUsersF extends javax.swing.JFrame {
         jPanel4.add(jButton1);
         jButton1.setBounds(10, 0, 90, 30);
 
-        jPanel10.add(jPanel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 160, 420, 30));
+        jPanel10.add(jPanel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 120, 420, 30));
 
-        jPanel3.setBackground(new java.awt.Color(51, 255, 153));
+        jPanel3.setBackground(new java.awt.Color(153, 153, 153));
         jPanel3.setLayout(null);
 
         jLabel10.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
@@ -431,9 +431,10 @@ public class CreateUsersF extends javax.swing.JFrame {
         jPanel3.add(fn);
         fn.setBounds(220, 0, 190, 30);
 
-        jPanel10.add(jPanel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 120, 420, 30));
+        jPanel10.add(jPanel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 90, 420, 30));
 
-        jPanel8.setBackground(new java.awt.Color(51, 255, 153));
+        jPanel8.setBackground(new java.awt.Color(153, 153, 153));
+        jPanel8.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
         jPanel8.setLayout(null);
 
         jLabel9.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
@@ -447,9 +448,9 @@ public class CreateUsersF extends javax.swing.JFrame {
         jPanel8.add(ut);
         ut.setBounds(90, 0, 190, 30);
 
-        jPanel10.add(jPanel8, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 460, 290, 30));
+        jPanel10.add(jPanel8, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 340, 290, 30));
 
-        jPanel9.setBackground(new java.awt.Color(51, 255, 153));
+        jPanel9.setBackground(new java.awt.Color(153, 153, 153));
         jPanel9.setLayout(null);
 
         stat.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
@@ -463,7 +464,7 @@ public class CreateUsersF extends javax.swing.JFrame {
         jPanel9.add(jLabel8);
         jLabel8.setBounds(0, 0, 90, 30);
 
-        jPanel10.add(jPanel9, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 500, 290, 30));
+        jPanel10.add(jPanel9, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 370, 290, 30));
 
         check.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
         check.setText("show");
@@ -472,9 +473,10 @@ public class CreateUsersF extends javax.swing.JFrame {
                 checkActionPerformed(evt);
             }
         });
-        jPanel10.add(check, new org.netbeans.lib.awtextra.AbsoluteConstraints(490, 280, -1, 30));
+        jPanel10.add(check, new org.netbeans.lib.awtextra.AbsoluteConstraints(430, 210, -1, 30));
 
-        jPanel2.setBackground(new java.awt.Color(51, 255, 153));
+        jPanel2.setBackground(new java.awt.Color(153, 153, 153));
+        jPanel2.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
         jPanel2.setLayout(null);
 
         jLabel2.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
@@ -499,7 +501,9 @@ public class CreateUsersF extends javax.swing.JFrame {
         jPanel2.add(uid);
         uid.setBounds(220, 0, 190, 30);
 
-        jPanel10.add(jPanel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 80, 420, 30));
+        jPanel10.add(jPanel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 60, 420, 30));
+
+        jPanel11.setBackground(new java.awt.Color(153, 153, 153));
 
         u_image.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
 
@@ -520,13 +524,13 @@ public class CreateUsersF extends javax.swing.JFrame {
                 .addContainerGap(24, Short.MAX_VALUE))
         );
 
-        jPanel10.add(jPanel11, new org.netbeans.lib.awtextra.AbsoluteConstraints(600, 60, 250, 210));
+        jPanel10.add(jPanel11, new org.netbeans.lib.awtextra.AbsoluteConstraints(520, 30, 250, 210));
 
         sq.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "What's the name of your first pet?", "What's the lastname of your Mother?", "What's your favorite food?", "What's your favorite Color?", "What's your birth month?" }));
-        jPanel10.add(sq, new org.netbeans.lib.awtextra.AbsoluteConstraints(120, 360, -1, -1));
-        jPanel10.add(ans, new org.netbeans.lib.awtextra.AbsoluteConstraints(120, 390, 240, 40));
+        jPanel10.add(sq, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 260, -1, -1));
+        jPanel10.add(ans, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 280, 230, 40));
 
-        select.setBackground(new java.awt.Color(0, 51, 102));
+        select.setBackground(new java.awt.Color(255, 0, 0));
         select.setText("SELECT");
         select.setBorder(javax.swing.BorderFactory.createEtchedBorder());
         select.addActionListener(new java.awt.event.ActionListener() {
@@ -534,9 +538,9 @@ public class CreateUsersF extends javax.swing.JFrame {
                 selectActionPerformed(evt);
             }
         });
-        jPanel10.add(select, new org.netbeans.lib.awtextra.AbsoluteConstraints(600, 290, 80, 30));
+        jPanel10.add(select, new org.netbeans.lib.awtextra.AbsoluteConstraints(540, 250, 80, 30));
 
-        remove.setBackground(new java.awt.Color(0, 51, 102));
+        remove.setBackground(new java.awt.Color(255, 0, 0));
         remove.setText("REMOVE");
         remove.setBorder(javax.swing.BorderFactory.createEtchedBorder());
         remove.addActionListener(new java.awt.event.ActionListener() {
@@ -544,9 +548,9 @@ public class CreateUsersF extends javax.swing.JFrame {
                 removeActionPerformed(evt);
             }
         });
-        jPanel10.add(remove, new org.netbeans.lib.awtextra.AbsoluteConstraints(770, 290, 80, 30));
+        jPanel10.add(remove, new org.netbeans.lib.awtextra.AbsoluteConstraints(680, 250, 80, 30));
 
-        getContentPane().add(jPanel10, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 90, 910, 590));
+        getContentPane().add(jPanel10, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 90, 820, 410));
 
         pack();
         setLocationRelativeTo(null);

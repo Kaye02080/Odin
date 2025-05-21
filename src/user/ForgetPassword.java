@@ -232,7 +232,8 @@ public void logEvent(int userId, String username, String description) {
         jPanel1.setBackground(new java.awt.Color(255, 255, 255));
         jPanel1.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        jPanel2.setBackground(new java.awt.Color(153, 153, 153));
+        jPanel2.setBackground(new java.awt.Color(0, 51, 102));
+        jPanel2.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
         jPanel2.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         jLabel1.setFont(new java.awt.Font("Yu Gothic", 1, 18)); // NOI18N
@@ -255,7 +256,7 @@ public void logEvent(int userId, String username, String description) {
                 SubmitMouseClicked(evt);
             }
         });
-        jPanel2.add(Submit, new org.netbeans.lib.awtextra.AbsoluteConstraints(390, 270, -1, -1));
+        jPanel2.add(Submit, new org.netbeans.lib.awtextra.AbsoluteConstraints(420, 270, -1, -1));
 
         Search.setText("Search");
         Search.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -271,15 +272,15 @@ public void logEvent(int userId, String username, String description) {
                 jButton1MouseClicked(evt);
             }
         });
-        jPanel2.add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(280, 270, -1, -1));
+        jPanel2.add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(330, 270, -1, -1));
 
-        jPanel1.add(jPanel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 90, 540, 340));
+        jPanel1.add(jPanel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 60, 540, 340));
 
-        jLabel3.setFont(new java.awt.Font("Yu Gothic", 3, 36)); // NOI18N
+        jLabel3.setFont(new java.awt.Font("Yu Gothic Light", 1, 36)); // NOI18N
         jLabel3.setText("FORGOT PASSWORD");
-        jPanel1.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(190, 20, 390, -1));
+        jPanel1.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 0, 390, -1));
 
-        getContentPane().add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 740, 490));
+        getContentPane().add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 590, 420));
 
         pack();
     }// </editor-fold>//GEN-END:initComponents

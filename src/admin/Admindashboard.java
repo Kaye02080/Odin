@@ -168,7 +168,7 @@ public class Admindashboard extends javax.swing.JFrame {
         jLabel7 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setPreferredSize(new java.awt.Dimension(1009, 719));
+        setPreferredSize(new java.awt.Dimension(1288, 748));
         addWindowListener(new java.awt.event.WindowAdapter() {
             public void windowActivated(java.awt.event.WindowEvent evt) {
                 formWindowActivated(evt);
@@ -179,14 +179,14 @@ public class Admindashboard extends javax.swing.JFrame {
         jPanel3.setBackground(new java.awt.Color(255, 255, 255));
         jPanel3.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        jLabel1.setFont(new java.awt.Font("Yu Gothic", 3, 36)); // NOI18N
+        jLabel1.setFont(new java.awt.Font("Yu Gothic Light", 1, 36)); // NOI18N
         jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel1.setText("ADMIN DASHBOARD");
         jPanel3.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(510, 50, 390, 34));
 
         jLabel3.setFont(new java.awt.Font("Yu Gothic", 3, 18)); // NOI18N
         jLabel3.setText("MONEY IS EVERYWHERE BUT THIS WEBSITE NOT EVERYWHERE ");
-        jPanel3.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(290, 370, 590, -1));
+        jPanel3.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(300, 270, 590, -1));
 
         logstbl.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -201,10 +201,10 @@ public class Admindashboard extends javax.swing.JFrame {
         ));
         jScrollPane1.setViewportView(logstbl);
 
-        jPanel3.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(290, 400, 720, 330));
+        jPanel3.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(300, 310, 720, 330));
 
         jPanel5.setBackground(new java.awt.Color(255, 255, 255));
-        jPanel5.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+        jPanel5.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
         jPanel5.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 jPanel5MouseClicked(evt);
@@ -226,7 +226,7 @@ public class Admindashboard extends javax.swing.JFrame {
         jPanel3.add(jPanel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 430, 220, 40));
 
         jPanel7.setBackground(new java.awt.Color(255, 255, 255));
-        jPanel7.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+        jPanel7.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
         jPanel7.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 jPanel7MouseClicked(evt);
@@ -244,7 +244,7 @@ public class Admindashboard extends javax.swing.JFrame {
         jPanel3.add(jPanel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 490, 220, 40));
 
         jPanel4.setBackground(new java.awt.Color(255, 255, 255));
-        jPanel4.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+        jPanel4.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
         jPanel4.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 jPanel4MouseClicked(evt);
@@ -262,7 +262,7 @@ public class Admindashboard extends javax.swing.JFrame {
         jPanel3.add(jPanel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 370, 220, -1));
 
         jPanel2.setBackground(new java.awt.Color(255, 255, 255));
-        jPanel2.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+        jPanel2.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
         jPanel2.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 jPanel2MouseClicked(evt);
@@ -320,7 +320,7 @@ public class Admindashboard extends javax.swing.JFrame {
         jPanel3.add(jLabel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(1080, 110, 200, 170));
 
         getContentPane().add(jPanel3);
-        jPanel3.setBounds(0, 0, 1310, 750);
+        jPanel3.setBounds(-10, 0, 1300, 750);
 
         pack();
         setLocationRelativeTo(null);
@@ -339,9 +339,16 @@ public class Admindashboard extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void jPanel4MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jPanel4MouseClicked
-       userLoginF us = new userLoginF();
-       us.setVisible(true);
-       this.dispose();
+      Session sess = Session.getInstance();
+    String userType = sess.getType();  
+
+    if (userType.equals("Admin")) {
+        userLoginF us = new userLoginF();
+        us.setVisible(true);
+        this.dispose(); 
+    } else {
+        JOptionPane.showMessageDialog(null, "Access Denied! Only Admin can See Users.");
+    }  
     }//GEN-LAST:event_jPanel4MouseClicked
 
     private void formWindowActivated(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowActivated
