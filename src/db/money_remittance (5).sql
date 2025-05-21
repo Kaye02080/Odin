@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Apr 26, 2025 at 08:17 AM
+-- Generation Time: May 21, 2025 at 07:28 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -24,38 +24,30 @@ SET time_zone = "+00:00";
 -- --------------------------------------------------------
 
 --
--- Table structure for table `tbl_loans`
+-- Table structure for table `tbl_deposits`
 --
 
-CREATE TABLE `tbl_loans` (
-  `loan_id` int(11) NOT NULL,
+CREATE TABLE `tbl_deposits` (
+  `deposit_id` int(11) NOT NULL,
   `u_id` int(11) NOT NULL,
-  `u_username` varchar(50) NOT NULL,
-  `loan_amount` decimal(10,2) NOT NULL,
-  `loan_date` timestamp NOT NULL DEFAULT current_timestamp(),
-  `loan_status` varchar(255) NOT NULL,
-  `loan_description` varchar(255) NOT NULL
+  `u_username` varchar(255) NOT NULL,
+  `u_fname` varchar(255) NOT NULL,
+  `u_lname` varchar(255) NOT NULL,
+  `amount` double NOT NULL,
+  `transaction_description` varchar(255) NOT NULL,
+  `transaction_date` datetime DEFAULT NULL,
+  `status` varchar(255) NOT NULL,
+  `approved_by` text NOT NULL,
+  `approved_at` text NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Dumping data for table `tbl_loans`
+-- Dumping data for table `tbl_deposits`
 --
 
-INSERT INTO `tbl_loans` (`loan_id`, `u_id`, `u_username`, `loan_amount`, `loan_date`, `loan_status`, `loan_description`) VALUES
-(1, 33, 'rhex123', 30000.00, '2025-04-15 12:31:52', 'REJECTED', 'Loan request submitted'),
-(2, 33, 'rhex123', 40000.00, '2025-04-15 12:52:24', 'REJECTED', 'Loan request submitted'),
-(3, 33, 'rhex123', 40000.00, '2025-04-15 12:55:17', 'PAID', 'Loan request submitted'),
-(4, 33, 'rhex123', 60000.00, '2025-04-15 12:58:11', 'APPROVED', 'Loan request submitted'),
-(5, 33, 'rhex123', 20000.00, '2025-04-26 04:32:03', 'APPROVED', 'Loan request submitted'),
-(6, 33, 'rhex123', 10000.00, '2025-04-26 04:46:06', 'APPROVED', 'Loan request submitted'),
-(7, 33, 'rhex123', 10000.00, '2025-04-26 04:51:11', 'APPROVED', 'Loan request submitted'),
-(8, 33, 'rhex123', 10000.00, '2025-04-26 04:53:50', 'APPROVED', 'Loan request submitted'),
-(9, 33, 'rhex123', 10000.00, '2025-04-26 04:58:26', 'APPROVED', 'Loan request submitted'),
-(10, 34, 'greg123', 20000.00, '2025-04-26 05:10:36', 'APPROVED', 'Loan request submitted'),
-(11, 34, 'greg123', 15000.00, '2025-04-26 05:21:09', 'APPROVED', 'Loan request submitted'),
-(12, 34, 'greg123', 50000.00, '2025-04-26 05:26:56', 'APPROVED', 'Loan request submitted'),
-(13, 34, 'greg123', 40000.00, '2025-04-26 05:32:34', 'APPROVED', 'Loan request submitted'),
-(14, 34, 'greg123', 10000.00, '2025-04-26 05:40:03', 'APPROVED', 'Loan request submitted');
+INSERT INTO `tbl_deposits` (`deposit_id`, `u_id`, `u_username`, `u_fname`, `u_lname`, `amount`, `transaction_description`, `transaction_date`, `status`, `approved_by`, `approved_at`) VALUES
+(1, 34, 'greg123', '', '', 100, 'Deposit request submitted by user', NULL, 'PENDING', '', ''),
+(2, 34, 'greg123', 'greg', 'boss', 500, 'Deposit request submitted by: greg boss', NULL, 'APPROVED', '34', '2025-05-21 13:17:39');
 
 -- --------------------------------------------------------
 
@@ -215,7 +207,30 @@ INSERT INTO `tbl_log` (`log_id`, `u_id`, `u_username`, `login_time`, `u_type`, `
 (141, 34, 'greg123', '2025-04-26 06:02:42', 'Success - User Action', 'Inactive', '2025-04-26 06:02:45', 'User Sent Money to rhex123'),
 (142, 33, 'rhex123', '2025-04-26 06:02:53', 'Success - User Login', 'Inactive', '2025-04-26 06:02:56', NULL),
 (143, 24, 'paran1234', '2025-04-26 06:16:48', 'Success - Admin Login', 'Inactive', '2025-04-26 06:17:11', NULL),
-(144, 24, 'paran1234', '2025-04-26 06:17:08', 'Admin', 'Inactive', '2025-04-26 06:17:11', 'User Changed Their Details');
+(144, 24, 'paran1234', '2025-04-26 06:17:08', 'Admin', 'Inactive', '2025-04-26 06:17:11', 'User Changed Their Details'),
+(145, 34, 'greg123', '2025-05-21 02:49:30', 'Success - User Login', 'Inactive', '2025-05-21 03:09:13', NULL),
+(146, 34, 'greg123', '2025-05-21 02:49:47', 'Success - User Action', 'Inactive', '2025-05-21 03:09:13', 'User submitted deposit request'),
+(147, 34, 'greg123', '2025-05-21 03:08:15', 'Success - User Login', 'Inactive', '2025-05-21 03:09:13', NULL),
+(149, 34, 'greg123', '2025-05-21 03:09:44', 'Success - User Login', 'Inactive', '2025-05-21 03:10:20', NULL),
+(150, 34, 'greg123', '2025-05-21 03:14:22', 'Success - User Login', 'Inactive', '2025-05-21 03:37:04', NULL),
+(151, 34, 'greg123', '2025-05-21 03:36:51', 'Success - User Login', 'Inactive', '2025-05-21 03:37:04', NULL),
+(152, 34, 'greg123', '2025-05-21 03:37:02', 'Success - User Action', 'Inactive', '2025-05-21 03:37:04', 'User submitted deposit request'),
+(153, 34, 'greg123', '2025-05-21 04:42:23', 'Success - User Login', 'Inactive', '2025-05-21 04:43:50', NULL),
+(154, 34, 'greg123', '2025-05-21 04:43:35', 'Success - User Action', 'Inactive', '2025-05-21 04:43:50', 'User Sent Money to rhex123'),
+(155, 34, 'greg123', '2025-05-21 04:59:01', 'Success - Admin Login', 'Inactive', '2025-05-21 05:09:09', NULL),
+(156, 34, 'greg123', '2025-05-21 05:09:01', 'Success - Admin Login', 'Inactive', '2025-05-21 05:09:09', NULL),
+(157, 34, 'greg123', '2025-05-21 05:10:23', 'Success - Admin Login', 'Inactive', '2025-05-21 05:12:11', NULL),
+(158, 34, 'greg123', '2025-05-21 05:12:29', 'Success - Admin Login', 'Inactive', '2025-05-21 05:12:33', NULL),
+(159, 34, 'greg123', '2025-05-21 05:13:46', 'Success - Teller Login', 'Inactive', '2025-05-21 05:14:28', NULL),
+(160, 34, 'greg123', '2025-05-21 05:14:23', 'Success - Teller Login', 'Inactive', '2025-05-21 05:14:28', NULL),
+(161, 34, 'greg123', '2025-05-21 05:14:57', 'Success - Teller Login', 'Inactive', '2025-05-21 05:15:46', NULL),
+(162, 34, 'greg123', '2025-05-21 05:15:37', 'Success - Teller Login', 'Inactive', '2025-05-21 05:15:46', NULL),
+(163, 34, 'greg123', '2025-05-21 05:17:37', 'Success - Teller Login', 'Inactive', '2025-05-21 05:17:58', NULL),
+(164, 34, 'greg123', '2025-05-21 05:17:40', 'Success - User Action', 'Inactive', '2025-05-21 05:17:58', 'Teller approved Deposit ID: 2 for user greg123'),
+(165, 34, 'greg123', '2025-05-21 05:18:58', 'Success - Teller Login', 'Inactive', '2025-05-21 05:19:39', NULL),
+(166, 34, 'greg123', '2025-05-21 05:19:51', 'Success - Teller Login', 'Inactive', '2025-05-21 05:20:58', NULL),
+(167, 34, 'greg123', '2025-05-21 05:20:54', 'Success - Teller Login', 'Inactive', '2025-05-21 05:20:58', NULL),
+(168, 34, 'greg123', '2025-05-21 05:24:15', 'Success - Teller Login', 'Inactive', '2025-05-21 05:24:29', NULL);
 
 -- --------------------------------------------------------
 
@@ -229,18 +244,24 @@ CREATE TABLE `tbl_sendmoney` (
   `sender_username` varchar(255) NOT NULL,
   `receiver_username` varchar(255) NOT NULL,
   `amount` double NOT NULL,
-  `description` varchar(255) NOT NULL,
-  `status` enum('COMPLETED','CANCELLED','','') NOT NULL
+  `transaction_description` varchar(255) NOT NULL,
+  `status` enum('COMPLETED','CANCELLED','','') NOT NULL,
+  `sender_fname` varchar(100) DEFAULT NULL,
+  `sender_lname` varchar(100) DEFAULT NULL,
+  `receiver_fname` varchar(100) DEFAULT NULL,
+  `receiver_lname` varchar(100) DEFAULT NULL,
+  `transaction_date` datetime DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `tbl_sendmoney`
 --
 
-INSERT INTO `tbl_sendmoney` (`id`, `sender_id`, `sender_username`, `receiver_username`, `amount`, `description`, `status`) VALUES
-(1, 0, 'greg123', 'rhex123', 2000, 'Money Sent', 'COMPLETED'),
-(2, 34, 'greg123', 'rhex123', 500, 'Money Sent', 'COMPLETED'),
-(3, 34, 'greg123', 'rhex123', 500, 'Money Sent', 'COMPLETED');
+INSERT INTO `tbl_sendmoney` (`id`, `sender_id`, `sender_username`, `receiver_username`, `amount`, `transaction_description`, `status`, `sender_fname`, `sender_lname`, `receiver_fname`, `receiver_lname`, `transaction_date`) VALUES
+(1, 0, 'greg123', 'rhex123', 2000, 'Money Sent', 'COMPLETED', NULL, NULL, NULL, NULL, '2025-05-21 13:02:28'),
+(2, 34, 'greg123', 'rhex123', 500, 'Money Sent', 'COMPLETED', NULL, NULL, NULL, NULL, '2025-05-21 13:02:28'),
+(3, 34, 'greg123', 'rhex123', 500, 'Money Sent', 'COMPLETED', NULL, NULL, NULL, NULL, '2025-05-21 13:02:28'),
+(4, 34, 'greg123', 'rhex123', 100, 'Money Sent', 'COMPLETED', 'greg', 'boss', 'delima', 'rhex', '2025-05-21 13:02:28');
 
 -- --------------------------------------------------------
 
@@ -278,19 +299,19 @@ INSERT INTO `tbl_users` (`u_id`, `u_fname`, `u_lname`, `u_email`, `u_username`, 
 (30, 'frans', 'ababa', 'fransababa@gmail.com', 'frans123', 'ky88G1YlfOhTmsJp16q0JVDaz4gY0HXwvfGZBWKq4+8=', 'Pending', 'User', 'What\'s the name of your first pet?', 'OstyYRKvTUuxwHH/PXNPTcb9/gMXt56CfKg7QYENPfA=', 'frans123_462581453_1264063778238587_8963988102995952736_n.jpg', 0.00),
 (31, 'jay', 'boss', 'jayboss@gmail.com', 'jay123', 'ky88G1YlfOhTmsJp16q0JVDaz4gY0HXwvfGZBWKq4+8=', 'User', 'Active', 'What\'s the name of your first pet?', 'OstyYRKvTUuxwHH/PXNPTcb9/gMXt56CfKg7QYENPfA=', 'Null', 0.00),
 (32, 'mark', 'pacaldo', 'markpacaldo@gmail.com', 'mark123', 'ky88G1YlfOhTmsJp16q0JVDaz4gY0HXwvfGZBWKq4+8=', 'User', 'Active', 'What\'s the name of your first pet?', 'Fkd2iMDgBpnGz6RJejYS1+g8UyBitkslD+2JCBKO1Ug=', 'Null', 0.00),
-(33, 'delima', 'rhex', 'delimarhex@gmail.com', 'rhex123', 'ky88G1YlfOhTmsJp16q0JVDaz4gY0HXwvfGZBWKq4+8=', 'User', 'Active', 'What\'s the name of your first pet?', 'Fkd2iMDgBpnGz6RJejYS1+g8UyBitkslD+2JCBKO1Ug=', 'Null', 500.00),
-(34, 'greg', 'boss', 'gregboss@gmail.com', 'greg123', 'ky88G1YlfOhTmsJp16q0JVDaz4gY0HXwvfGZBWKq4+8=', 'User', 'Active', 'What\'s your favorite food?', '3kM+1VChYkp0J5qjDDa1LyhEJmEMAUtwAi5MiJ68qHU=', 'src/images/467719808_849346147222609_1601374335414698002_n.jpg', 7000.00);
+(33, 'delima', 'rhex', 'delimarhex@gmail.com', 'rhex123', 'ky88G1YlfOhTmsJp16q0JVDaz4gY0HXwvfGZBWKq4+8=', 'User', 'Active', 'What\'s the name of your first pet?', 'Fkd2iMDgBpnGz6RJejYS1+g8UyBitkslD+2JCBKO1Ug=', 'Null', 600.00),
+(34, 'greg', 'boss', 'gregboss@gmail.com', 'greg123', 'ky88G1YlfOhTmsJp16q0JVDaz4gY0HXwvfGZBWKq4+8=', 'Teller', 'Active', 'What\'s your favorite food?', '3kM+1VChYkp0J5qjDDa1LyhEJmEMAUtwAi5MiJ68qHU=', 'src/images/467719808_849346147222609_1601374335414698002_n.jpg', 7400.00);
 
 --
 -- Indexes for dumped tables
 --
 
 --
--- Indexes for table `tbl_loans`
+-- Indexes for table `tbl_deposits`
 --
-ALTER TABLE `tbl_loans`
-  ADD PRIMARY KEY (`loan_id`),
-  ADD KEY `tbl_loans_ibfk_1` (`u_id`);
+ALTER TABLE `tbl_deposits`
+  ADD PRIMARY KEY (`deposit_id`),
+  ADD KEY `u_id` (`u_id`);
 
 --
 -- Indexes for table `tbl_log`
@@ -316,22 +337,22 @@ ALTER TABLE `tbl_users`
 --
 
 --
--- AUTO_INCREMENT for table `tbl_loans`
+-- AUTO_INCREMENT for table `tbl_deposits`
 --
-ALTER TABLE `tbl_loans`
-  MODIFY `loan_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
+ALTER TABLE `tbl_deposits`
+  MODIFY `deposit_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `tbl_log`
 --
 ALTER TABLE `tbl_log`
-  MODIFY `log_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=145;
+  MODIFY `log_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=169;
 
 --
 -- AUTO_INCREMENT for table `tbl_sendmoney`
 --
 ALTER TABLE `tbl_sendmoney`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `tbl_users`
@@ -344,10 +365,10 @@ ALTER TABLE `tbl_users`
 --
 
 --
--- Constraints for table `tbl_loans`
+-- Constraints for table `tbl_deposits`
 --
-ALTER TABLE `tbl_loans`
-  ADD CONSTRAINT `tbl_loans_ibfk_1` FOREIGN KEY (`u_id`) REFERENCES `tbl_users` (`u_id`) ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE `tbl_deposits`
+  ADD CONSTRAINT `tbl_deposits_ibfk_1` FOREIGN KEY (`u_id`) REFERENCES `tbl_users` (`u_id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Constraints for table `tbl_log`
