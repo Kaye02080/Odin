@@ -9,11 +9,20 @@ package user;
 import admin.CreateUsersF;
 import config.Session;
 import config.dbConnector;
+import java.awt.Image;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
+import javax.swing.JLabel;
 
 import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
@@ -36,7 +45,7 @@ public class UserDashboard extends javax.swing.JFrame {
         loadUserProfile();
     }
 
-    private void loadUserProfile() {
+  private void loadUserProfile() {
     dbConnector dbc = new dbConnector();
     Session sess = Session.getInstance();
 
@@ -50,17 +59,76 @@ public class UserDashboard extends javax.swing.JFrame {
 
         if (rs.next()) {
             String imagePath = rs.getString("u_image");
+            System.out.println("Loading image from: " + imagePath);
 
             if (imagePath != null && !imagePath.isEmpty()) {
-                ImageIcon icon = new ImageIcon(imagePath);
-                u_image.setIcon(icon);
+                File imgFile = new File(imagePath);
+                if (imgFile.exists()) {
+                    ImageIcon icon = new ImageIcon(imagePath);
+                    Image img = icon.getImage().getScaledInstance(u_image.getWidth(), u_image.getHeight(), Image.SCALE_SMOOTH);
+                    u_image.setIcon(new ImageIcon(img));
+                } else {
+                    System.out.println("Image file does not exist at path: " + imagePath);
+                }
             }
         }
     } catch (SQLException e) {
         e.printStackTrace(); // Log the error
         JOptionPane.showMessageDialog(this, "Error loading profile image: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
     }
-}   
+}
+  
+   public static int getHeightFromWidth(String imagePath, int desiredWidth) {
+        try {
+            // Read the image file
+            File imageFile = new File(imagePath);
+            BufferedImage image = ImageIO.read(imageFile);
+            
+            // Get the original width and height of the image
+            int originalWidth = image.getWidth();
+            int originalHeight = image.getHeight();
+            
+            // Calculate the new height based on the desired width and the aspect ratio
+            int newHeight = (int) ((double) desiredWidth / originalWidth * originalHeight);
+            
+            return newHeight;
+        } catch (IOException ex) {
+            System.out.println("No image found!");
+        }
+        
+        return -1;
+    }    
+    
+       public  ImageIcon ResizeImage(String ImagePath, byte[] pic, JLabel label) {
+        ImageIcon MyImage = null;
+            if(ImagePath !=null){
+                MyImage = new ImageIcon(ImagePath);
+            }else{
+                MyImage = new ImageIcon(pic);
+            }
+
+        int newHeight = getHeightFromWidth(ImagePath, label.getWidth());
+
+        Image img = MyImage.getImage();
+        Image newImg = img.getScaledInstance(label.getWidth(), newHeight, Image.SCALE_SMOOTH);
+        ImageIcon image = new ImageIcon(newImg);
+        return image;
+    }
+     public int FileExistenceChecker(String path){
+        File file = new File(path);
+        String fileName = file.getName();
+        
+        Path filePath = Paths.get("src/usersimages", fileName);
+        boolean fileExists = Files.exists(filePath);
+        
+        if (fileExists) {
+            return 1;
+        } else {
+            return 0;
+        }
+    
+    }
+
     
     private void logoutUser(String username) {
     dbConnector connector = new dbConnector();
@@ -117,6 +185,8 @@ public class UserDashboard extends javax.swing.JFrame {
         System.err.println("Error loading balance for user ID " + userId + ": " + e.getMessage());
     }
 }
+  
+  
 
     
     /**
@@ -175,7 +245,7 @@ public class UserDashboard extends javax.swing.JFrame {
         jPanel7.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         u_image.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jPanel7.add(u_image, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 150, 110));
+        jPanel7.add(u_image, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 150, 130));
 
         jPanel2.add(jPanel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 30, -1, 130));
 
@@ -311,7 +381,7 @@ public class UserDashboard extends javax.swing.JFrame {
 
     // Fetch and update balance
     updateBalance(sess.getUid());
-    
+     loadUserProfile();
         
     }//GEN-LAST:event_formWindowActivated
 

@@ -40,6 +40,7 @@ import javax.swing.JOptionPane;
  */
 public class CreateUsersF extends javax.swing.JFrame {
 
+    
     /**
      * Creates new form registF
      */
@@ -59,7 +60,7 @@ public class CreateUsersF extends javax.swing.JFrame {
         public static String email,username;
               
     public String destination = ""; 
-    File selectedFile;
+   private File selectedFile = null;
     public String oldpath;
     public String path;
         
@@ -171,28 +172,43 @@ public class CreateUsersF extends javax.swing.JFrame {
     
     }
     
-        public void imageUpdater(String existingFilePath, String newFilePath){
-        File existingFile = new File(existingFilePath);
+     public boolean imageUpdater(String existingFilePath, String newFilePath) {
+    File existingFile = new File(existingFilePath);
+    File newFile = new File(newFilePath);
+
+    if (!newFile.exists()) {
+        System.out.println("New image file does not exist.");
+        return false;
+    }
+
+    try {
         if (existingFile.exists()) {
             String parentDirectory = existingFile.getParent();
-            File newFile = new File(newFilePath);
-            String newFileName = newFile.getName();
-            File updatedFile = new File(parentDirectory, newFileName);
-            existingFile.delete();
-            try {
-                Files.copy(newFile.toPath(), updatedFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
-                System.out.println("Image updated successfully.");
-            } catch (IOException e) {
-                System.out.println("Error occurred while updating the image: "+e);
+            File updatedFile = new File(parentDirectory, newFile.getName());
+
+            // Copy new file first (overwrite if exists)
+            Files.copy(newFile.toPath(), updatedFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
+
+            // Now delete old file if it has a different name/path
+            if (!existingFile.getAbsolutePath().equals(updatedFile.getAbsolutePath())) {
+                existingFile.delete();
             }
+
+            System.out.println("Image updated successfully.");
+            return true;
         } else {
-            try{
-                Files.copy(selectedFile.toPath(), new File(destination).toPath(), StandardCopyOption.REPLACE_EXISTING);
-            }catch(IOException e){
-                System.out.println("Error on update!");
-            }
+            // No existing file, just copy new file to desired location
+            // Here we assume newFilePath is full destination path
+            Files.copy(newFile.toPath(), new File(newFilePath).toPath(), StandardCopyOption.REPLACE_EXISTING);
+            System.out.println("Image copied successfully.");
+            return true;
         }
-   }
+    } catch (IOException e) {
+        System.out.println("Error occurred while updating the image: " + e);
+        return false;
+    }
+}
+
     
      public void logEvent(int userId, String username, String action) 
     {
@@ -688,126 +704,154 @@ try (PreparedStatement logPst = conn.prepareStatement(logQuery)) {
     }//GEN-LAST:event_checkActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-String id = uid.getText().trim();
+ String id = uid.getText().trim();
 String email = mail.getText().trim();
 String username = us.getText().trim();
-String password = pw.getText().trim();
-String firstName = fn.getText().trim();  // First name
-String lastName = ln.getText().trim();   // Last name
-String type = stat.getSelectedItem().toString();  // User type
-String statusValue = ut.getSelectedItem().toString(); // User status
-Session sess = Session.getInstance();
-
-// Validation
-if (id.isEmpty()) {
-    JOptionPane.showMessageDialog(this, "Error: User ID is missing.", "Error", JOptionPane.ERROR_MESSAGE);
-    return;
-}
-
-if (firstName.isEmpty() || lastName.isEmpty()) {
-    JOptionPane.showMessageDialog(this, "Error: First Name and Last Name are required.", "Error", JOptionPane.ERROR_MESSAGE);
-    return;
-}
-
-// Email validation
-String emailRegex = "^[a-zA-Z0-9_+&*-]+(?:\\.[a-zA-Z0-9_+&*-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,7}$";
-if (!email.matches(emailRegex)) {
-    JOptionPane.showMessageDialog(this, "Invalid Email! Please enter a valid email address.", "Error", JOptionPane.ERROR_MESSAGE);
-    return;
-}
-
-// Username validation
-if (!username.matches("[a-zA-Z0-9_]{5,}")) {
-    JOptionPane.showMessageDialog(this, "Invalid Username! Must be at least 5 characters and contain only letters, numbers, and underscores.", "Error", JOptionPane.ERROR_MESSAGE);
-    return;
-}
+// Ignore password input, always fetch old from DB
+String firstName = fn.getText().trim();
+String lastName = ln.getText().trim();
+String type = ut.getSelectedItem().toString();
+String statusValue = stat.getSelectedItem().toString();
+String sourceImagePath = u_image.getText().trim();  // full path from text field
+String securityQ = sq.getSelectedItem().toString();
+String securityA = ans.getText().trim();
 
 try {
-    
-    // Hash the password using SHA-256 before storing
-    String hashedPassword = passwordHasher.hashPassword(password);
+    String hashedPassword = null;  // Will be fetched from DB
+
+    String hashedSecurityA = "";
+    if (!securityA.isEmpty()) {
+        hashedSecurityA = passwordHasher.hashPassword(securityA);
+    }
 
     dbConnector dbc = new dbConnector();
-    String checkQuery = "SELECT COUNT(*) FROM tbl_users WHERE (u_username = ? OR u_email = ?) AND u_id != ?";
 
-    try (Connection conn = dbc.getConnection();
-         PreparedStatement pst = conn.prepareStatement(checkQuery)) {
-
-        pst.setString(1, username);
-        pst.setString(2, email);
-        pst.setInt(3, Integer.parseInt(id));
-
-        try (ResultSet rs = pst.executeQuery()) {
-            if (rs.next() && rs.getInt(1) > 0) {
-                JOptionPane.showMessageDialog(this, "Username or Email already exists! Please use different credentials.", "Error", JOptionPane.ERROR_MESSAGE);
-                return;
+    try (Connection conn = dbc.getConnection()) {
+        // Check for existing username/email excluding current user
+        String checkQuery = "SELECT COUNT(*) FROM tbl_users WHERE (u_username = ? OR u_email = ?) AND u_id != ?";
+        try (PreparedStatement pst = conn.prepareStatement(checkQuery)) {
+            pst.setString(1, username);
+            pst.setString(2, email);
+            pst.setInt(3, Integer.parseInt(id));
+            try (ResultSet rs = pst.executeQuery()) {
+                if (rs.next() && rs.getInt(1) > 0) {
+                    JOptionPane.showMessageDialog(this, "Username or Email already exists! Please use different credentials.", "Error", JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
             }
         }
 
-        // ✅ Corrected the column order in the UPDATE query
-        String updateQuery = "UPDATE tbl_users SET u_fname = ?, u_lname = ?, u_username = ?, u_email = ?, u_password = ?, u_type = ?, u_status = ? WHERE u_id = ?";
-
-        try (Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/money_remittance", "root", "");
-             PreparedStatement updatePst = con.prepareStatement(updateQuery)) {
-            
-            
-            String query = "SELECT * FROM tbl_users WHERE u_id = '"+sess.getUid()+"'";
-            ResultSet rs = dbc.getData(query);
-            if(rs.next())
-            {
-                String npass = rs.getString("u_password");
-
-                updatePst.setString(1, firstName);   // First name
-                updatePst.setString(2, lastName);    // Last name
-                updatePst.setString(3, username);    // Username
-                updatePst.setString(4, email);       // Email
-                updatePst.setString(5, npass);  // Store hashed password
-                updatePst.setString(6, statusValue); // Status (Corrected order)
-                updatePst.setString(7, type);        // Type (Corrected order)
-                updatePst.setInt(8, Integer.parseInt(id));  // User ID
-                
-
-
-
-                int updated = updatePst.executeUpdate();
-                if (updated > 0) {
-                    JOptionPane.showMessageDialog(this, "User updated successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);
-                    new userLoginF().setVisible(true);
-                    this.dispose();
+        // Fetch existing password from DB
+        String passQuery = "SELECT u_password FROM tbl_users WHERE u_id = ?";
+        try (PreparedStatement passPst = conn.prepareStatement(passQuery)) {
+            passPst.setInt(1, Integer.parseInt(id));
+            try (ResultSet rsPass = passPst.executeQuery()) {
+                if (rsPass.next()) {
+                    hashedPassword = rsPass.getString("u_password");
                 } else {
-                    JOptionPane.showMessageDialog(this, "Update failed!", "Error", JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.showMessageDialog(this, "User not found.", "Error", JOptionPane.ERROR_MESSAGE);
+                    return;
                 }
+            }
+        }
+
+        // Handle image file copy if path provided
+        String destinationPath = ""; // default empty string if no image selected
+        if (!sourceImagePath.isEmpty()) {
+            try {
+                File sourceFile = new File(sourceImagePath);
+                if (!sourceFile.exists()) {
+                    JOptionPane.showMessageDialog(this, "Selected image file does not exist.", "Error", JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+
+                // Create destination directory if not exists
+                File destDir = new File("images/usersimages");
+                if (!destDir.exists()) {
+                    destDir.mkdirs();
+                }
+
+                // Construct new image name using username + original filename to avoid conflicts
+                String imageName = username + "_" + sourceFile.getName();
+
+                destinationPath = destDir.getPath() + File.separator + imageName;
+
+                // Copy the file to destination folder (overwrite if exists)
+                Files.copy(sourceFile.toPath(), new File(destinationPath).toPath(), StandardCopyOption.REPLACE_EXISTING);
+
+                // Use relative path for DB (optional, depending on your app)
+                destinationPath = "images/usersimages/" + imageName;
+
+            } catch (IOException e) {
+                JOptionPane.showMessageDialog(this, "Failed to save image: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+        } else {
+            // Optional: fetch current image path from DB to keep old image
+            String getImageQuery = "SELECT u_image FROM tbl_users WHERE u_id = ?";
+            try (PreparedStatement imgPst = conn.prepareStatement(getImageQuery)) {
+                imgPst.setInt(1, Integer.parseInt(id));
+                try (ResultSet rsImg = imgPst.executeQuery()) {
+                    if (rsImg.next()) {
+                        destinationPath = rsImg.getString("u_image");
+                    }
+                }
+            }
+        }
+
+        // Update user record
+        String updateQuery = "UPDATE tbl_users SET u_fname = ?, u_lname = ?, u_username = ?, u_email = ?, u_password = ?, u_type = ?, u_status = ?, u_image = ?, security_question = ?, security_answer = ? WHERE u_id = ?";
+        try (PreparedStatement updatePst = conn.prepareStatement(updateQuery)) {
+            updatePst.setString(1, firstName);
+            updatePst.setString(2, lastName);
+            updatePst.setString(3, username);
+            updatePst.setString(4, email);
+            updatePst.setString(5, hashedPassword);
+            updatePst.setString(6, type);
+            updatePst.setString(7, statusValue);
+            updatePst.setString(8, destinationPath);
+            updatePst.setString(9, securityQ);
+            updatePst.setString(10, hashedSecurityA);
+            updatePst.setInt(11, Integer.parseInt(id));
+
+            int updated = updatePst.executeUpdate();
+            if (updated > 0) {
+                JOptionPane.showMessageDialog(this, "User updated successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);
+                new userLoginF().setVisible(true);
+                this.dispose();
+            } else {
+                JOptionPane.showMessageDialog(this, "Update failed!", "Error", JOptionPane.ERROR_MESSAGE);
             }
         }
     }
 } catch (Exception ex) {
     JOptionPane.showMessageDialog(this, "Error: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-}        // TODO add your handling code here:
+}
+
+    // TODO add your handling code here:
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void selectActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_selectActionPerformed
-            JFileChooser fileChooser = new JFileChooser();
-        int returnValue = fileChooser.showOpenDialog(null);
-        if (returnValue == JFileChooser.APPROVE_OPTION) {
-            try {
-                selectedFile = fileChooser.getSelectedFile();
-                destination = "src/usersimages/" + selectedFile.getName();
-                path  = selectedFile.getAbsolutePath();
+         JFileChooser fileChooser = new JFileChooser();
+    int returnValue = fileChooser.showOpenDialog(null);
+    if (returnValue == JFileChooser.APPROVE_OPTION) {
+        try {
+            selectedFile = fileChooser.getSelectedFile();
+            destination = "src/usersimages/" + selectedFile.getName();
 
-                if(FileExistenceChecker(path) == 1){
-                    JOptionPane.showMessageDialog(null, "File Already Exist, Rename or Choose another!");
-                    destination = "";
-                    path= "";
-                }else{
-                    u_image.setIcon(ResizeImage(path, null, u_image));
-                    select.setEnabled(false);
-                    remove.setEnabled(true);
-                }
-            } catch (Exception ex) {
-                System.out.println("File Error!");
+            if(FileExistenceChecker(destination) == 1){
+                JOptionPane.showMessageDialog(null, "File Already Exist, Rename or Choose another!");
+                destination = "";
+                selectedFile = null;
+            } else {
+                u_image.setIcon(ResizeImage(selectedFile.getAbsolutePath(), null, u_image));
+                select.setEnabled(false);
+                remove.setEnabled(true);
             }
+        } catch (Exception ex) {
+            System.out.println("File Error!");
         }
-
+    }
     }//GEN-LAST:event_selectActionPerformed
 
     private void removeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_removeActionPerformed
