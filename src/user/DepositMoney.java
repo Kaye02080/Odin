@@ -185,6 +185,7 @@ public class DepositMoney extends javax.swing.JFrame {
         getContentPane().add(jPanel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 0, 550, 500));
 
         pack();
+        setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
     private void formWindowActivated(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowActivated
@@ -241,7 +242,8 @@ try {
     }
 
     dbConnector dbc = new dbConnector();
-    String sql = "INSERT INTO tbl_deposits (u_id, u_username, u_fname, u_lname, amount, transaction_description, status) VALUES (?, ?, ?, ?, ?, ?, ?)";
+   String sql = "INSERT INTO tbl_deposits (u_id, u_username, u_fname, u_lname, amount, transaction_description, status, approved_by, approved_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+
 
     try (Connection conn = dbc.getConnection();
          PreparedStatement pst = conn.prepareStatement(sql)) {
@@ -249,13 +251,17 @@ try {
         String fullName = firstName + " " + lastName;
         String description = "Deposit request submitted by: " + fullName;
 
-        pst.setInt(1, userId);              // u_id
-        pst.setString(2, usernameStr);      // u_username
-        pst.setString(3, firstName);        // u_fname
-        pst.setString(4, lastName);         // u_lname
-        pst.setDouble(5, amount);           // amount
-        pst.setString(6, description);      // transaction_description
-        pst.setString(7, "PENDING");        // status
+        pst.setInt(1, userId);                    // u_id
+pst.setString(2, usernameStr);           // u_username
+pst.setString(3, firstName);             // u_fname
+pst.setString(4, lastName);              // u_lname
+pst.setDouble(5, amount);                // amount
+pst.setString(6, description);           // transaction_description
+pst.setString(7, "PENDING");             // status
+pst.setNull(8, java.sql.Types.INTEGER);   // approved_by is NULL initially
+pst.setNull(9, java.sql.Types.TIMESTAMP); // approved_at is NULL initially
+
+
 
         int result = pst.executeUpdate();
 
@@ -278,7 +284,6 @@ try {
 } catch (Exception e) {
     JOptionPane.showMessageDialog(this, "Error: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
 }
-
 
     }//GEN-LAST:event_jButton1ActionPerformed
 

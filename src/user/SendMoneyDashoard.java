@@ -216,6 +216,7 @@ public class SendMoneyDashoard extends javax.swing.JFrame {
         getContentPane().add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 110, 510));
 
         pack();
+        setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
     private void SenderusernameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_SenderusernameActionPerformed
